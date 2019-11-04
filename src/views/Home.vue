@@ -45,6 +45,7 @@ export default {
         { icon: 'dashboard', text: '仪表盘', to: { name: 'dashboard' } },
         { icon: 'account_circle', text: '用户管理', to: { name: 'sysUser' } },
         { icon: 'mdi-account-badge-horizontal-outline', text: '角色管理', to: { name: 'sysRole' } },
+        { icon: 'mdi-home-account', text: '部门管理', to: { name: 'sysDepartment' } },
         { icon: 'how_to_vote', text: '权限管理', to: { name: 'sysPermission' } }
       ]
     }, {
@@ -52,8 +53,7 @@ export default {
       children: [
         { icon: 'location_city', text: '数据管理', to: { name: 'sysData' } },
         { icon: 'av_timer', text: '学期管理', to: { name: 'semester' } },
-        { icon: 'school', text: '教师管理', to: { name: 'teacher' } },
-        { icon: 'mdi-home-account', text: '学生管理', to: { name: 'student' } }
+        { icon: 'school', text: '教师管理', to: { name: 'teacher' } }
       ]
     }, {
       name: '系统管理',

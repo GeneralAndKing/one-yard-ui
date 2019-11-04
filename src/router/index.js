@@ -49,6 +49,15 @@ const routes = [
           icon: 'how_to_vote'
         },
         component: () => import(/* webpackChunkName: "sys-permission" */ '_v/sys-permission')
+      },
+      {
+        path: 'sysDepartment',
+        name: 'sysDepartment',
+        meta: {
+          meta: '部门管理',
+          icon: 'how_to_vote'
+        },
+        component: () => import(/* webpackChunkName: "sys-department" */ '_v/sys-department')
       }
     ]
   },

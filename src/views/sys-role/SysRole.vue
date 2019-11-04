@@ -1,7 +1,11 @@
 <template lang="pug">
   v-container#auth-role
+    v-btn(fixed, fab, bottom, right, color="pink", @click="handleAdd")
+      v-icon mdi-plus
+    v-snackbar(v-model="tip", :timeout="3000") {{tipText}}
+      v-btn(color="red", text, @click="tip = false") Close
     v-layout(wrap)
-      v-flex.pa-4(xs12, sm6, md4, v-for="role in sysRoles", :key="role.id")
+      v-flex.pa-4(xs12, sm6, md6, lg6, xl4, v-for="role in sysRoles", :key="role.id")
         v-card
           v-card-title
             v-avatar(color="indigo", size="36")
@@ -22,6 +26,9 @@
                   v-select(v-model="role.department", :items="departments", item-text="name", label="所属部门", :readonly="!role.edit")
               v-list-item(:ripple="!role.edit")
                 v-list-item-content.pa-0
+                    v-select(v-model="role.permissions", label="权限", :items="permissions", item-text="name", chips, multiple, :readonly="!role.edit")
+              v-list-item(:ripple="!role.edit")
+                v-list-item-content.pa-0
                   v-text-field(v-model="role.icon", label="图标", :readonly="!role.edit")
               v-list-item(:ripple="!role.edit")
                 v-list-item-content.pa-0
@@ -40,6 +47,14 @@ export default {
     TableCardSheet
   },
   data: () => ({
+    tip: false,
+    tipText: '',
+    permissions: [
+      { id: 1, name: 'asd' },
+      { id: 2, name: 'aaa' },
+      { id: 3, name: 'bbb' }
+    ],
+    add: false,
     sysRoles: [
       {
         id: 1,
@@ -52,6 +67,7 @@ export default {
           id: 1,
           name: '采购部门1'
         },
+        permissions: [ { id: 1, name: 'asd' } ],
         edit: false
       }, {
         id: 2,
@@ -63,21 +79,15 @@ export default {
           id: 1,
           name: '采购部门1'
         },
+        permissions: [ { id: 1, name: 'asd' } ],
         isEnable: true,
         edit: false
       }
     ],
     departments: [
-      {
-        id: 1,
-        name: '采购部门1'
-      }, {
-        id: 2,
-        name: '采购部门2'
-      }, {
-        id: 3,
-        name: '采购部门3'
-      }
+      { id: 1, name: '采购部门1' },
+      { id: 2, name: '采购部门2' },
+      { id: 3, name: '采购部门3' }
     ],
     editItem: {}
   }),
@@ -87,17 +97,39 @@ export default {
       if (!role.edit) {
         // 保存的时候
         console.log('保存')
+        this.showTip('保存成功～！')
       } else {
         // 编辑的时候
         this.editItem = this._.cloneDeep(role)
         console.log('编辑')
       }
+      this.add = false
     },
     handleCancel (role) {
+      if (this.add) {
+        this.sysRoles.shift()
+        this.add = false
+        return
+      }
       this._.forOwn(this.editItem, (value, key) => {
         role[key] = value
       })
       role.edit = false
+    },
+    handleAdd () {
+      if (this.add) {
+        this.showTip('不要重复添加哦～先完成当前的添加把！')
+      } else {
+        this.sysRoles.unshift({
+          isEnable: true,
+          edit: true
+        })
+        this.add = true
+      }
+    },
+    showTip (tipText) {
+      this.tip = true
+      this.tipText = tipText
     }
   }
 }
