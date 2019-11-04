@@ -45,7 +45,7 @@ export default {
         { icon: 'dashboard', text: '仪表盘', to: { name: 'dashboard' } },
         { icon: 'account_circle', text: '用户管理', to: { name: 'sysUser' } },
         { icon: 'mdi-account-badge-horizontal-outline', text: '角色管理', to: { name: 'sysRole' } },
-        { icon: 'how_to_vote', text: '资源管理', to: { name: 'sysRes' } }
+        { icon: 'how_to_vote', text: '权限管理', to: { name: 'sysPermission' } }
       ]
     }, {
       name: '教务管理',
