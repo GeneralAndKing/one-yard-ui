@@ -1,7 +1,7 @@
 
-export let requiredRules = [
-  v => !!v || '内容不能为空'
-]
+export let requiredRules = (name) => {
+  return v => !!v || name + '不能为空'
+}
 export let phoneRules = [
   v => !!v || '电话号码不能为空',
   v => (v && v.length === 11) || '电话号码必须是11位'
@@ -20,3 +20,17 @@ export let codeRules = [
   v => !!v || '验证码不能为空',
   v => (v && v.length === 4) || '验证码是4位'
 ]
+
+export let unionRules = (...args) => {
+  let result = []
+  args.forEach(value => {
+    if (typeof value === 'function') {
+      result.push(value)
+    } else if (value instanceof Array) {
+      result = result.concat(value)
+    } else {
+      throw Error('typeError', 'Type must be an array or a function')
+    }
+  })
+  return result
+}

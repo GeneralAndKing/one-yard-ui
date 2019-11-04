@@ -32,22 +32,23 @@ export default {
   components: {
     CenterCard
   },
-  data: () => ({
-    window: 0,
-    user: {
-      email: '',
-      password: '',
-      name: 'John Doe'
-    },
-    rules: {
-      email: emailRules,
-      password: passwordRules
-    },
-    nextBtnText: '下一步',
-    accountText: '创建账号',
-    welcomeText: '登陆',
-    infoText: '使用您的帐号进行登录'
-  }),
+  data () {
+    return { window: 0,
+      user: {
+        email: '',
+        password: '',
+        name: 'John Doe'
+      },
+      rules: {
+        email: emailRules,
+        password: passwordRules
+      },
+      nextBtnText: '下一步',
+      accountText: '创建账号',
+      welcomeText: '登陆',
+      infoText: '使用您的帐号进行登录'
+    }
+  },
   watch: {
     window: function (val) {
       if (val === 0) {

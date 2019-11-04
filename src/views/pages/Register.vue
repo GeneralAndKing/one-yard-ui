@@ -10,11 +10,11 @@
         v-window-item(:key="0")
           v-card-text.px-0
             v-form(ref="account")
-                v-text-field(label="用户名", ref="username", type="text", outlined, counter="15", dense :rules="rules.required" v-model="account.username")
+                v-text-field(label="用户名", ref="username", type="text", outlined, counter="15", dense :rules="rules.union(rules.required('用户名'))" v-model="account.username")
                 v-text-field(label="电子邮件地址", ref="email", type="email", outlined, counter="25", hint="将作为验证您帐号的唯一标准", dense :rules="rules.email" v-model="account.email")
                 v-text-field(label="手机号", ref="phone", type="text", outlined, hint="请输入 11 位的手机号码", counter="11", dense :rules="rules.phone" v-model="account.phone")
                 v-text-field(label="密码", ref="password", type="password", outlined, counter="18", hint="使用 8 个或更多字符（字母、数字和符号的组合）", dense :rules="rules.password" v-model="account.password")
-                v-text-field(label="确认密码", ref="rePassword", type="password", outlined, counter="18", hint="使用 8 个或更多字符（字母、数字和符号的组合）", dense :rules="_.union([rePasswordRule] ,rules.password)" v-model="account.rePassword")
+                v-text-field(label="确认密码", ref="rePassword", type="password", outlined, counter="18", hint="使用 8 个或更多字符（字母、数字和符号的组合）", dense :rules="rules.union(rules.password,rules.rePassword)" v-model="account.rePassword")
         v-window-item(:key="1")
           v-card-text.px-0
             v-text-field(label="输入验证码", ref="code", type="text", outlined, counter="4" :rules="rules.code")
@@ -27,7 +27,7 @@
 
 <script>
 import CenterCard from '_c/center-card/CenterCard'
-import { emailRules, passwordRules, requiredRules, phoneRules, codeRules } from '_u/rules'
+import { emailRules, passwordRules, requiredRules, phoneRules, codeRules, unionRules } from '_u/rules'
 export default {
   name: 'Register',
   components: {
@@ -46,33 +46,36 @@ export default {
       }
     }
   },
-  data: () => ({
-    window: 0,
-    infoText: '创建您的帐号',
-    preBtnText: '登录现有帐号',
-    nextBtnText: '下一步',
-    account: {
-      username: null,
-      password: null,
-      rePassword: null,
-      phone: null,
-      email: null
-    },
-    rules: {
-      email: emailRules,
-      required: requiredRules,
-      password: passwordRules,
-      phone: phoneRules,
-      code: codeRules
-    }
-  }),
-  methods: {
-    rePasswordRule (val) {
-      if (this.account.password !== val) {
-        return '两次密码不相同'
+  data () {
+    return {
+      window: 0,
+      infoText: '创建您的帐号',
+      preBtnText: '登录现有帐号',
+      nextBtnText: '下一步',
+      account: {
+        username: null,
+        password: null,
+        rePassword: null,
+        phone: null,
+        email: null
+      },
+      rules: {
+        union: unionRules,
+        email: emailRules,
+        required: requiredRules,
+        password: passwordRules,
+        phone: phoneRules,
+        code: codeRules,
+        rePassword: (val) => {
+          if (this.account.password !== val) {
+            return '两次密码不相同'
+          }
+          return true
+        }
       }
-      return true
-    },
+    }
+  },
+  methods: {
     next () {
       if (this.window === 0) {
         if (this.$refs.account.validate(true)) {
