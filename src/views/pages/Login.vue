@@ -12,21 +12,21 @@
           v-window-item(:key="0")
             v-card-text.px-0
               v-text-field(label="电子邮件地址", name="email", type="text",
-                outlined, :rules="emailRules", v-model='user.email', required, clearable ref="username")
+                outlined, :rules="rules.email", v-model='user.email', required, clearable ref="username")
           v-window-item(:key="1")
             v-card-text.px-0
               v-text-field(label="输入您的密码", name="password", type="password",
-                outlined, :rules="passwordRules", v-model='user.password' ref="password")
+                outlined, :rules="rules.password", v-model='user.password' ref="password")
       v-card-actions.px-0
         a(@click="handleAccount") {{accountText}}
         v-spacer
-        v-btn(color="primary", @click="next") {{loginText}}
+        v-btn(color="primary", @click="next") {{nextBtnText}}
       v-footer#form-footer.grey--text @ 2019 copy right
 </template>
 
 <script>
 import CenterCard from '_c/center-card/CenterCard'
-
+import { emailRules, passwordRules } from '_u/rules'
 export default {
   name: 'Login',
   components: {
@@ -39,14 +39,11 @@ export default {
       password: '',
       name: 'John Doe'
     },
-    emailRules: [
-      v => !!v || '账号不能为空',
-      v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || '电子邮箱不规范'
-    ],
-    passwordRules: [
-      v => !!v || '密码不能为空'
-    ],
-    loginText: '下一步',
+    rules: {
+      email: emailRules,
+      password: passwordRules
+    },
+    nextBtnText: '下一步',
     accountText: '创建账号',
     welcomeText: '登陆',
     infoText: '使用您的帐号进行登录'
@@ -56,11 +53,11 @@ export default {
       if (val === 0) {
         this.welcomeText = '登陆'
         this.infoText = '使用您的帐号进行登录'
-        this.loginText = '下一步'
+        this.nextBtnText = '下一步'
         this.accountText = '创建账号'
       } else if (val === 1) {
         this.welcomeText = '欢迎'
-        this.loginText = '登陆'
+        this.nextBtnText = '登陆'
         this.accountText = '忘记密码?'
         this.infoText = '要继续操作，请首先验证登录者是您本人'
       }
@@ -79,7 +76,6 @@ export default {
     },
     next () {
       // 如果windows===1那么登陆
-      console.log()
       if (this.window === 1) {
         if (this.$refs['username'].validate(true) && this.$refs['password'].validate(true)) {
           this.$router.push({ path: '/home' })
@@ -91,6 +87,7 @@ export default {
       }
     },
     previous () {
+      this.$refs['password'].reset()
       this.window -= 1
     }
   }
