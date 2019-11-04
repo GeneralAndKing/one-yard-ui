@@ -34,26 +34,27 @@
                   v-card-title
                     span.headline {{ formTitle }}
                   v-card-text
-                    v-container(grid-list-md)
-                      v-layout(wrap)
-                        v-flex(xs12, sm12)
-                          v-img(:src="editedItem.icon", :width="64", :height="64")
-                        v-flex(xs12, sm6, md4)
-                          v-text-field(v-model="editedItem.name", counter="18", label="用户名")
-                        v-flex(xs12, sm6, md4)
-                          v-text-field(type="password", v-model="editedItem.password", counter="55", label="密码")
-                        v-flex(xs12, sm6, md4)
-                          v-file-input(accept="image/*", label="上传头像", small-chips, prepend-icon="")
-                        v-flex(xs12, sm6, md4)
-                          v-text-field(type="email", v-model="editedItem.email", counter="30", hint="可能用于找回密码", label="电子邮箱")
-                        v-flex(xs12, sm6, md4)
-                          v-text-field(type="phone", v-model="editedItem.phone", counter="11", hint="长度为11位的手机号", label="手机号")
-                        v-flex(xs12, sm6, md4)
-                          v-text-field(type="number", v-model="editedItem.sort", label="排序")
-                        v-flex(xs12, sm12)
-                          v-select(v-model="editedItem.roles", label="角色", :items="roles", item-text="name", chips, multiple)
-                        v-flex(xs12, sm12)
-                          v-textarea(label="备注", v-model="editedItem.remark", counter="250")
+                    v-form(ref="editedItem")
+                        v-container(grid-list-md)
+                          v-layout(wrap)
+                            v-flex(xs12, sm12)
+                              v-img(:src="editedItem.icon", :width="64", :height="64" :rules="rules.union(rules.required('头像'))")
+                            v-flex(xs12, sm6, md4)
+                              v-text-field(v-model="editedItem.name", counter="18", label="用户名" :rules="rules.union(rules.required('用户名'))" ref="name")
+                            v-flex(xs12, sm6, md4)
+                              v-text-field(type="password", v-model="editedItem.password", counter="55", label="密码" :rules="rules.password")
+                            v-flex(xs12, sm6, md4)
+                              v-file-input(accept="image/*", label="上传头像", small-chips, prepend-icon="")
+                            v-flex(xs12, sm6, md4)
+                              v-text-field(type="email", v-model="editedItem.email", counter="30", hint="可能用于找回密码", label="电子邮箱" :rules="rules.email")
+                            v-flex(xs12, sm6, md4)
+                              v-text-field(type="phone", v-model="editedItem.phone", counter="11", hint="长度为11位的手机号", label="手机号" :rules="rules.phone")
+                            v-flex(xs12, sm6, md4)
+                              v-text-field(type="number", v-model="editedItem.sort", label="排序" :rules="rules.union(rules.required('排序'))" )
+                            v-flex(xs12, sm12)
+                              v-select(v-model="editedItem.roles", label="角色", :items="roles", item-text="name", chips, multiple :rules="rules.union(rules.required('角色'))")
+                            v-flex(xs12, sm12)
+                              v-textarea(label="备注", v-model="editedItem.remark", counter="250")
                   v-card-actions
                     v-spacer
                       v-btn.blue.darken-1(text, @click="close") Cancel
@@ -62,6 +63,7 @@
 
 <script>
 import TableCardSheet from '_c/table-card-sheet'
+import { emailRules, passwordRules, requiredRules, unionRules, phoneRules } from '_u/rules'
 export default {
   name: 'SysUser',
   components: {
@@ -121,7 +123,15 @@ export default {
       { text: '状态', value: 'status' },
       { text: '操作', value: 'action', sortable: false }
     ],
-    desserts: []
+    desserts: [],
+    rules: {
+      email: emailRules,
+      password: passwordRules,
+      required: requiredRules,
+      union: unionRules,
+      phone: phoneRules
+
+    }
   }),
   computed: {
     formTitle () {
@@ -134,7 +144,7 @@ export default {
     }
   },
   created () {
-    for (let i = 0; i < 20; i++) {
+    for (let i = 1; i < 20; i++) {
       this.desserts.push({
         icon: 'https://avatars0.githubusercontent.com/u/9064066?v=4&s=460',
         name: 'admin' + i,
@@ -167,6 +177,7 @@ export default {
     handleEdit (item) {
       this.editedIndex = this.desserts.indexOf(item)
       this.editedItem = Object.assign({}, item)
+      console.log(this.editedItem)
       this.dialog = true
     },
     close () {
@@ -177,12 +188,15 @@ export default {
       }, 300)
     },
     save () {
-      if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem)
-      } else {
-        this.desserts.push(this.editedItem)
+      if (this.$refs['editedItem'].validate(true)) {
+        // to do 数据保存
+        if (this.editedIndex > -1) {
+          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+        } else {
+          this.desserts.push(this.editedItem)
+        }
+        this.close()
       }
-      this.close()
     }
   }
 }
