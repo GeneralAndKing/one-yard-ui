@@ -8,7 +8,7 @@
       v-spacer
       v-card-subtitle.text-center.subtitle-1.pt-0 {{infoText}}
       v-spacer
-      v-window(v-model="window")
+      v-window(v-model="window", style="min-height:180px")
         v-form(ref='form')
           v-window-item(:key="0")
             v-card-text.px-0
