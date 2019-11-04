@@ -38,19 +38,19 @@
                         v-container(grid-list-md)
                           v-layout(wrap)
                             v-flex(xs12, sm12)
-                              v-img(:src="editedItem.icon", :width="64", :height="64" :rules="rules.union(rules.required('头像'))")
+                              v-img(:src="editedItem.icon", :width="64", :height="64" )
                             v-flex(xs12, sm6, md4)
                               v-text-field(v-model="editedItem.name", counter="18", label="用户名" :rules="rules.union(rules.required('用户名'))" ref="name")
                             v-flex(xs12, sm6, md4)
                               v-text-field(type="password", v-model="editedItem.password", counter="55", label="密码" :rules="rules.password")
                             v-flex(xs12, sm6, md4)
-                              v-file-input(accept="image/*", label="上传头像", small-chips, prepend-icon="")
+                              v-file-input(accept="image/*", label="上传头像", small-chips, prepend-icon="" :rules="rules.union(rules.image('头像',2000000))" ref="icon")
                             v-flex(xs12, sm6, md4)
                               v-text-field(type="email", v-model="editedItem.email", counter="30", hint="可能用于找回密码", label="电子邮箱" :rules="rules.email")
                             v-flex(xs12, sm6, md4)
                               v-text-field(type="phone", v-model="editedItem.phone", counter="11", hint="长度为11位的手机号", label="手机号" :rules="rules.phone")
                             v-flex(xs12, sm6, md4)
-                              v-text-field(type="number", v-model="editedItem.sort", label="排序" :rules="rules.union(rules.required('排序'))" )
+                              v-text-field(type="number", v-model="editedItem.sort", label="排序" :rules="rules.union(rules.required('排序'))")
                             v-flex(xs12, sm12)
                               v-select(v-model="editedItem.roles", label="角色", :items="roles", item-text="name", chips, multiple :rules="rules.union(rules.required('角色'))")
                             v-flex(xs12, sm12)
@@ -63,7 +63,7 @@
 
 <script>
 import TableCardSheet from '_c/table-card-sheet'
-import { emailRules, passwordRules, requiredRules, unionRules, phoneRules } from '_u/rules'
+import { emailRules, passwordRules, requiredRules, unionRules, phoneRules, imageRequiredRules } from '_u/rules'
 export default {
   name: 'SysUser',
   components: {
@@ -129,7 +129,8 @@ export default {
       password: passwordRules,
       required: requiredRules,
       union: unionRules,
-      phone: phoneRules
+      phone: phoneRules,
+      image: imageRequiredRules
 
     }
   }),

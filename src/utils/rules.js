@@ -2,6 +2,10 @@
 export let requiredRules = (name) => {
   return v => (!!v && v.length !== 0) || name + '不能为空'
 }
+
+export let imageRequiredRules = (name, size) => {
+  return v => !v || v.size < size || name + '图片大小要小于' + size / 1000000 + 'MB'
+}
 export let phoneRules = [
   v => !!v || '电话号码不能为空',
   v => (v && v.length === 11) || '电话号码必须是11位'
