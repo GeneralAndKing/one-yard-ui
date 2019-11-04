@@ -12,10 +12,12 @@
         v-form(ref='form')
           v-window-item(:key="0")
             v-card-text.px-0
-              v-text-field(label="电子邮件地址", name="username", type="text", outlined :rules="emailRules" v-model='user.email' required)
+              v-text-field(label="电子邮件地址", name="email", type="text",
+                outlined, :rules="emailRules", v-model='user.email', required, clearable)
           v-window-item(:key="1")
             v-card-text.px-0
-              v-text-field(label="输入您的密码", name="password", type="password", outlined :rules="passwordRules" v-model='user.password')
+              v-text-field(label="输入您的密码", name="password", type="password",
+                outlined, :rules="passwordRules", v-model='user.password')
       v-card-actions.px-0
         a(@click="handleAccount") {{accountText}}
         v-spacer
@@ -80,10 +82,10 @@ export default {
       // 如果windows===1那么登陆
       if (this.window === 1) {
         if (this.$refs.form.validate()) {
-          this.$router.push({ path: '/index' })
+          this.$router.push({ path: '/home' })
         }
       } else {
-        if (this.$refs.form.validate('username')) {
+        if (this.$refs.form.validate('email')) {
           this.window += 1
         }
       }
