@@ -90,7 +90,7 @@ export default {
     },
     previous () {
       if (this.window === 0) {
-        this.$router.push({ path: '/login' })
+        this.$router.push({ name: 'login' })
       } else if (this.window === 1) {
         this.$refs['code'].reset()
         this.window -= 1

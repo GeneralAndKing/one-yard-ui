@@ -70,16 +70,16 @@ export default {
   methods: {
     handleAccount () {
       if (this.window === 1) {
-        this.$router.push({ path: '/forget' })
+        this.$router.push({ name: 'forget' })
       } else {
-        this.$router.push({ path: '/register' })
+        this.$router.push({ name: 'register' })
       }
     },
     next () {
       // 如果windows===1那么登陆
       if (this.window === 1) {
         if (this.$refs['username'].validate(true) && this.$refs['password'].validate(true)) {
-          this.$router.push({ path: '/home' })
+          this.$router.push({ name: 'home' })
         }
       } else {
         if (this.$refs['username'].validate(true)) {
