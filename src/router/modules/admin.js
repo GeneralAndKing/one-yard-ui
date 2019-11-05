@@ -48,6 +48,15 @@ export default {
         icon: 'how_to_vote'
       },
       component: () => import(/* webpackChunkName: "sys-department" */ '_v/sys-department')
+    },
+    {
+      path: 'materialPlanCreate',
+      name: 'materialPlanCreate',
+      meta: {
+        meta: '创建计划表',
+        icon: 'location_city'
+      },
+      component: () => import(/* webpackChunkName: "sys-department" */ '_v/material-plan-create')
     }
   ]
 }
