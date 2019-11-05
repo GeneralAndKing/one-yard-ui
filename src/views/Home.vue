@@ -49,9 +49,9 @@ export default {
         { icon: 'how_to_vote', text: '权限管理', to: { name: 'sysPermission' } }
       ]
     }, {
-      name: '教务管理',
+      name: '物料需求',
       children: [
-        { icon: 'location_city', text: '数据管理', to: { name: 'sysData' } },
+        { icon: 'location_city', text: '创建计划表', to: { name: 'materialPlanCreate' } },
         { icon: 'av_timer', text: '学期管理', to: { name: 'semester' } },
         { icon: 'school', text: '教师管理', to: { name: 'teacher' } }
       ]
