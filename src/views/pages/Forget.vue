@@ -89,7 +89,7 @@ export default {
   methods: {
     handleAccount () {
       if (this.window === 0) {
-        this.$router.push({ path: '/login' })
+        this.$router.push({ name: 'login' })
       } else if (this.window === 1) {
         // to do 重新发送
         console.log('重新发送')
@@ -111,7 +111,7 @@ export default {
       } else if (this.window === 2) {
         if (this.$refs['form'].validate(true)) {
           // to do 密码修改成功
-          this.$router.push({ path: '/home' })
+          this.$router.push({ name: 'home' })
         }
       }
     },
