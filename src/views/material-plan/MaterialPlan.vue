@@ -19,23 +19,23 @@
           v-form(ref="base")
             v-layout(wrap, style="width:100%")
               v-flex(sm12, md6, lg4)
-                v-select(v-model="materialPlan.planTypes", :items="planTypes", ref="planTypes", label="需求计划类型")
+                v-select(v-model="materialPlan.planTypes", :items="planTypes", ref="planTypes", label="需求计划类型" :rules="rules.union(rules.required('需求计划类型'))")
               v-flex(sm12, md6, lg4)
                 v-select(v-model="materialPlan.departmentId", :items="departments", ref="departmentId",
-                  item-text="name", item-value="id", label="需求部门")
+                  item-text="name", item-value="id", label="需求部门" :rules="rules.union(rules.required('需求部门'))")
               v-flex(sm12, md6, lg4)
                 v-text-field(value="自由", label="需求计划状态", readonly)
               v-flex(sm12, md6, lg4)
-                v-text-field(v-model="materialPlan.name", ref="name", label="需求计划名称")
+                v-text-field(v-model="materialPlan.name", ref="name", label="需求计划名称" :rules="rules.union(rules.required('需求计划名称'))")
               v-flex(sm12, md6, lg4)
-                v-text-field(v-model="materialPlan.needPeople", ref="needPeople", label="需求人员")
+                v-text-field(v-model="materialPlan.needPeople", ref="needPeople", label="需求人员" :rules="rules.union(rules.required('需求人员'))")
               v-flex(sm12, md6, lg4)
                 v-text-field(value="未提交", label="审批状态", readonly)
               v-flex(xs12, md6, md4)
                 v-menu(ref="month", :close-on-content-click="false", :return-value.sync="date", transition="scale-transition",
                   v-model="menu", max-width="290px", min-width="290px")
                   template(v-slot:activator="{ on }")
-                    v-text-field(v-model="materialPlan.month", label="需求月份", readonly, v-on="on")
+                    v-text-field(v-model="materialPlan.month", label="需求月份", readonly, v-on="on" :rules="rules.union(rules.required('需求月份'))")
                   v-date-picker(v-model="date", type="month", no-title, scrollable, locale="zh-cn")
                     v-spacer
                     v-btn(text, color="primary",  @click="menu = false") 取消
@@ -121,8 +121,8 @@
 </template>
 
 <script>
+import { requiredRules, unionRules } from '_u/rules'
 const uuidv4 = require('uuid/v4')
-
 export default {
   name: 'MaterialPlan',
   data: () => ({
@@ -145,6 +145,10 @@ export default {
       { code: '126', name: '126' },
       { code: '127', name: '127' }
     ],
+    rules: {
+      required: requiredRules,
+      union: unionRules
+    },
     date: new Date().toISOString().substr(0, 7),
     planTypes: [ '订单型需求计划', '年度计划', '月度计划', '紧急计划' ],
     departments: [

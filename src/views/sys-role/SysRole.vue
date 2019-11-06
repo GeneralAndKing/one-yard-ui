@@ -17,22 +17,22 @@
             v-list(three-line)
               v-list-item(:ripple="!role.edit")
                 v-list-item-content.pa-0
-                  v-text-field(v-model="role.name", label="角色名", :readonly="!role.edit")
+                  v-text-field(v-model="role.name", label="角色名", :readonly="!role.edit" :rules="rules.union(rules.required('角色名'))" ref="name")
               v-list-item(:ripple="!role.edit")
                 v-list-item-content.pa-0
-                  v-text-field(v-model="role.des", label="描述", :readonly="!role.edit")
+                  v-text-field(v-model="role.des", label="描述", :readonly="!role.edit" :rules="rules.union(rules.required('描述'))" ref="des")
               v-list-item(:ripple="!role.edit")
                 v-list-item-content.pa-0
-                  v-select(v-model="role.department", :items="departments", item-text="name", label="所属部门", :readonly="!role.edit")
+                  v-select(v-model="role.department", :items="departments", item-text="name", label="所属部门", :readonly="!role.edit" :rules="rules.union(rules.required('所属部门'))" ref="department")
               v-list-item(:ripple="!role.edit")
                 v-list-item-content.pa-0
-                    v-select(v-model="role.permissions", label="权限", :items="permissions", item-text="name", chips, multiple, :readonly="!role.edit")
+                    v-select(v-model="role.permissions", label="权限", :items="permissions", item-text="name", chips, multiple, :readonly="!role.edit" :rules="rules.union(rules.required('权限'))" ref="permissions")
               v-list-item(:ripple="!role.edit")
                 v-list-item-content.pa-0
-                  v-text-field(v-model="role.icon", label="图标", :readonly="!role.edit")
+                  v-text-field(v-model="role.icon", label="图标", :readonly="!role.edit" :rules="rules.union(rules.required('图标'))" ref="icon")
               v-list-item(:ripple="!role.edit")
                 v-list-item-content.pa-0
-                  v-textarea(v-model="role.remark", label="备注", counter="255", :readonly="!role.edit")
+                  v-textarea(v-model="role.remark", label="备注", counter="255", :readonly="!role.edit" ref="remark")
             v-flex(md-12, text-right)
               v-btn.text-right(v-if="role.edit", @click="handleCancel(role)") 取消
               v-btn.text-right(@click="handleSubmit(role)") {{ role.edit ? '保存' : '编辑' }}
@@ -40,6 +40,7 @@
 
 <script>
 import TableCardSheet from '_c/table-card-sheet'
+import { requiredRules, unionRules } from '_u/rules'
 
 export default {
   name: 'SysRole',
@@ -89,6 +90,10 @@ export default {
       { id: 2, name: '采购部门2' },
       { id: 3, name: '采购部门3' }
     ],
+    rules: {
+      required: requiredRules,
+      union: unionRules
+    },
     editItem: {}
   }),
   methods: {
@@ -115,6 +120,17 @@ export default {
         role[key] = value
       })
       role.edit = false
+    },
+    save () {
+      if (this.$refs['editedItem'].validate(true)) {
+        // TODO: 数据保存
+        if (this.editedIndex > -1) {
+          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+        } else {
+          this.desserts.push(this.editedItem)
+        }
+        this.close()
+      }
     },
     handleAdd () {
       if (this.add) {
