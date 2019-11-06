@@ -81,7 +81,6 @@ export default {
       }
     },
     next () {
-      this.$message('这是一个message', 'success')
       let _this = this
       // 如果windows===1那么登陆
       if (this.window === 1) {

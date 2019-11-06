@@ -21,7 +21,7 @@ GlobalMessage.install = function (options, type) {
     data: options
   }).$mount()
 
-  document.body.appendChild(instance.$el)
+  document.getElementById('inspire').appendChild(instance.$el)
 
   Vue.nextTick(() => {
     instance.snackbar = true
