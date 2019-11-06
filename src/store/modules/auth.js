@@ -71,6 +71,44 @@ const actions = {
       })
     })
   },
+  authRegister ({ commit, dispatch }, jsonData) {
+    oauthAPI.authRegister(jsonData).then(res => {
+
+    }).catch((error) => {
+      // TODO: 注册失败
+      // iView.Message.error('获取用户信息失败')
+      console.log(error)
+    })
+  },
+  authRegisterEmail ({ commit, dispatch }, email) {
+    oauthAPI.authRegisterEmail(email).then(res => {
+      // TODO:发送邮件成功
+    }).catch((error) => {
+      // TODO: 注册失败
+      // iView.Message.error('获取用户信息失败')
+      console.log(error)
+    })
+  },
+
+  authForget ({ commit, dispatch }, jsonData) {
+    oauthAPI.authForget(jsonData).then(res => {
+
+    }).catch((error) => {
+      // TODO: 注册失败
+      // iView.Message.error('获取用户信息失败')
+      console.log(error)
+    })
+  },
+  authForgetEmail ({ commit, dispatch }, email) {
+    oauthAPI.authForgetEmail(email).then(res => {
+      // TODO:发送邮件成功
+    }).catch((error) => {
+      // TODO: 注册失败
+      // iView.Message.error('获取用户信息失败')
+      console.log(error)
+    })
+  },
+
   logout ({ commit }) {
     commit('LOGOUT')
   }

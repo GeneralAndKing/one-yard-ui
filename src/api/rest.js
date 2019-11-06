@@ -15,7 +15,7 @@ export const getAll = (resource) => {
     }).then(res => {
       resolve(res)
     }).catch(error => {
-      // iView.Message.error('数据初始化失败')
+      // TODO:初始化失败提示
       console.log(error)
       reject(error)
     })
@@ -34,10 +34,10 @@ export const deleteByLink = (link) => {
       url: getUrl(link),
       method: 'delete'
     }).then(res => {
-      iView.Message.success('数据删除成功！')
+      // TODO:删除成功提示
       resolve(res)
     }).catch(error => {
-      iView.Message.error('数据删除失败！')
+      // TODO:删除失败提示
       console.log(error)
       reject(error)
     })
@@ -58,10 +58,10 @@ export const addOne = (resource, data) => {
       method: 'post',
       data: data
     }).then(res => {
-      iView.Message.success('数据添加成功！')
+      // TODO:添加成功提示
       resolve(res)
     }).catch(error => {
-      iView.Message.error('数据添加失败！')
+      // TODO:添加失败提示
       console.log(error)
       reject(error)
     })
@@ -82,10 +82,10 @@ export const putOne = (resource, data) => {
       method: 'put',
       data: data
     }).then(res => {
-      iView.Message.success('数据更新成功！')
+      // TODO:更新成功提示
       resolve(res)
     }).catch(error => {
-      iView.Message.error('数据更新失败！')
+      // TODO:更新失败提示
       console.log(error)
       reject(error)
     })
