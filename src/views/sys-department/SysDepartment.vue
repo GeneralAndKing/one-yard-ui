@@ -63,7 +63,7 @@
                     .title.grey--text.text--lighten-1.font-weight-light.text-center(v-if="!isSelected")
                       | 请选择一个角色
                     v-row.pt-6.mx-auto(v-else, :key="selected.id", flat, max-width="400")
-                      v-col.mb-2.text-center(cols="4", lg="3", v-for="user in users")
+                      v-col.mb-2.text-center(cols="4", lg="3", v-for="(user, i) in users", :key="i")
                         v-avatar(size="88", color="indigo")
                           v-img(:src="user.icon")
                         h3.headline.my-2  {{ user.name }}

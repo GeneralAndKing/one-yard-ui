@@ -22,16 +22,16 @@ module.exports = {
   // 跨域配置
   devServer: {
     port: 8081,
-    // proxy: {
-    // '/api': {
-    //   target: 'http://localhost:9000',
-    //   changeOrigin: true,
-    //   ws: true,
-    //   pathRewrite: {
-    //     '^/api': ''
-    //   }
-    // }
-    // },
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8080/api/',
+        changeOrigin: true,
+        ws: true,
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    },
     disableHostCheck: true
   }
 }
