@@ -124,7 +124,7 @@
 const uuidv4 = require('uuid/v4')
 
 export default {
-  name: 'MaterialPlanCreate',
+  name: 'MaterialPlan',
   data: () => ({
     selected: [],
     menu: false,

@@ -39,7 +39,7 @@ export default {
   name: 'home',
   data: () => ({
     drawer: true,
-    theme: true,
+    theme: false,
     menus: [{
       children: [
         { icon: 'dashboard', text: '仪表盘', to: { name: 'dashboard' } },
@@ -71,7 +71,7 @@ export default {
     }
   },
   created () {
-    this.$vuetify.theme.dark = true
+    this.$vuetify.theme.dark = false
   },
   methods: {
     handleTheme () {

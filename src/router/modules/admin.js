@@ -56,7 +56,7 @@ export default {
         meta: '创建计划表',
         icon: 'location_city'
       },
-      component: () => import(/* webpackChunkName: "sys-department" */ '_v/material-plan-create')
+      component: () => import(/* webpackChunkName: "sys-department" */ '_v/material-plan')
     }
   ]
 }
