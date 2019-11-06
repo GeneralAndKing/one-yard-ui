@@ -82,3 +82,13 @@ export const authForgetEmail = ({ email }) => {
     method: 'get'
   })
 }
+
+export const authExistEmail = ({ email }) => {
+  return axios.request({
+    url: '/rest/sysUser/search/existsByEmail',
+    method: 'get',
+    data: {
+      email: email
+    }
+  })
+}

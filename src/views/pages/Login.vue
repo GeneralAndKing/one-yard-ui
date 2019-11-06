@@ -1,7 +1,7 @@
 <template lang="pug">
   center-card#one-login
-    v-card#form-card.px-6.pt-6.pb-7.px-sm-10.pt-sm-12.pb-sm-9.mx-auto(outlined)
-      v-spacer
+    v-card#form-card.px-6.pb-7.px-sm-10.pt-sm-12.pb-sm-9.mx-auto(outlined, :loading="load")
+      v-spacer.pt-6
       v-card-title.justify-center.headline {{welcomeText}}
       #login-user.pb-2.text-center(style="height:44px")
         v-btn(v-if="window === 1", outlined, rounded, @click="previous") {{user.email}}
@@ -12,11 +12,12 @@
           v-window-item(:key="0")
             v-card-text.px-0
               v-text-field(label="电子邮件地址", name="email", type="text",
-                outlined, :rules="rules.email", v-model='user.email', required, clearable ref="username")
+                outlined, :rules="rules.email", v-model='user.email', required, clearable,
+                ref="email", autofocus)
           v-window-item(:key="1")
             v-card-text.px-0
-              v-text-field(label="输入您的密码", name="password", type="password",
-                outlined, :rules="rules.password", v-model='user.password' ref="password")
+              v-text-field(label="输入您的密码", name="password", type="password", autofocus,
+                outlined, :rules="rules.password", v-model='user.password', ref="password")
       v-card-actions.px-0
         a(@click="handleAccount") {{accountText}}
         v-spacer
@@ -27,13 +28,17 @@
 <script>
 import CenterCard from '_c/center-card/CenterCard'
 import { emailRules, passwordRules } from '_u/rules'
+import * as oauthAPI from '_api/oauch'
+
 export default {
   name: 'Login',
   components: {
     CenterCard
   },
   data () {
-    return { window: 0,
+    return {
+      window: 0,
+      load: false,
       user: {
         email: '',
         password: '',
@@ -76,14 +81,37 @@ export default {
       }
     },
     next () {
+      let _this = this
       // 如果windows===1那么登陆
       if (this.window === 1) {
-        if (this.$refs['username'].validate(true) && this.$refs['password'].validate(true)) {
-          this.$router.push({ name: 'home' })
+        if (this.$refs['email'].validate(true) && this.$refs['password'].validate(true)) {
+          // this.$router.push({ name: 'home' }
+          this.$store.dispatch('auth/oauthLogin', {
+            username: _this.user.email,
+            password: _this.user.password,
+            grant_type: 'password',
+            scope: 'all'
+          }).then(() => {
+            console.log('成功')
+          }).catch(error => {
+            console.log('error')
+            console.log(error)
+          })
         }
       } else {
-        if (this.$refs['username'].validate(true)) {
-          this.window += 1
+        if (this.$refs['email'].validate(true)) {
+          this.load = true
+          oauthAPI.authExistEmail(_this.user.email).then(res => {
+            if (res.data) _this.window += 1
+            else {
+              // TODO 账户存在的时候
+            }
+          }).catch(error => {
+            // TODO 请求出错
+            console.log(error)
+          }).finally(() => {
+            _this.load = false
+          })
         }
       }
     },
