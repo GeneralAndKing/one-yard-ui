@@ -79,12 +79,12 @@ export default {
     next () {
       if (this.window === 0) {
         if (this.$refs.account.validate(true)) {
-          // to do
+          // TODO:
           this.window = this.window + 1
         }
       } else if (this.window === 1) {
         if (this.$refs['code'].validate(true)) {
-          // to do
+          // TODO:
         }
       }
     },
@@ -94,7 +94,7 @@ export default {
       } else if (this.window === 1) {
         this.$refs['code'].reset()
         this.window -= 1
-        // to do
+        // TODO:
       }
     }
   }

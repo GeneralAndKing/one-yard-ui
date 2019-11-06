@@ -55,7 +55,7 @@ const actions = {
       oauthAPI.oauthMe(token.access_token).then(res => {
         commit('SET_USER', res.data)
       }).catch((error) => {
-        // to do 信息展示
+        // TODO: 信息展示
         // iView.Message.error('获取用户信息失败')
         console.log(error)
       })
@@ -66,7 +66,7 @@ const actions = {
       oauthAPI.checkToken(token.access_token).then(res => {
         commit('SET_AUTH', res.data)
       }).catch(() => {
-        // to do 信息展示
+        // TODO: 信息展示
         // iView.Message.error('获取授权信息失败')
       })
     })

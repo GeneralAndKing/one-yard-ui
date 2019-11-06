@@ -91,7 +91,7 @@ export default {
       if (this.window === 0) {
         this.$router.push({ name: 'login' })
       } else if (this.window === 1) {
-        // to do 重新发送
+        // TODO: 重新发送
         console.log('重新发送')
       } else {
         this.previous()
@@ -105,12 +105,12 @@ export default {
         }
       } else if (this.window === 1) {
         if (this.$refs['code'].validate(true)) {
-          // to do 验证码是否正确
+          // TODO: 验证码是否正确
           this.window += 1
         }
       } else if (this.window === 2) {
         if (this.$refs['form'].validate(true)) {
-          // to do 密码修改成功
+          // TODO: 密码修改成功
           this.$router.push({ name: 'home' })
         }
       }

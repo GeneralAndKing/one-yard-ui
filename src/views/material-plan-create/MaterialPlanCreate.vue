@@ -44,7 +44,24 @@
                 v-text-field(v-model="materialPlan.remark", label="备注")
               v-flex(sm12, md6, lg4)
                 v-switch(v-model="materialPlan.isBudgetPlan", :label="`是否预算内计划：${materialPlan.isBudgetPlan? '是' : '否'}`")
-        v-data-table(:headers="headers", :items="desserts", item-key="id", :mobile-breakpoint="1200")
+        v-data-table(v-model="selected", :headers="headers", :items="desserts",
+          item-key="materialTrackingCode", :mobile-breakpoint="1200", show-select)
+          template(v-slot:item.action="{ item }")
+            v-tooltip(top)
+              template(v-slot:activator="{ on }")
+                v-btn.mr-2(outlined, rounded, x-small, fab, color="error", @click="handleDelete(item)", v-on="on")
+                  v-icon mdi-delete
+              span 删除
+            v-tooltip(top)
+              template(v-slot:activator="{ on }")
+                v-btn.mr-2(outlined, rounded, x-small, fab, color="success", @click="handleEdit(item)", v-on="on")
+                  v-icon mdi-pencil
+              span 编辑
+            v-tooltip(top)
+              template(v-slot:activator="{ on }")
+                v-btn(outlined, rounded, x-small, fab, color="primary", @click="handleCopy(item)", v-on="on")
+                  v-icon file_copy
+              span 复制
           template(v-slot:top)
             v-toolbar(flat, justify-content="right")
               h3 您的物料单
@@ -52,6 +69,7 @@
               v-dialog(v-model="dialog", max-width="1200px", persistent)
                 template(v-slot:activator="{ on }")
                   v-btn.mb-2.ml-3.mr-3(color="primary", v-on="on") 添加
+                  v-btn.mb-2.ml-3.mr-3(color="error", @click="handleDeleteSelected") 删除所选
                 v-card
                   v-card-title(primary-title)
                     .headline.lighten-2 添加数据
@@ -63,9 +81,11 @@
                       v-container(grid-list-md)
                         v-layout(wrap)
                           v-flex(xs12, md6, md4)
-                            v-select(v-model="editedItem.materialType", label="物料分类", :items="materialTypes", item-text="name")
+                            v-select(v-model="editedItem.materialType", label="物料分类", :items="materialTypes",
+                              item-text="name", return-object)
                           v-flex(xs12, md6, md4)
-                            v-select(v-model="editedItem.material", label="物料", :items="materials", item-text="name")
+                            v-select(v-model="editedItem.material", label="物料", :items="materials",
+                              item-text="name", return-object)
                           v-flex(xs12, md6, md4)
                             v-text-field(v-model="editedItem.specifications", label="规格")
                           v-flex(xs12, md6, md4)
@@ -78,10 +98,8 @@
                             v-menu(v-model="dayMenu", :close-on-content-click="false", transition="scale-transition",
                               offset-y, max-width="290px", min-width="290px")
                               template(v-slot:activator="{ on }")
-                                v-text-field(v-model="editedItem.date", v-on="on")
-                              v-date-picker(v-model="editedItem.date", no-title, @input="dayMenu = false", label="需求日期")
-                          v-flex(xs12, md6, md4)
-                            v-text-field(v-model="editedItem.isSourceGoods", label="货源是否确定")
+                                v-text-field(v-model="editedItem.date", v-on="on", label="需求日期", readonly)
+                              v-date-picker(v-model="editedItem.date", no-title, @input="dayMenu = false", locale="zh-cn")
                           v-flex(xs12, md6, md4)
                             v-text-field(v-model="editedItem.expectationSupplier", label="期望供应商")
                           v-flex(xs12, md6, md4)
@@ -89,7 +107,9 @@
                           v-flex(xs12, md6, md4)
                             v-text-field(v-model="editedItem.inventory", label="需求库存组织")
                           v-flex(xs12, md6, md4)
-                            v-text-field(v-model="editedItem.materialTrackingCode", label="物料追踪码")
+                            v-text-field(:value="editedItem.materialTrackingCode", label="物料追踪码", readonly, hint="此项为随机生成，请勿修改")
+                          v-flex(xs12, md6, md4)
+                            v-switch(v-model="editedItem.isSourceGoods", :label="`货源是否确定:${editedItem.isSourceGoods ? '是': '否'}`")
                   v-card-actions
                     v-spacer
                     v-btn(color="primary", @click="initEdit") 重置
@@ -101,10 +121,12 @@
 </template>
 
 <script>
+const uuidv4 = require('uuid/v4')
 
 export default {
   name: 'MaterialPlanCreate',
   data: () => ({
+    selected: [],
     menu: false,
     dayMenu: false,
     fab: false,
@@ -158,7 +180,7 @@ export default {
       { text: '期望供应商', value: 'expectationSupplier' },
       { text: '固定供应商', value: 'fixedSupplier' },
       { text: '需求库存组织', value: 'inventory' },
-      { text: '物料追踪码', value: 'materialTrackingCode' }
+      { text: '操作', value: 'action', sortable: false, width: '160px', align: 'center' }
     ]
   }),
   created () {
@@ -182,25 +204,46 @@ export default {
         number: null,
         month: null,
         date: null,
-        isSourceGoods: null,
+        isSourceGoods: true,
         expectationSupplier: null,
         fixedSupplier: null,
         inventory: null,
-        materialTrackingCode: null
+        materialTrackingCode: uuidv4(),
+        materialType: null,
+        material: null
       }
     },
     handleAdd () {
-      this.editedItem.materialTypeCode = this.editedItem.materialType.materialTypeCode
-      this.editedItem.materialTypeName = this.editedItem.materialType.materialTypeName
-      this.editedItem.materialCode = this.editedItem.material.materialCode
-      this.editedItem.materialName = this.editedItem.material.materialName
-      this.desserts.unshift(this.editedItem)
+      this.editedItem.materialTypeCode = this.editedItem.materialType.code
+      this.editedItem.materialTypeName = this.editedItem.materialType.name
+      this.editedItem.materialCode = this.editedItem.material.code
+      this.editedItem.materialName = this.editedItem.material.name
+      this.desserts.unshift(this._.cloneDeep(this.editedItem))
       this.initEdit()
+      this.dialog = false
     },
     formatDate (date) {
       if (!date) return null
       const [year, month] = date.split('-')
       return `${year}${month}`
+    },
+    handleDelete (item) {
+      this.desserts.splice(this._.indexOf(this.desserts, item), 1)
+    },
+    handleDeleteSelected () {
+      if (this.selected.length <= 0) return
+      this._.forEach(this.selected, value => {
+        this.desserts.splice(this._.indexOf(this.desserts, value), 1)
+        this.selected = []
+      })
+    },
+    handleEdit (item) {
+      //
+    },
+    handleCopy (item) {
+      let copy = this._.cloneDeep(item)
+      copy.materialTrackingCode = uuidv4()
+      this.desserts.unshift(copy)
     }
   }
 }

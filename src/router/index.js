@@ -9,7 +9,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   console.log(to)
   next()
-  // to do 加载开始
+  // TODO: 加载开始
   // iView.LoadingBar.start()
   // 所有的路由必须有name 利用name做路由认证
   // if (to.name === null) {
@@ -69,7 +69,7 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach(route => {
   // iView.LoadingBar.finish()
-  // to do 加载完成
+  // TODO: 加载完成
 })
 
 export default router
