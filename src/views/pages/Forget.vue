@@ -1,7 +1,7 @@
 <template lang="pug">
   center-card#one-forget
-    v-card#form-card.px-6.pt-6.pb-7.px-sm-10.pt-sm-12.pb-sm-9.mx-auto(outlined)
-      v-spacer
+    v-card#form-card.px-6.pb-7.px-sm-10.pb-sm-9.mx-auto(outlined, :loading="load")
+      v-spacer.pt-6.pt-sm-12
       v-card-title.justify-center.headline {{welcomeText}}
       #login-user.pb-2.text-center(style="height:44px")
         v-btn(v-if="window === 1", outlined, rounded, @click="previous") {{email}}
@@ -12,20 +12,20 @@
         v-form(ref='form')
           v-window-item(:key="0")
             v-card-text.px-0
-              v-text-field(label="电子邮件地址", ref="email", type="text",
+              v-text-field(label="电子邮件地址", ref="email", type="text", validate-on-blur, autofocus,
                 outlined, :rules="rules.email", v-model='email', required, clearable)
           v-window-item(:key="1")
             v-card-text.px-0
-              v-text-field(label="输入您的验证码", ref="code", type="text",
+              v-text-field(label="输入您的验证码", ref="code", type="text", validate-on-blur, autofocus,
                 outlined, :rules="rules.code", v-model='code', counter='4')
           v-window-item(:key="2")
             v-card-text.px-0
-              v-text-field(label="输入您的新密码", ref="password", type="password", dense,
-                outlined, :rules="rules.password", v-model='password', counter='18')
-              v-text-field(label="确认您的新密码", ref="rePassword", type="password", dense,
+              v-text-field(label="输入您的新密码", ref="password", type="password", dense, validate-on-blur,
+                outlined, :rules="rules.password", v-model='password', counter='18', autofocus)
+              v-text-field(label="确认您的新密码", ref="rePassword", type="password", dense, validate-on-blur
                 outlined, :rules="rules.union(rules.password,rules.rePassword)", v-model='rePassword', counter='18')
       v-card-actions.px-0
-        a(@click="handleAccount") {{accountText}}
+        v-btn(text, color="primary", @click="handleAccount", :disabled="disabled") {{accountText}}
         v-spacer
         v-btn(color="primary", @click="next") {{nextBtnText}}
       v-footer#form-footer.grey--text @ 2019 copy right
@@ -34,16 +34,21 @@
 <script>
 import CenterCard from '_c/center-card/CenterCard'
 import { emailRules, passwordRules, codeRules, unionRules } from '_u/rules'
+import * as oauthAPI from '_api/oauch'
+
 export default {
   name: 'Forget',
   components: {
     CenterCard
   },
   data () {
-    return { window: 0,
+    return {
+      window: 0,
+      load: false,
       email: '',
       code: '',
       password: '',
+      disabled: false,
       rePassword: '',
       rules: {
         code: codeRules,
@@ -91,28 +96,47 @@ export default {
       if (this.window === 0) {
         this.$router.push({ name: 'login' })
       } else if (this.window === 1) {
-        // TODO: 重新发送
-        console.log('重新发送')
+        this.load = true
+        let second = 60
+        oauthAPI.authForgetEmail({ email: this.email })
+          .then(() => {
+            this.disabled = true
+            const change = setInterval(() => {
+              this.accountText = `没有收到？重新发送(${second}s)`
+              second -= 1
+            }, 1000)
+            setTimeout(() => {
+              clearInterval(change)
+              this.accountText = `没有收到？重新发送`
+              this.disabled = false
+            }, 60000)
+          })
+          // .catch(error => { )
+          .finally(() => { this.load = false })
       } else {
         this.previous()
       }
     },
     next () {
-      // 如果windows===1那么登陆
-      if (this.window === 0) {
-        if (this.$refs['email'].validate(true)) {
-          this.window += 1
-        }
-      } else if (this.window === 1) {
-        if (this.$refs['code'].validate(true)) {
-          // TODO: 验证码是否正确
-          this.window += 1
-        }
-      } else if (this.window === 2) {
-        if (this.$refs['form'].validate(true)) {
-          // TODO: 密码修改成功
-          this.$router.push({ name: 'home' })
-        }
+      let _this = this
+      if (this.window === 0 && this.$refs.email.validate(true)) {
+        this.load = true
+        oauthAPI.authForgetEmail({ email: this.email })
+          .then(() => { _this.window += 1 })
+          .catch(error => { if (error.status === 404) this.$refs.email.errorBucket = ['账户不存在，请重新输入'] })
+          .finally(() => { _this.load = false })
+      } else if (this.window === 1 && this.$refs.code.validate(true)) {
+        this.load = true
+        oauthAPI.authForgetValidate({ email: this.email, code: this.code })
+          .then(() => { _this.window += 1 })
+          .catch(error => { this.$refs.email.errorBucket = error.data.hasOwnProperty('error_description') ? [error.data.error_description] : ['验证失败'] })
+          .finally(() => { _this.load = false })
+      } else if (this.window === 2 && this.$refs.form.validate(true)) {
+        this.load = true
+        oauthAPI.authForget({ email: this.email, code: this.code, password: this.password, rePassword: this.rePassword })
+          .then(() => { this.$router.push({ name: 'home' }) })
+          .catch(error => { this.$refs.email.errorBucket = error.data.hasOwnProperty('error_description') ? [error.data.error_description] : ['修改失败'] })
+          .finally(() => { _this.load = false })
       }
     },
     previous () {

@@ -30,7 +30,7 @@
           v-card-text.px-0
             v-text-field(label="输入验证码", ref="code", type="text", outlined, v-model="account.code", counter="4" :rules="rules.code")
       v-card-actions.px-0
-        a(@click="previous") {{preBtnText}}
+        v-btn(text, color="primary", @click="previous") {{preBtnText}}
         v-spacer
         v-btn(color="primary", @click="next") {{nextBtnText}}
       v-footer#form-footer.grey--text @ 2019 copy right
@@ -99,14 +99,14 @@ export default {
       if (this.window === 0) {
         if (this.$refs.account.validate(true)) {
           this.loading = true
-          oauthAPI.authRegisterEmail(this.account).then(res => {
+          oauthAPI.authRegisterEmail(this.account).then(() => {
             this.window = this.window + 1
           }).finally(() => { this.loading = false })
         }
       } else if (this.window === 1) {
         this.loading = true
         if (this.$refs.code.validate(true)) {
-          oauthAPI.authRegister(this.account).then(res => {
+          oauthAPI.authRegister(this.account).then(() => {
             this.$router.push({ name: 'login' })
           }).finally(() => { this.loading = false })
         }

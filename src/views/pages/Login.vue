@@ -19,7 +19,7 @@
               v-text-field(label="输入您的密码", name="password", type="password", autofocus, validate-on-blur,
                 outlined, :rules="rules.password", v-model='user.password', ref="password")
       v-card-actions.px-0
-        a(@click="handleAccount") {{accountText}}
+        v-btn(text, color="primary", @click="handleAccount") {{accountText}}
         v-spacer
         v-btn(color="primary", @click="next") {{nextBtnText}}
       v-footer#form-footer.grey--text @ 2019 copy right
@@ -105,8 +105,6 @@ export default {
           oauthAPI.authExistEmail(_this.user).then(res => {
             if (res.data) _this.window += 1
             else this.$refs['email'].errorBucket = ['账户不存在，请重新输入']
-          }).catch(() => {
-            // TODO 请求出错
           }).finally(() => {
             _this.load = false
           })
