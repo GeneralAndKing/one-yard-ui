@@ -118,7 +118,6 @@ export default {
       } else if (this.window === 1) {
         this.$refs['code'].reset()
         this.window -= 1
-        // TODO:
       }
     },
     handleExist (action) {

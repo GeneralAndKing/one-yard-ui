@@ -6,11 +6,12 @@ import Message from '_plugins/global-message'
  *
  * @returns 响应
  */
-export const getAllByPage = (resource) => {
+export const getAllByPage = (resource, params) => {
   return new Promise((resolve, reject) => {
     axios.request({
       url: `/rest/${resource}`,
-      method: 'get'
+      method: 'get',
+      params: params
     }).then(res => {
       resolve(res)
     }).catch(error => {
@@ -91,13 +92,14 @@ export const addOne = (resource, data) => {
  * 更新一个资源
  *
  * @param resource 资源名称
+ * @param id 资源 ID
  * @param data 更新数据
  * @returns {*} 请求结果
  */
-export const putOne = (resource, data) => {
+export const putOne = (resource, id, data) => {
   return new Promise((resolve, reject) => {
     axios.request({
-      url: `/rest/${resource}`,
+      url: `/rest/${resource}/${id}`,
       method: 'put',
       data: data
     }).then(res => {
