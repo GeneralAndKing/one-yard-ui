@@ -28,7 +28,7 @@
 <script>
 import CenterCard from '_c/center-card/CenterCard'
 import { emailRules, passwordRules } from '_u/rules'
-import * as oauthAPI from '_api/oauch'
+import * as oauthAPI from '_api/oauth'
 
 export default {
   name: 'Login',
