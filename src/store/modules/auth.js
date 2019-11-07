@@ -1,5 +1,5 @@
 import * as oauthAPI from '../../api/oauch'
-
+import Message from '_plugins/global-message'
 const state = {
   // 用户信息，来源于 oauthMe
   user: null,
@@ -55,8 +55,7 @@ const actions = {
       oauthAPI.oauthMe(token.access_token).then(res => {
         commit('SET_USER', res.data)
       }).catch((error) => {
-        // TODO: 信息展示
-        // iView.Message.error('获取用户信息失败')
+        Message('获取用户信息失败', 'error')
         console.log(error)
       })
     })
@@ -66,49 +65,10 @@ const actions = {
       oauthAPI.checkToken(token.access_token).then(res => {
         commit('SET_AUTH', res.data)
       }).catch(() => {
-        // TODO: 信息展示
-        // iView.Message.error('获取授权信息失败')
+        Message('获取授权信息失败', 'error')
       })
     })
   },
-  authRegister ({ commit, dispatch }, jsonData) {
-    oauthAPI.authRegister(jsonData).then(res => {
-
-    }).catch((error) => {
-      // TODO: 注册失败
-      // iView.Message.error('获取用户信息失败')
-      console.log(error)
-    })
-  },
-  authRegisterEmail ({ commit, dispatch }, email) {
-    oauthAPI.authRegisterEmail(email).then(res => {
-      // TODO:发送邮件成功
-    }).catch((error) => {
-      // TODO: 注册失败
-      // iView.Message.error('获取用户信息失败')
-      console.log(error)
-    })
-  },
-
-  authForget ({ commit, dispatch }, jsonData) {
-    oauthAPI.authForget(jsonData).then(res => {
-
-    }).catch((error) => {
-      // TODO: 注册失败
-      // iView.Message.error('获取用户信息失败')
-      console.log(error)
-    })
-  },
-  authForgetEmail ({ commit, dispatch }, email) {
-    oauthAPI.authForgetEmail(email).then(res => {
-      // TODO:发送邮件成功
-    }).catch((error) => {
-      // TODO: 注册失败
-      // iView.Message.error('获取用户信息失败')
-      console.log(error)
-    })
-  },
-
   logout ({ commit }) {
     commit('LOGOUT')
   }

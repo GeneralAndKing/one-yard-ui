@@ -15,6 +15,7 @@ module.exports = {
       .set('_api', resolve('src/api'))
       .set('_lib', resolve('src/lib'))
       .set('_store', resolve('src/store'))
+      .set('_plugins', resolve('src/plugins'))
   },
 
   productionSourceMap: false,
