@@ -5,7 +5,7 @@ import store from './store'
 import vuetify from './plugins/vuetify'
 import Message from './plugins/global-message'
 import _ from 'lodash'
-Vue.prototype.$message = Message.install
+Vue.prototype.$message = Message
 Vue.config.productionTip = false
 Vue.prototype._ = _
 

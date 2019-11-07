@@ -1,5 +1,5 @@
 import axios from './index'
-
+import Message from '_plugins/global-message'
 /**
  * 请一定写注释！格式和这个类似！
  * 获取所有资源
@@ -34,7 +34,7 @@ export const getAll = (resource) => {
     }).then(res => {
       resolve(res)
     }).catch(error => {
-      // TODO:初始化失败提示
+      Message('初始化失败', 'error')
       console.log(error)
       reject(error)
     })
@@ -53,10 +53,10 @@ export const deleteByLink = (resource) => {
       url: `/rest/${resource}`,
       method: 'delete'
     }).then(res => {
-      // TODO:删除成功提示
+      Message('删除数据成功', 'success')
       resolve(res)
     }).catch(error => {
-      // TODO:删除失败提示
+      Message('删除数据失败', 'error')
       console.log(error)
       reject(error)
     })
@@ -77,10 +77,10 @@ export const addOne = (resource, data) => {
       method: 'post',
       data: data
     }).then(res => {
-      // TODO:添加成功提示
+      Message('添加数据成功', 'success')
       resolve(res)
     }).catch(error => {
-      // TODO:添加失败提示
+      Message('添加数据成功', 'error')
       console.log(error)
       reject(error)
     })
@@ -101,10 +101,10 @@ export const putOne = (resource, data) => {
       method: 'put',
       data: data
     }).then(res => {
-      // TODO:更新成功提示
+      Message('更新数据成功', 'success')
       resolve(res)
     }).catch(error => {
-      // TODO:更新失败提示
+      Message('更新数据失败', 'error')
       console.log(error)
       reject(error)
     })

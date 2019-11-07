@@ -28,4 +28,4 @@ GlobalMessage.install = function (options, type) {
   })
 }
 
-export default GlobalMessage
+export default GlobalMessage.install

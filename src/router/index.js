@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import { whiteRoutes } from './router'
+
 // import store from '_store'
 Vue.use(VueRouter)
 const router = new VueRouter({
