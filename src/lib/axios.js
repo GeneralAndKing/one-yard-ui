@@ -1,4 +1,4 @@
-
+import Vue from 'vue'
 import axios from 'axios'
 import { baseURL } from '_api/config'
 
@@ -59,10 +59,13 @@ class HttpRequest {
     }, error => {
       this.destroy(url)
       if (error.response.status === 401) {
-        // iView.Message.error('未经授权:访问由于凭据无效被拒绝')}
-        if (error.response.status === 400) {
-        // iView.Message.error(`失败：${error.response.data.error_description}`)
-        }
+        Vue.prototype.$message('未经授权:访问由于凭据无效被拒绝', 'error')
+      }
+      if (error.response.status === 403) {
+        Vue.prototype.$message('鉴权失败:您没有权限访问该资源', 'error')
+      }
+      if (error.response.status === 500) {
+        Vue.prototype.$message('服务错误:服务器出现内部错误，请联系管理员', 'error')
       }
       return Promise.reject(error.response)
     })

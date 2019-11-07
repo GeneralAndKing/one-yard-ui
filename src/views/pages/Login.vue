@@ -1,7 +1,7 @@
 <template lang="pug">
   center-card#one-login
-    v-card#form-card.px-6.pb-7.px-sm-10.pt-sm-12.pb-sm-9.mx-auto(outlined, :loading="load")
-      v-spacer.pt-6
+    v-card#form-card.px-6.pb-7.px-sm-10.pb-sm-9.mx-auto(outlined, :loading="load")
+      v-spacer.pt-6.pt-sm-12
       v-card-title.justify-center.headline {{welcomeText}}
       #login-user.pb-2.text-center(style="height:44px")
         v-btn(v-if="window === 1", outlined, rounded, @click="previous") {{user.email}}
@@ -11,12 +11,12 @@
       v-window(v-model="window", style="min-height:180px")
           v-window-item(:key="0")
             v-card-text.px-0
-              v-text-field(label="电子邮件地址", name="email", type="text",
+              v-text-field(label="电子邮件地址", name="email", type="text", validate-on-blur,
                 outlined, :rules="rules.email", v-model='user.email', required, clearable,
                 ref="email", autofocus)
           v-window-item(:key="1")
             v-card-text.px-0
-              v-text-field(label="输入您的密码", name="password", type="password", autofocus,
+              v-text-field(label="输入您的密码", name="password", type="password", autofocus, validate-on-blur,
                 outlined, :rules="rules.password", v-model='user.password', ref="password")
       v-card-actions.px-0
         a(@click="handleAccount") {{accountText}}
@@ -85,30 +85,28 @@ export default {
       // 如果windows===1那么登陆
       if (this.window === 1) {
         if (this.$refs['email'].validate(true) && this.$refs['password'].validate(true)) {
-          // this.$router.push({ name: 'home' }
+          this.load = true
           this.$store.dispatch('auth/oauthLogin', {
             username: _this.user.email,
             password: _this.user.password,
             grant_type: 'password',
             scope: 'all'
           }).then(() => {
-            console.log('成功')
+            this.$router.push({ name: 'home' })
           }).catch(error => {
-            console.log('error')
-            console.log(error)
+            this.$refs['password'].errorBucket = error.data.hasOwnProperty('error_description') ? [error.data.error_description] : ['验证失败']
+          }).finally(() => {
+            _this.load = false
           })
         }
       } else {
         if (this.$refs['email'].validate(true)) {
           this.load = true
-          oauthAPI.authExistEmail(_this.user.email).then(res => {
+          oauthAPI.authExistEmail(_this.user).then(res => {
             if (res.data) _this.window += 1
-            else {
-              // TODO 账户存在的时候
-            }
-          }).catch(error => {
+            else this.$refs['email'].errorBucket = ['账户不存在，请重新输入']
+          }).catch(() => {
             // TODO 请求出错
-            console.log(error)
           }).finally(() => {
             _this.load = false
           })

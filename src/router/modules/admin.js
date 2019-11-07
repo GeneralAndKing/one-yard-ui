@@ -2,6 +2,7 @@ import Home from '_v//Home'
 export default {
   path: '/home',
   component: Home,
+  name: 'home',
   redirect: '/home/dashboard',
   children: [
     {
