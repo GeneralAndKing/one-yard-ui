@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import * as oauthAPI from '_api/oauch'
+import * as oauthAPI from '_api/oauth'
 import CenterCard from '_c/center-card/CenterCard'
 import { emailRules, passwordRules, requiredRules, phoneRules, codeRules, unionRules } from '_u/rules'
 export default {

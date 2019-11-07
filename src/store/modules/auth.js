@@ -1,4 +1,4 @@
-import * as oauthAPI from '../../api/oauch'
+import * as oauthAPI from '../../api/oauth'
 import Message from '_plugins/global-message'
 const state = {
   // 用户信息，来源于 oauthMe
