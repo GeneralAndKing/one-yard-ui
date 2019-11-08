@@ -21,7 +21,7 @@ router.beforeEach((to, from, next) => {
         next({ ...to, replace: true })
       } else {
         // 已登陆并拉取权限表 前往错误页面
-        next({ name: 'error' })
+        next({ name: 'home' })
       }
     } else {
       // 未登录 前往登陆页面
