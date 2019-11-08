@@ -3,7 +3,8 @@
     v-card
       v-card-text
         TableCardSheet(title="用户管理", description="你可以自由查看与管理当前系统的用户信息", color="orange")
-        v-data-table(:headers="headers", :items="desserts", item-key="name", :loading="loading",  loading-text="正在加载数据")
+        v-data-table(:headers="headers", :items="desserts", item-key="username", :loading="loading",
+          loading-text="正在加载数据", :search="search")
           template(v-slot:item.icon="{ item }")
             v-avatar(size="36px")
               v-img(:src="item.icon", :alt="item.name", lazy-src="https://picsum.photos/id/11/10/6")
@@ -26,10 +27,9 @@
                 single-line,
                 hide-details
               )
-              v-btn.mb-2.ml-3.mr-3(color="primary") 查询
               v-dialog(v-model="dialog" max-width="800px")
                 template(v-slot:activator="{ on }")
-                  v-btn.mb-2(color="primary", v-on="on") new
+                  v-btn.mb-2.ml-3(color="primary", v-on="on") 添加
                 v-card
                   v-card-title
                     span.headline {{ formTitle }}
@@ -40,19 +40,34 @@
                             v-flex(xs12, sm12)
                               v-img(:src="editedItem.icon", :width="64", :height="64" )
                             v-flex(xs12, sm6, md4)
-                              v-text-field(v-model="editedItem.name", counter="18", label="用户名" :rules="rules.union(rules.required('用户名'))" ref="name")
+                              v-text-field(v-model="editedItem.username", counter="18", label="用户名", validate-on-blur,
+                                :rules="rules.union(rules.required('用户名'))", ref="username", @blur="handleExist('username')")
+                                template(v-slot:append)
+                                  v-progress-circular(v-if="load.username", size="24", color="info", indeterminate)
                             v-flex(xs12, sm6, md4)
-                              v-text-field(type="password", v-model="editedItem.password", counter="55", label="密码" :rules="rules.password")
+                              v-text-field(v-model="editedItem.name", counter="18", label="姓名", validate-on-blur,
+                                :rules="rules.union(rules.required('姓名'))", ref="name")
                             v-flex(xs12, sm6, md4)
-                              v-file-input(accept="image/*", label="上传头像", small-chips, prepend-icon="" :rules="rules.union(rules.image('头像',2000000))" ref="icon")
+                              v-text-field(type="password", v-model="editedItem.password", counter="60", label="密码", validate-on-blur,
+                                :rules="rules.password", ref="password")
+                                template(v-slot:append)
+                                  v-progress-circular(v-if="load.email", size="24", color="info", indeterminate)
                             v-flex(xs12, sm6, md4)
-                              v-text-field(type="email", v-model="editedItem.email", counter="30", hint="可能用于找回密码", label="电子邮箱" :rules="rules.email")
+                              v-file-input(accept="image/*", label="上传头像", small-chips, prepend-icon="", validate-on-blur,
+                                :rules="rules.union(rules.image('头像', 2000000))", ref="icon")
+                                template(v-slot:append)
+                                  v-progress-circular(v-if="load.phone", size="24", color="info", indeterminate)
                             v-flex(xs12, sm6, md4)
-                              v-text-field(type="phone", v-model="editedItem.phone", counter="11", hint="长度为11位的手机号", label="手机号" :rules="rules.phone")
+                              v-text-field(type="email", v-model="editedItem.email", counter="30", hint="可能用于找回密码", validate-on-blur,
+                                label="电子邮箱" :rules="rules.email", ref="email", @blur="handleExist('email')")
                             v-flex(xs12, sm6, md4)
-                              v-text-field(type="number", v-model="editedItem.sort", label="排序" :rules="rules.union(rules.required('排序'))")
+                              v-text-field(type="phone", v-model="editedItem.phone", counter="11", hint="长度为11位的手机号", validate-on-blur,
+                                label="手机号", :rules="rules.phone", @blur="handleExist('phone')", ref="phone")
+                            v-flex(xs12, sm6, md4)
+                              v-text-field(type="number", v-model="editedItem.sort", label="排序", :rules="rules.union(rules.required('排序'))")
                             v-flex(xs12, sm12)
-                              v-select(v-model="editedItem.roles", label="角色", :items="roles", item-text="name", item-value="id", chips, :rules="rules.union(rules.required('角色'))")
+                              v-select(v-model="editedItem.role", label="角色", :items="roles", item-text="name", chips, return-object,
+                                :rules="rules.union(rules.required('角色'))")
                             v-flex(xs12, sm12)
                               v-textarea(label="备注", v-model="editedItem.remark", counter="250")
                   v-card-actions
@@ -65,6 +80,7 @@
 import TableCardSheet from '_c/table-card-sheet'
 import { emailRules, passwordRules, requiredRules, unionRules, phoneRules, imageRequiredRules } from '_u/rules'
 import * as restAPI from '_api/rest'
+import * as oauthAPI from '_api/oauth'
 
 export default {
   name: 'SysUser',
@@ -75,16 +91,23 @@ export default {
     loading: false,
     isActive: false,
     search: '',
+    load: {
+      username: false,
+      phone: false,
+      email: false
+    },
     editedIndex: -1,
     editedItem: {
       icon: '',
-      name: '',
+      username: '',
       password: '',
+      name: '',
       email: '',
       phone: '',
       sort: 1,
       roleId: 1,
-      status: 1,
+      role: null,
+      status: 'NORMAL',
       createTime: '',
       modifyTime: '',
       remark: '',
@@ -92,22 +115,17 @@ export default {
       loading: false,
       disabled: false
     },
-    roles: [
-      { name: 'admin' },
-      { name: 'test1' },
-      { name: 'test2' },
-      { name: 'test3' },
-      { name: 'test4' }
-    ],
+    roles: [],
     defaultItem: {
       icon: '',
       password: '',
+      username: '',
       name: '',
       email: '',
       phone: '',
       sort: 1,
-      roles: [],
-      status: 1,
+      role: null,
+      status: 'NORMAL',
       createTime: '',
       modifyTime: '',
       remark: '',
@@ -118,7 +136,8 @@ export default {
     dialog: false,
     headers: [
       { text: '头像', value: 'icon', sortable: false },
-      { text: '用户名', value: 'name', align: 'left' },
+      { text: '姓名', value: 'name', align: 'left' },
+      { text: '用户名', value: 'username', align: 'left' },
       { text: '邮箱', value: 'email' },
       { text: '手机号', value: 'phone' },
       { text: '排序', value: 'sort' },
@@ -134,7 +153,6 @@ export default {
       union: unionRules,
       phone: phoneRules,
       image: imageRequiredRules
-
     }
   }),
   computed: {
@@ -153,6 +171,7 @@ export default {
     try {
       let users = await restAPI.getAll('sysUser')
       let roles = await restAPI.getAll('sysRole')
+      this.roles = roles.data.content
       users.data.content.forEach(user => {
         user.model = false
         user.loading = false
@@ -169,19 +188,16 @@ export default {
       item.status = item.status === 'NORMAL' ? 'LOCKED' : 'NORMAL'
       item.loading = 'success'
       item.disabled = true
-      restAPI.putOne('sysUser', item.id, item).then(res => {
-        console.log(res)
-      }).catch(() => {
-        item.status = item.status === 'NORMAL' ? 'LOCKED' : 'NORMAL'
-      }).finally(() => {
-        item.disabled = false
-        item.loading = false
-      })
+      restAPI.patchOne('sysUser', item.id, { status: item.status })
+        .catch(() => { item.status = item.status === 'NORMAL' ? 'LOCKED' : 'NORMAL' })
+        .finally(() => {
+          item.disabled = false
+          item.loading = false
+        })
     },
     handleEdit (item) {
       this.editedIndex = this.desserts.indexOf(item)
       this.editedItem = Object.assign({}, item)
-      console.log(this.editedItem)
       this.dialog = true
     },
     close () {
@@ -191,16 +207,33 @@ export default {
         this.editedIndex = -1
       }, 300)
     },
-    save () {
+    async save () {
       if (this.$refs['editedItem'].validate(true)) {
-        // TODO: 数据保存
+        this.editedItem.roleId = this.editedItem.role.id
         if (this.editedIndex > -1) {
+          const data = this.editedItem.password.length === 60
+            ? this._.omit(this.editedItem, 'password')
+            : this.editedItem
+          await restAPI.patchOne('sysUser', this.editedItem.id, data)
           Object.assign(this.desserts[this.editedIndex], this.editedItem)
         } else {
+          await restAPI.addOne('sysUser', this.editedItem)
           this.desserts.push(this.editedItem)
         }
         this.close()
       }
+    },
+    handleExist (action) {
+      if (!this.editedItem[action]) return
+      this.load[action] = true
+      oauthAPI.authExist({
+        username: this.editedItem[action],
+        email: this.editedItem[action],
+        phone: this.editedItem[action],
+        action: action
+      }).then(res => {
+        if (res.data) this.$refs[action].errorBucket = ['账户已存在，请重新输入']
+      }).finally(() => { this.load[action] = false })
     }
   }
 }

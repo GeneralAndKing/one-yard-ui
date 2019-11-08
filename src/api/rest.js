@@ -81,7 +81,7 @@ export const addOne = (resource, data) => {
       Message('添加数据成功', 'success')
       resolve(res)
     }).catch(error => {
-      Message('添加数据成功', 'error')
+      Message('添加数据失败', 'error')
       console.log(error)
       reject(error)
     })
@@ -96,11 +96,36 @@ export const addOne = (resource, data) => {
  * @param data 更新数据
  * @returns {*} 请求结果
  */
-export const putOne = (resource, id, data) => {
+export const putOne = (resource, data) => {
+  return new Promise((resolve, reject) => {
+    axios.request({
+      url: `/rest/${resource}/${data.id}`,
+      method: 'put',
+      data: data
+    }).then(res => {
+      Message('更新数据成功', 'success')
+      resolve(res)
+    }).catch(error => {
+      Message('更新数据失败', 'error')
+      console.log(error)
+      reject(error)
+    })
+  })
+}
+
+/**
+ * 更新一个资源
+ *
+ * @param resource 资源名称
+ * @param id 资源 ID
+ * @param data 更新数据
+ * @returns {*} 请求结果
+ */
+export const patchOne = (resource, id, data) => {
   return new Promise((resolve, reject) => {
     axios.request({
       url: `/rest/${resource}/${id}`,
-      method: 'put',
+      method: 'patch',
       data: data
     }).then(res => {
       Message('更新数据成功', 'success')
