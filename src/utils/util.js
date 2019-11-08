@@ -1,6 +1,4 @@
-// export const setTitle = (title) => {
-//   window.document.title = title || 'admin'
-// }
+import store from '_store'
 
 /**
  * 比较当前时间与指定的时间戳
@@ -21,3 +19,4 @@ export const isExpired = (time) => {
 export const getUrl = (link) => {
   return link.split('8080')[1]
 }
+

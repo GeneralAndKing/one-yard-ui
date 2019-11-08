@@ -1,4 +1,5 @@
 import * as oauthAPI from '_api/oauth'
+
 const state = {
   // 用户信息，来源于 oauthMe
   user: null,
@@ -13,16 +14,33 @@ const getters = {
     return state.token !== null
   },
   rule: state => {
-    return state.auth.authorities[0]
+    return (state.auth === null || state.auth.authorities === null) ? null : state.auth.authorities[0]
   },
   token: state => {
     return state.token
   },
   router: state => {
+    console.log('dsdsd')
     return state.router
   },
   username: state => {
     return state.auth.user_name || null
+  },
+  isTokenExpired: state => {
+    /* 从localStorage中取出token过期时间 */
+    if (state.auth === null) {
+      return true
+    }
+
+    let expiredTime = new Date(state.auth.exp).getTime()
+    /* 获取本地时间 */
+    let nowTime = new Date().getTime() / 1000
+    // /* 获取校验时间差 */
+    // let diffTime = JSON.parse(sessionStorage.diffTime)
+    // /* 校验本地时间 */
+    // nowTime -= diffTime
+    /* 如果 < 10分钟，则说明即将过期 */
+    return (expiredTime - nowTime) < (60 * 60 * 5)
   }
 }
 const mutations = {
@@ -47,28 +65,34 @@ const mutations = {
 }
 const actions = {
   oauthLogin ({ commit, dispatch }, formUser) {
-    return new Promise((resolve, reject) => {
-      oauthAPI.oauthToken(formUser).then(res => {
-        let token = res.data
-        if (token !== null) {
-          // 登录完成后，获取用户信息，里面包括了路由权限和用户等信息
-          commit('SET_TOKEN', token)
-          resolve(res)
-        }
-      }).catch(error => {
-        reject(error)
-      })
+    return oauthAPI.oauthToken(formUser).then(res => {
+      let token = res.data
+      if (token !== null) {
+        // 登录完成后，获取用户信息，里面包括了路由权限和用户等信息
+        commit('SET_TOKEN', token)
+        return Promise.resolve(res)
+      }
+    }).catch(error => {
+      return Promise.reject(error)
     })
   },
-  checkToken ({ commit, dispatch }, token) {
-    return new Promise((resolve, reject) => {
-      oauthAPI.checkToken(token.access_token).then(res => {
-        commit('SET_AUTH', res.data)
-        commit('SET_USER', res.data.user_name)
-        resolve(res)
-      }).catch(error => {
-        reject(error)
-      })
+  checkToken ({ commit, dispatch }, accessToken) {
+    return oauthAPI.checkToken(accessToken).then(res => {
+      console.log('12312')
+      commit('SET_AUTH', res.data)
+      commit('SET_USER', res.data.user_name)
+      return Promise.resolve(res)
+    }).catch(error => {
+      return Promise.reject(error)
+    })
+  },
+  refreshToken ({ commit, dispatch }, refreshToken) {
+    return oauthAPI.refreshToken(refreshToken).then(res => {
+      commit('SET_AUTH', res.data)
+      commit('SET_USER', res.data.user_name)
+      return Promise.resolve(res)
+    }).catch(error => {
+      return Promise.reject(error)
     })
   },
   logout ({ commit }) {

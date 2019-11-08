@@ -94,7 +94,7 @@ export default {
               grant_type: 'password',
               scope: 'all'
             })
-            await _this.$store.dispatch('auth/checkToken', _this.$store.getters['auth/token'])
+            await _this.$store.dispatch('auth/checkToken', _this.$store.getters['auth/token'].access_token)
             _this.$router.push({ name: 'home' })
           } catch (e) {
             console.log(e)

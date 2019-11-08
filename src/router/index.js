@@ -7,18 +7,17 @@ const router = new VueRouter({
   routes: whiteRoutes
 })
 router.beforeEach((to, from, next) => {
+  console.log('asd')
   // TODO: 加载开始
   // iView.LoadingBar.start()
   // 所有的路由必须有name 利用name做路由认证
   if (to.meta === undefined || to.meta.length === 0 || !to.meta.route) {
-    console.log(store.getters['auth/isAuth'])
     if (store.getters['auth/isAuth']) {
+      console.log(store.getters['auth/refresh'])
       if (store.getters['auth/router'] === null) {
-        console.log('123')
         let routers = routeMap[store.getters['auth/rule']]
         router.addRoutes([routers])
         store.commit('auth/SET_ROUTER', routers)
-        console.log(store.getters['auth/router'])
         next({ ...to, replace: true })
       } else {
         // 已登陆并拉取权限表 前往错误页面
