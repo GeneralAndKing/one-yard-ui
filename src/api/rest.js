@@ -2,7 +2,7 @@ import axios from './index'
 import Vue from 'vue'
 /**
  * 请一定写注释！格式和这个类似！
- * 获取所有资源
+ * 获取所有资源（分页）
  *
  * @returns 响应
  */
