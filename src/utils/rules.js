@@ -27,6 +27,7 @@ export let passwordRules = [
   v => (v && v.length >= 8) || '密码不能少于8位',
   v => (v && v.length <= 18) || '密码不能大于18位'
 ]
+
 export let codeRules = [
   v => !!v || '验证码不能为空',
   v => (v && v.length === 4) || '验证码是4位'

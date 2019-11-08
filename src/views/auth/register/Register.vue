@@ -24,11 +24,11 @@
                     v-progress-circular(v-if="load.phone", size="24", color="info", indeterminate)
                 v-text-field(label="密码", ref="password", type="password", outlined, counter="18", validate-on-blur,
                   hint="使用 8 个或更多字符（字母、数字和符号的组合）", dense, :rules="rules.password" v-model="account.password")
-                v-text-field(label="确认密码", ref="rePassword", type="password", outlined, counter="18", validate-on-blur,
+                v-text-field(label="确认密码", ref="rePassword", type="password", outlined, counter="18", @keyup.enter="next",
                   hint="使用 8 个或更多字符（字母、数字和符号的组合）", dense, :rules="rules.union(rules.password,rules.rePassword)" v-model="account.rePassword")
         v-window-item(:key="1")
           v-card-text.px-0
-            v-text-field(label="输入验证码", ref="code", type="text", outlined, v-model="account.code", counter="4" :rules="rules.code")
+            v-text-field(label="输入验证码", ref="code", type="text", outlined, v-model="account.code", counter="4" :rules="rules.code", @keyup.enter="next")
       v-card-actions.px-0
         v-btn(text, color="primary", @click="previous") {{preBtnText}}
         v-spacer
@@ -99,16 +99,16 @@ export default {
       if (this.window === 0) {
         if (this.$refs.account.validate(true)) {
           this.loading = true
-          oauthAPI.authRegisterEmail(this.account).then(() => {
-            this.window = this.window + 1
-          }).finally(() => { this.loading = false })
+          oauthAPI.authRegisterEmail(this.account)
+            .then(() => { this.window = this.window + 1 })
+            .finally(() => { this.loading = false })
         }
       } else if (this.window === 1) {
         this.loading = true
         if (this.$refs.code.validate(true)) {
-          oauthAPI.authRegister(this.account).then(() => {
-            this.$router.push({ name: 'login' })
-          }).finally(() => { this.loading = false })
+          oauthAPI.authRegister(this.account)
+            .then(() => { this.$router.push({ name: 'login' }) })
+            .finally(() => { this.loading = false })
         }
       }
     },

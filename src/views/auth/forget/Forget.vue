@@ -12,17 +12,17 @@
         v-form(ref='form')
           v-window-item(:key="0")
             v-card-text.px-0
-              v-text-field(label="电子邮件地址", ref="email", type="text", validate-on-blur, autofocus,
+              v-text-field(label="电子邮件地址", ref="email", type="text", @keyup.enter="next", autofocus,
                 outlined, :rules="rules.email", v-model='email', required, clearable)
           v-window-item(:key="1")
             v-card-text.px-0
-              v-text-field(label="输入您的验证码", ref="code", type="text", validate-on-blur, autofocus,
+              v-text-field(label="输入您的验证码", ref="code", type="text", @keyup.enter="next", autofocus,
                 outlined, :rules="rules.code", v-model='code', counter='4')
           v-window-item(:key="2")
             v-card-text.px-0
               v-text-field(label="输入您的新密码", ref="password", type="password", dense, validate-on-blur,
                 outlined, :rules="rules.password", v-model='password', counter='18', autofocus)
-              v-text-field(label="确认您的新密码", ref="rePassword", type="password", dense, validate-on-blur
+              v-text-field(label="确认您的新密码", ref="rePassword", type="password", dense, validate-on-blur, @keyup.enter="next"
                 outlined, :rules="rules.union(rules.password,rules.rePassword)", v-model='rePassword', counter='18')
       v-card-actions.px-0
         v-btn(text, color="primary", @click="handleAccount", :disabled="disabled") {{accountText}}
