@@ -3,16 +3,16 @@
     v-card
       v-card-text
         TableCardSheet(title="用户管理", description="你可以自由查看与管理当前系统的用户信息", color="orange")
-        v-data-table(:headers="headers", :items="desserts", item-key="name")
+        v-data-table(:headers="headers", :items="desserts", item-key="name", :loading="loading",  loading-text="正在加载数据")
           template(v-slot:item.icon="{ item }")
             v-avatar(size="36px")
               v-img(:src="item.icon", :alt="item.name", lazy-src="https://picsum.photos/id/11/10/6")
           template(v-slot:item.roles="{ item }")
-            v-chip(v-for="role in item.roles", :key="role.name") {{role.name}}
+            v-chip {{item.role.name}}
           template(v-slot:item.status="{ item }")
             v-switch(:loading="item.loading", :disabled="item.disabled" v-model="item.status",
-              :true-value="1", :false-value="2", :value="item.status", @click.stop="handleStatus(item)",
-              :label="`${item.disabled === true? '等待' : item.status === 1 ? '启用' : '禁用' }`")
+              true-value="NORMAL", false-value="LOCKED", :value="item.status", @click.stop="handleStatus(item)",
+              :label="`${item.disabled === true? '等待' : item.status === 'NORMAL' ? '启用' : '禁用' }`")
           template(v-slot:item.action="{ item }")
             v-btn.ma-2(tile, outlined, color="success", @click="handleEdit(item)")
               v-icon(left) mdi-pencil
@@ -52,7 +52,7 @@
                             v-flex(xs12, sm6, md4)
                               v-text-field(type="number", v-model="editedItem.sort", label="排序" :rules="rules.union(rules.required('排序'))")
                             v-flex(xs12, sm12)
-                              v-select(v-model="editedItem.roles", label="角色", :items="roles", item-text="name", chips, multiple :rules="rules.union(rules.required('角色'))")
+                              v-select(v-model="editedItem.roles", label="角色", :items="roles", item-text="name", item-value="id", chips, :rules="rules.union(rules.required('角色'))")
                             v-flex(xs12, sm12)
                               v-textarea(label="备注", v-model="editedItem.remark", counter="250")
                   v-card-actions
@@ -64,12 +64,15 @@
 <script>
 import TableCardSheet from '_c/table-card-sheet'
 import { emailRules, passwordRules, requiredRules, unionRules, phoneRules, imageRequiredRules } from '_u/rules'
+import * as restAPI from '_api/rest'
+
 export default {
   name: 'SysUser',
   components: {
     TableCardSheet
   },
   data: () => ({
+    loading: false,
     isActive: false,
     search: '',
     editedIndex: -1,
@@ -80,7 +83,7 @@ export default {
       email: '',
       phone: '',
       sort: 1,
-      roles: [],
+      roleId: 1,
       status: 1,
       createTime: '',
       modifyTime: '',
@@ -144,36 +147,36 @@ export default {
       val || this.close()
     }
   },
-  created () {
-    for (let i = 1; i < 20; i++) {
-      this.desserts.push({
-        icon: 'https://avatars0.githubusercontent.com/u/9064066?v=4&s=460',
-        name: 'admin' + i,
-        email: '13712341234@qq.com',
-        phone: '13712341234',
-        sort: i,
-        roles: [{
-          name: 'admin'
-        }],
-        status: 1,
-        modify: false,
-        loading: false,
-        disabled: false
+  async created () {
+    this.loading = true
+    let _this = this
+    try {
+      let users = await restAPI.getAll('sysUser')
+      let roles = await restAPI.getAll('sysRole')
+      users.data.content.forEach(user => {
+        user.model = false
+        user.loading = false
+        user.disabled = false
+        user.role = _this._.find(roles.data.content, { id: user.roleId })
       })
+      this.desserts = users.data.content
+    } finally {
+      this.loading = false
     }
   },
   methods: {
     handleStatus (item) {
-      item.status = item.status === 1 ? 2 : 1
+      item.status = item.status === 'NORMAL' ? 'LOCKED' : 'NORMAL'
       item.loading = 'success'
       item.disabled = true
-      setTimeout(() => {
-        console.log(item.status)
+      restAPI.putOne('sysUser', item.id, item).then(res => {
+        console.log(res)
+      }).catch(() => {
+        item.status = item.status === 'NORMAL' ? 'LOCKED' : 'NORMAL'
+      }).finally(() => {
         item.disabled = false
-        // 失败的情况
-        // item.status = item.status === 1 ? 2 : 1
         item.loading = false
-      }, 1500)
+      })
     },
     handleEdit (item) {
       this.editedIndex = this.desserts.indexOf(item)

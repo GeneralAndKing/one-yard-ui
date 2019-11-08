@@ -34,7 +34,7 @@
 <script>
 import CenterCard from '_c/center-card/CenterCard'
 import { emailRules, passwordRules, codeRules, unionRules } from '_u/rules'
-import * as oauthAPI from '_api/oauch'
+import * as oauthAPI from '_api/oauth'
 
 export default {
   name: 'Forget',
