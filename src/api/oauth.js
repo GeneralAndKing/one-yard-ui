@@ -1,12 +1,12 @@
-import axios from './index'
+
+import axios from 'axios'
 import qs from 'qs'
-const OAUTH_TOKEN = '/oauth/token'
-const CHECK_TOKEN = '/oauth/check_token'
+import { baseURL } from './config'
+const OAUTH_TOKEN = baseURL + 'oauth/token'
+const CHECK_TOKEN = baseURL + 'oauth/check_token'
 const authorizationBasic = 'Basic Z2FrOjEyMzQ1Ng=='
-const authorization = 'Bearer '
-const OAUTH_ME = '/oauth/me'
-const AUTH_REGISTER = '/auth/register'
-const AUTH_FORGET = '/auth/forget'
+const AUTH_REGISTER = baseURL + 'auth/register'
+const AUTH_FORGET = baseURL + 'auth/forget'
 // 暂时不对 token 进行校验
 
 /**
@@ -17,7 +17,7 @@ const AUTH_FORGET = '/auth/forget'
  * @returns {*} 他哦肯
  */
 export const oauthToken = ({ username, password }) => {
-  return axios.request({
+  return axios({
     url: OAUTH_TOKEN,
     method: 'post',
     headers: {
@@ -31,6 +31,12 @@ export const oauthToken = ({ username, password }) => {
       scope: 'all'
     })
   })
+    .then(res => {
+      return Promise.resolve(res)
+    })
+    .catch(error => {
+      return Promise.reject(error)
+    })
 }
 
 /**
@@ -40,7 +46,7 @@ export const oauthToken = ({ username, password }) => {
  * @returns {*}
  */
 export const checkToken = (token) => {
-  return axios.request({
+  return axios({
     url: CHECK_TOKEN,
     method: 'post',
     headers: {
@@ -51,24 +57,38 @@ export const checkToken = (token) => {
       token: token
     })
   })
+    .then(res => {
+      return Promise.resolve(res)
+    })
+    .catch(error => {
+      return Promise.reject(error)
+    })
 }
-
 /**
- * 当前用户的信息
- *
- * @param token
- * @returns {*}
+ * 刷新token
+ * @param refreshToken
+ * @returns {Promise<AxiosResponse<any>>}
  */
-export const oauthMe = (token) => {
-  return axios.request({
-    url: OAUTH_ME,
-    method: 'get',
+export const refreshToken = (refreshToken) => {
+  return axios({
+    url: OAUTH_TOKEN,
+    method: 'post',
     headers: {
-      Authorization: authorization + token
-    }
+      Authorization: authorizationBasic,
+      'content-type': 'application/x-www-form-urlencoded'
+    },
+    data: qs.stringify({
+      grant_type: 'refresh_token',
+      refresh_token: refreshToken
+    })
   })
+    .then(res => {
+      return Promise.resolve(res)
+    })
+    .catch(error => {
+      return Promise.reject(error)
+    })
 }
-
 /**
  * 注册请求
  *
@@ -81,11 +101,17 @@ export const oauthMe = (token) => {
  * @returns {*}
  */
 export const authRegister = ({ username, email, phone, password, rePassword, code }) => {
-  return axios.request({
+  return axios({
     url: AUTH_REGISTER,
     method: 'post',
     data: { username, email, phone, password, rePassword, code }
   })
+    .then(res => {
+      return Promise.resolve(res)
+    })
+    .catch(error => {
+      return Promise.reject(error)
+    })
 }
 
 /**
@@ -95,10 +121,16 @@ export const authRegister = ({ username, email, phone, password, rePassword, cod
  * @returns {*}
  */
 export const authRegisterEmail = ({ email }) => {
-  return axios.request({
+  return axios({
     url: `${AUTH_REGISTER}/${email}`,
     method: 'get'
   })
+    .then(res => {
+      return Promise.resolve(res)
+    })
+    .catch(error => {
+      return Promise.reject(error)
+    })
 }
 
 /**
@@ -111,11 +143,17 @@ export const authRegisterEmail = ({ email }) => {
  * @returns {*}
  */
 export const authForget = ({ email, password, rePassword, code }) => {
-  return axios.request({
+  return axios({
     url: AUTH_FORGET,
     method: 'post',
     data: { email, password, rePassword, code }
   })
+    .then(res => {
+      return Promise.resolve(res)
+    })
+    .catch(error => {
+      return Promise.reject(error)
+    })
 }
 
 /**
@@ -125,10 +163,16 @@ export const authForget = ({ email, password, rePassword, code }) => {
  * @returns {*}
  */
 export const authForgetEmail = ({ email }) => {
-  return axios.request({
+  return axios({
     url: `${AUTH_FORGET}/${email}`,
     method: 'get'
   })
+    .then(res => {
+      return Promise.resolve(res)
+    })
+    .catch(error => {
+      return Promise.reject(error)
+    })
 }
 
 /**
@@ -139,10 +183,16 @@ export const authForgetEmail = ({ email }) => {
  * @returns {*}
  */
 export const authForgetValidate = ({ email, code }) => {
-  return axios.request({
+  return axios({
     url: `${AUTH_FORGET}/${email}/${code}`,
     method: 'get'
   })
+    .then(res => {
+      return Promise.resolve(res)
+    })
+    .catch(error => {
+      return Promise.reject(error)
+    })
 }
 
 /**
@@ -152,13 +202,19 @@ export const authForgetValidate = ({ email, code }) => {
  * @returns {*}
  */
 export const authExistEmail = ({ email }) => {
-  return axios.request({
-    url: '/rest/sysUser/search/existsByEmail',
+  return axios({
+    url: baseURL + '/rest/sysUser/search/existsByEmail',
     method: 'get',
     params: {
       email: email
     }
   })
+    .then(res => {
+      return Promise.resolve(res)
+    })
+    .catch(error => {
+      return Promise.reject(error)
+    })
 }
 
 /**
@@ -171,9 +227,15 @@ export const authExistEmail = ({ email }) => {
  * @returns {*}
  */
 export const authExist = ({ username, email, phone, action }) => {
-  return axios.request({
-    url: `/rest/sysUser/search/existsBy${action.replace(/^\S/, s => s.toUpperCase())}`,
+  return axios({
+    url: baseURL + `/rest/sysUser/search/existsBy${action.replace(/^\S/, s => s.toUpperCase())}`,
     method: 'get',
     params: { username, email, phone }
   })
+    .then(res => {
+      return Promise.resolve(res)
+    })
+    .catch(error => {
+      return Promise.reject(error)
+    })
 }

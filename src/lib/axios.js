@@ -1,6 +1,22 @@
 import Vue from 'vue'
 import axios from 'axios'
+import store from '_store'
 import { baseURL } from '_api/config'
+
+const refresh = async function () {
+  try {
+    console.log('123')
+    let res = await store.dispatch('auth/refreshToken', store.getters['auth/token'].refresh_token)
+    let token = res.data
+    if (token === null) {
+      return false
+    }
+    await store.dispatch('auth/checkToken', token.access_token)
+    return true
+  } catch (e) {
+    return false
+  }
+}
 
 class HttpRequest {
   constructor (baseUrl = baseURL) {
@@ -48,6 +64,12 @@ class HttpRequest {
         // iView.Spin.show()
       }
       this.queue[url] = true
+      if (store.getters['auth/isTokenExpired']) {
+        if (!refresh()) {
+          store.dispatch('auth/logout')
+          Vue.prototype.$message('登陆已失效,请重新登陆', 'error')
+        }
+      }
       return config
     }, error => {
       return Promise.reject(error)
