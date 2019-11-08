@@ -255,7 +255,7 @@ export default {
     },
     handleSaveAndSubmit () {
       if (!this.$refs.base.validate(true)) return
-      this.materialPlan.approvalStatus = 'APPROVAL'
+      this.materialPlan.approvalStatus = 'APPROVAL_ING'
       this.materialPlan.planType = 'APPROVAL'
       materialPlanAPI.saveOrUpdate(this.materialPlan, this.desserts)
         .then(() => this.$message('保存数据并提交成功！', 'success'))

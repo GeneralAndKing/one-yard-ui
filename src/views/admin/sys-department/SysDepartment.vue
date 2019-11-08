@@ -4,13 +4,13 @@
       v-card-text
         v-row
           v-col
-            v-treeview(:items="items", open-on-click, activatable,
-              :load-children="handleLoading", @update:active="handleActive",
+            v-treeview(:items="items", open-on-click, activatable, :open.sync="open",
+              :load-children="handleLoading", @update:active="handleActive", item-key="name",
               :active.sync="active", transition, return-object)
               template(v-slot:prepend="{ item, active }")
                 v-icon(v-if="!item.children") mdi-account
           v-divider(vertical)
-          v-col(cols="9", xl="10")
+          v-col(cols="8", md="7", xl="9")
             v-tabs(v-model="tab")
               v-tabs-slider
               v-tab(href="#tab-1") 角色信息
@@ -47,7 +47,7 @@
                                 v-flex(xs4, sm4, md4)
                                   strong {{ item.name }}
                                 v-flex(xs6, sm6, md6)
-                                  span {{ item.describe }}
+                                  span {{ item.description }}
                                 v-flex(xs2, sm2, md2)
                                   v-chip.white--text(v-if="item.method === 'GET'", color="green") {{ item.method }}
                                   v-chip.white--text(v-if="item.method === 'POST'", color="blue") {{ item.method }}
@@ -57,7 +57,7 @@
                                   v-chip.white--text(v-if="item.method === 'PATCH'", color="cyan") {{ item.method }}
                             v-expansion-panel-content
                               code {{ item.url }}
-                              p {{ item.describe }}
+                              p {{ item.description }}
                 v-tab-item(:key="3", :value="'tab-' + 3")
                   v-scroll-y-transition(mode="out-in")
                     .title.grey--text.text--lighten-1.font-weight-light.text-center(v-if="!isSelected")
@@ -71,33 +71,18 @@
 </template>
 
 <script>
-const pause = ms => new Promise(resolve => setTimeout(resolve, ms))
-
+import * as restAPI from '_api/rest'
+import * as departmentAPI from '_api/department'
 export default {
   name: 'SysDepartment',
   data: () => ({
     tab: null,
-    selected: null,
+    selected: {},
     active: [],
     open: [],
     items: [],
     users: [],
-    permissions: [
-      { id: 1,
-        name: 'home',
-        url: '/home',
-        describe: 'api 主界面',
-        method: 'GET',
-        sort: 1
-      }, {
-        id: 2,
-        name: 'Oauth2',
-        url: '/oauth2',
-        describe: 'api 主界面',
-        method: 'PUT',
-        sort: 1
-      }
-    ]
+    permissions: []
   }),
   computed: {
     isSelected () {
@@ -105,38 +90,26 @@ export default {
       return this.active[0] !== null
     }
   },
-  created () {
-    for (let i = 1; i < 10; i++) {
-      this.items.push({
-        id: i,
-        name: '部门' + i,
-        children: []
-      })
-      this.users.push({
-        id: i,
-        name: '用户' + i,
-        icon: 'https://avatars0.githubusercontent.com/u/9064066?v=4&s=460'
-      })
-    }
+  async created () {
+    let res = await restAPI.getAll('sysDepartment')
+    let _this = this
+    res.data.content.forEach(d => {
+      d.children = []
+      _this.items.push(d)
+    })
   },
   methods: {
     handleActive (item) {
+      if (!item.length) return
       this.selected = item[0]
+      departmentAPI.getPermissionByRole(this.selected.id)
+        .then(res => { this.permissions = res.data.content })
+      departmentAPI.getUserByRole(this.selected.id)
+        .then(res => { this.users = res.data.content })
     },
     async handleLoading (item) {
-      // 模拟异步等待事件
-      await pause(1500)
-      for (let i = 1; i < 5; i++) {
-        item.children.push({
-          id: `${item.id}-${i}`,
-          name: `ROLE_角色${item.id}${i}`,
-          description: '角色描述',
-          icon: 'location_city',
-          remark: '备注',
-          isEnable: true,
-          edit: false
-        })
-      }
+      const res = await departmentAPI.getRoleByDepartment(item.id)
+      item.children = res.data.content
     }
   }
 }
