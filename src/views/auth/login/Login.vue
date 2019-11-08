@@ -28,7 +28,7 @@
 <script>
 import CenterCard from '_c/center-card/CenterCard'
 import { emailRules, passwordRules } from '_u/rules'
-import * as oauthAPI from '_api/oauch'
+import * as oauthAPI from '_api/oauth'
 
 export default {
   name: 'Login',
@@ -97,6 +97,7 @@ export default {
             await _this.$store.dispatch('auth/checkToken', _this.$store.getters['auth/token'])
             _this.$router.push({ name: 'home' })
           } catch (e) {
+            console.log(e)
             _this.$refs['password'].errorBucket = e.data.hasOwnProperty('error_description') ? [e.data.error_description] : ['验证失败']
           } finally {
             _this.load = false
@@ -110,6 +111,7 @@ export default {
             if (res.data) _this.window += 1
             else this.$refs['email'].errorBucket = ['账户不存在，请重新输入']
           } catch (e) {
+            console.log(e)
             _this.$refs['email'].errorBucket = e.data.hasOwnProperty('error_description') ? [e.data.error_description] : ['验证失败']
           } finally {
             _this.load = false

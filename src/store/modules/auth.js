@@ -1,4 +1,4 @@
-import * as oauthAPI from '_api/oauch'
+import * as oauthAPI from '_api/oauth'
 const state = {
   // 用户信息，来源于 oauthMe
   user: null,
@@ -20,6 +20,9 @@ const getters = {
   },
   router: state => {
     return state.router
+  },
+  username: state => {
+    return state.auth.user_name || null
   }
 }
 const mutations = {

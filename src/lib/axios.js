@@ -58,7 +58,7 @@ class HttpRequest {
       return res
     }, error => {
       this.destroy(url)
-      if (error.response.status === 400 && error.data.hasOwnProperty('error_description')) {
+      if (error.response.status === 400 && error.data !== undefined && error.data.hasOwnProperty('error_description')) {
         Vue.prototype.$message(`请求错误:${error.data.error_description}`, 'error')
       }
       if (error.response.status === 401) {
