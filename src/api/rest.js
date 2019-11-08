@@ -1,5 +1,5 @@
 import axios from './index'
-import Message from '_plugins/global-message'
+import Vue from 'vue'
 /**
  * 请一定写注释！格式和这个类似！
  * 获取所有资源
@@ -35,7 +35,7 @@ export const getAll = (resource) => {
     }).then(res => {
       resolve(res)
     }).catch(error => {
-      Message('初始化失败', 'error')
+      Vue.prototype.$message('初始化失败', 'error')
       console.log(error)
       reject(error)
     })
@@ -54,10 +54,10 @@ export const deleteByLink = (resource) => {
       url: `/rest/${resource}`,
       method: 'delete'
     }).then(res => {
-      Message('删除数据成功', 'success')
+      Vue.prototype.$message('删除数据成功', 'success')
       resolve(res)
     }).catch(error => {
-      Message('删除数据失败', 'error')
+      Vue.prototype.$message('删除数据失败', 'error')
       console.log(error)
       reject(error)
     })
@@ -78,11 +78,10 @@ export const addOne = (resource, data) => {
       method: 'post',
       data: data
     }).then(res => {
-      Message('添加数据成功', 'success')
+      Vue.prototype.$message('添加数据成功', 'success')
       resolve(res)
     }).catch(error => {
-      Message('添加数据失败', 'error')
-      console.log(error)
+      Vue.prototype.$message('添加数据失败', 'error')
       reject(error)
     })
   })
@@ -103,10 +102,10 @@ export const putOne = (resource, data) => {
       method: 'put',
       data: data
     }).then(res => {
-      Message('更新数据成功', 'success')
+      Vue.prototype.$message('更新数据成功', 'success')
       resolve(res)
     }).catch(error => {
-      Message('更新数据失败', 'error')
+      Vue.prototype.$message('更新数据失败', 'error')
       console.log(error)
       reject(error)
     })
@@ -128,10 +127,10 @@ export const patchOne = (resource, id, data) => {
       method: 'patch',
       data: data
     }).then(res => {
-      Message('更新数据成功', 'success')
+      Vue.prototype.$message('更新数据成功', 'success')
       resolve(res)
     }).catch(error => {
-      Message('更新数据失败', 'error')
+      Vue.prototype.$message('更新数据失败', 'error')
       console.log(error)
       reject(error)
     })

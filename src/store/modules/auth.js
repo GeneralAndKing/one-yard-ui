@@ -1,19 +1,28 @@
-import * as oauthAPI from '../../api/oauth'
-import Message from '_plugins/global-message'
+import * as oauthAPI from '_api/oauth'
 const state = {
   // 用户信息，来源于 oauthMe
   user: null,
   // token 信息，来源于 登录 或 刷新令牌
   token: null,
   // 授权信息，来源于 checkToken
-  auth: null
+  auth: null,
+  router: null
 }
 const getters = {
   isAuth: state => {
     return state.token !== null
   },
-  isAdmin: state => {
-    return state.auth && state.auth.authorities.includes('ROLE_ADMIN')
+  rule: state => {
+    return state.auth.authorities[0]
+  },
+  token: state => {
+    return state.token
+  },
+  router: state => {
+    return state.router
+  },
+  username: state => {
+    return state.auth.user_name || null
   }
 }
 const mutations = {
@@ -26,10 +35,14 @@ const mutations = {
   SET_AUTH (state, auth) {
     state.auth = auth
   },
+  SET_ROUTER (state, router) {
+    state.router = router
+  },
   // logout
   LOGOUT (state) {
     state.token = null
     state.user = null
+    state.auth = null
   }
 }
 const actions = {
@@ -38,25 +51,12 @@ const actions = {
       oauthAPI.oauthToken(formUser).then(res => {
         let token = res.data
         if (token !== null) {
-          // 登录完成后，获取授权信息，里面包括了 token 有效期
-          dispatch('checkToken', token)
           // 登录完成后，获取用户信息，里面包括了路由权限和用户等信息
-          dispatch('oauthMe', token)
           commit('SET_TOKEN', token)
-          resolve()
+          resolve(res)
         }
       }).catch(error => {
         reject(error)
-      })
-    })
-  },
-  oauthMe ({ commit, dispatch }, token) {
-    return new Promise((resolve, reject) => {
-      oauthAPI.oauthMe(token.access_token).then(res => {
-        commit('SET_USER', res.data)
-      }).catch((error) => {
-        Message('获取用户信息失败', 'error')
-        console.log(error)
       })
     })
   },
@@ -64,8 +64,10 @@ const actions = {
     return new Promise((resolve, reject) => {
       oauthAPI.checkToken(token.access_token).then(res => {
         commit('SET_AUTH', res.data)
-      }).catch(() => {
-        Message('获取授权信息失败', 'error')
+        commit('SET_USER', res.data.user_name)
+        resolve(res)
+      }).catch(error => {
+        reject(error)
       })
     })
   },

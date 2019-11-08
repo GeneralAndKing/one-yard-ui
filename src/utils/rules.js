@@ -18,12 +18,14 @@ export let phoneRules = [
 
 export let emailRules = [
   v => !!v || '邮箱不能为空',
-  v => /.+@.+\..+/.test(v) || '电子邮箱不规范'
+  v => /.+@.+\..+/.test(v) || '电子邮箱不规范',
+  v => (v && v.length <= 30) || '邮箱长度不能大于30位'
 ]
 
 export let passwordRules = [
   v => !!v || '密码不能为空',
-  v => (v && v.length >= 8) || '密码不能少于8位'
+  v => (v && v.length >= 8) || '密码不能少于8位',
+  v => (v && v.length <= 18) || '密码不能大于18位'
 ]
 export let codeRules = [
   v => !!v || '验证码不能为空',
