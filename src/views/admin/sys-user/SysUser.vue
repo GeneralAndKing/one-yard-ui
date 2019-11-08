@@ -1,4 +1,4 @@
-<template lang="pug" xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+<template lang="pug">
   v-container#auth-user.mt-9
     v-card
       v-card-text
@@ -70,10 +70,9 @@
                                 :rules="rules.union(rules.required('角色'))")
                             v-flex(xs12, sm12)
                               v-textarea(label="备注", v-model="editedItem.remark", counter="250")
-                  v-card-actions
-                    v-spacer
-                      v-btn.blue.darken-1(text, @click="close") Cancel
-                      v-btn.blue.darken-1(text, @click="save") Save
+                  v-card-actions.text-right.justify-end
+                    v-btn.darken-1(text, @click="close", dark, color='error') 取消
+                    v-btn.darken-1(text, @click="save", dark, color='success') 保存
 </template>
 
 <script>
@@ -157,7 +156,7 @@ export default {
   }),
   computed: {
     formTitle () {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+      return this.editedIndex === -1 ? '添加' : '编辑'
     }
   },
   watch: {
@@ -174,6 +173,7 @@ export default {
       this.roles = roles.data.content
       users.data.content.forEach(user => {
         user.model = false
+        user.password = 'xxxxxxxxxxxxxxxxxx'
         user.loading = false
         user.disabled = false
         user.role = _this._.find(roles.data.content, { id: user.roleId })
@@ -211,7 +211,7 @@ export default {
       if (this.$refs['editedItem'].validate(true)) {
         this.editedItem.roleId = this.editedItem.role.id
         if (this.editedIndex > -1) {
-          const data = this.editedItem.password.length === 60
+          const data = this.editedItem.password === 'xxxxxxxxxxxxxxxxxx'
             ? this._.omit(this.editedItem, 'password')
             : this.editedItem
           await restAPI.patchOne('sysUser', this.editedItem.id, data)

@@ -1,7 +1,7 @@
 <template lang="pug">
   v-container#one-plan-create
-    v-speed-dial(v-model="fab", bottom, right, fixed,
-      transition='slide-y-reverse-transition', direction='top')
+    v-speed-dial.mt-10(v-model="fab", top, right, fixed,
+      transition='slide-y-reverse-transition', direction='bottom')
       template(v-slot:activator)
         v-btn(v-model="fab", color="blue darken-2", fab, dark)
           v-icon(v-if="fab") mdi-close
@@ -19,23 +19,23 @@
           v-form(ref="base")
             v-layout(wrap, style="width:100%")
               v-flex(sm12, md6, lg4)
-                v-select(v-model="materialPlan.planTypes", :items="planTypes", ref="planTypes", label="需求计划类型" :rules="rules.union(rules.required('需求计划类型'))")
+                v-select(v-model="materialPlan.planType", :items="planTypes", ref="planTypes",
+                  label="需求计划类型" :rules="rules.union(rules.required('需求计划类型'))")
               v-flex(sm12, md6, lg4)
                 v-select(v-model="materialPlan.departmentId", :items="departments", ref="departmentId",
                   item-text="name", item-value="id", label="需求部门" :rules="rules.union(rules.required('需求部门'))")
               v-flex(sm12, md6, lg4)
-                v-text-field(value="自由", label="需求计划状态", readonly)
+                v-text-field(v-model="materialPlan.name", ref="name", label="需求计划名称",
+                  :rules="rules.union(rules.required('需求计划名称'))")
               v-flex(sm12, md6, lg4)
-                v-text-field(v-model="materialPlan.name", ref="name", label="需求计划名称" :rules="rules.union(rules.required('需求计划名称'))")
-              v-flex(sm12, md6, lg4)
-                v-text-field(v-model="materialPlan.needPeople", ref="needPeople", label="需求人员" :rules="rules.union(rules.required('需求人员'))")
-              v-flex(sm12, md6, lg4)
-                v-text-field(value="未提交", label="审批状态", readonly)
-              v-flex(xs12, md6, md4)
+                v-text-field(v-model="materialPlan.needPeople", ref="needPeople", label="需求人员",
+                  :rules="rules.union(rules.required('需求人员'))")
+              v-flex(xs12, md6, lg4, v-if="materialPlan.planType === '月度计划'")
                 v-menu(ref="month", :close-on-content-click="false", :return-value.sync="date", transition="scale-transition",
                   v-model="menu", max-width="290px", min-width="290px")
                   template(v-slot:activator="{ on }")
-                    v-text-field(v-model="materialPlan.month", label="需求月份", readonly, v-on="on" :rules="rules.union(rules.required('需求月份'))")
+                    v-text-field(v-model="materialPlan.month", label="需求月份", readonly, v-on="on",
+                      :rules="rules.union(rules.required('需求月份'))")
                   v-date-picker(v-model="date", type="month", no-title, scrollable, locale="zh-cn")
                     v-spacer
                     v-btn(text, color="primary",  @click="menu = false") 取消
@@ -68,8 +68,8 @@
               v-spacer
               v-dialog(v-model="dialog", max-width="1200px", persistent)
                 template(v-slot:activator="{ on }")
-                  v-btn.mb-2.ml-3.mr-3(color="primary", v-on="on") 添加
-                  v-btn.mb-2.ml-3.mr-3(color="error", @click="handleDeleteSelected") 删除所选
+                  v-btn.mb-2.ml-3.mr-3(text, color="primary", v-on="on") 添加
+                  v-btn.mb-2.ml-3.mr-3(text, color="error", @click="handleDeleteSelected") 删除所选
                 v-card
                   v-card-title(primary-title)
                     .headline.lighten-2 添加数据
@@ -112,16 +112,19 @@
                             v-switch(v-model="editedItem.isSourceGoods", :label="`货源是否确定:${editedItem.isSourceGoods ? '是': '否'}`")
                   v-card-actions
                     v-spacer
-                    v-btn(color="primary", @click="initEdit") 重置
-                    v-btn(color="primary", @click="handleAdd") 添加
+                    v-btn(text, color="error", @click="initEdit") 重置
+                    v-btn(text, color="success", @click="handleAdd") 添加
       v-card-actions
         v-spacer
-        v-btn(color="primary") 保存
-        v-btn(color="primary") 保存并提交
+        v-btn(text, color="purple", @click="handleSave") 保存
+        v-btn(text, color="success", @click="handleSaveAndSubmit") 保存并提交
 </template>
 
 <script>
 import { requiredRules, unionRules } from '_u/rules'
+import * as materialPlanAPI from '_api/materialPlan'
+import * as restAPI from '_api/rest'
+
 const uuidv4 = require('uuid/v4')
 export default {
   name: 'MaterialPlan',
@@ -131,31 +134,15 @@ export default {
     dayMenu: false,
     fab: false,
     dialog: false,
-    materialTypes: [
-      { code: '123', name: '123' },
-      { code: '124', name: '124' },
-      { code: '125', name: '125' },
-      { code: '126', name: '126' },
-      { code: '127', name: '127' }
-    ],
-    materials: [
-      { code: '123', name: '123' },
-      { code: '124', name: '124' },
-      { code: '125', name: '125' },
-      { code: '126', name: '126' },
-      { code: '127', name: '127' }
-    ],
+    materialTypes: [],
+    materials: [],
     rules: {
       required: requiredRules,
       union: unionRules
     },
     date: new Date().toISOString().substr(0, 7),
     planTypes: [ '订单型需求计划', '年度计划', '月度计划', '紧急计划' ],
-    departments: [
-      { id: 1, name: '部门1' },
-      { id: 2, name: '部门2' },
-      { id: 3, name: '部门3' }
-    ],
+    departments: [],
     editedItem: {},
     materialPlan: {
       materialType: null,
@@ -164,8 +151,8 @@ export default {
       planType: null,
       departmentId: null,
       needPeople: null,
-      planStatus: 0,
-      approvalStatus: 0,
+      planStatus: 'FREE',
+      approvalStatus: 'NO_SUBMIT',
       isBudgetPlan: true,
       remark: null
     },
@@ -187,8 +174,17 @@ export default {
       { text: '操作', value: 'action', sortable: false, width: '160px', align: 'center' }
     ]
   }),
+  props: {
+    edit: {
+      type: Boolean,
+      default: false
+    }
+  },
   created () {
     this.initEdit()
+    restAPI.getAll('sysDepartment').then(res => { this.departments = res.data.content })
+    restAPI.getAll('material').then(res => { this.materials = res.data.content })
+    restAPI.getAll('materialType').then(res => { this.materialTypes = res.data.content })
   },
   watch: {
     date (val) {
@@ -235,19 +231,34 @@ export default {
       this.desserts.splice(this._.indexOf(this.desserts, item), 1)
     },
     handleDeleteSelected () {
-      if (this.selected.length <= 0) return
+      if (this.selected.length <= 0) {
+        this.$message('您没有选择任何数据', 'warning')
+        return
+      }
       this._.forEach(this.selected, value => {
         this.desserts.splice(this._.indexOf(this.desserts, value), 1)
         this.selected = []
       })
     },
     handleEdit (item) {
-      //
+      console.log(item)
     },
     handleCopy (item) {
       let copy = this._.cloneDeep(item)
       copy.materialTrackingCode = uuidv4()
       this.desserts.unshift(copy)
+    },
+    handleSave () {
+      if (!this.$refs.base.validate(true)) return
+      materialPlanAPI.saveOrUpdate(this.materialPlan, this.desserts)
+        .then(() => this.$message('保存数据成功！', 'success'))
+    },
+    handleSaveAndSubmit () {
+      if (!this.$refs.base.validate(true)) return
+      this.materialPlan.approvalStatus = 'APPROVAL'
+      this.materialPlan.planType = 'APPROVAL'
+      materialPlanAPI.saveOrUpdate(this.materialPlan, this.desserts)
+        .then(() => this.$message('保存数据并提交成功！', 'success'))
     }
   }
 }

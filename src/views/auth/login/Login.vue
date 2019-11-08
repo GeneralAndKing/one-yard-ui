@@ -11,13 +11,13 @@
             v-window(v-model="window", style="min-height:180px")
                 v-window-item(:key="0")
                     v-card-text.px-0
-                        v-text-field(label="电子邮件地址", name="email", type="text", validate-on-blur,
-                            outlined, :rules="rules.email", v-model='user.email', required, clearable,
+                        v-text-field(label="电子邮件地址", name="email", type="text", required, clearable,
+                            outlined, :rules="rules.email", v-model='user.email', @keyup.enter="next",
                             ref="email", autofocus)
                 v-window-item(:key="1")
                     v-card-text.px-0
-                        v-text-field(label="输入您的密码", name="password", type="password", autofocus, validate-on-blur,
-                            outlined, :rules="rules.password", v-model='user.password', ref="password")
+                        v-text-field(label="输入您的密码", name="password", type="password", autofocus,
+                            outlined, :rules="rules.password", v-model='user.password', ref="password", @keyup.enter="next")
             v-card-actions.px-0
                 v-btn(text, color="primary", @click="handleAccount") {{accountText}}
                 v-spacer
