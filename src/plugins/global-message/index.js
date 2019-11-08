@@ -1,9 +1,6 @@
 import Vue from 'vue'
 import GlobalMessage from './GlobalMessage.vue'
-const MessageBox = Vue.extend(GlobalMessage)
-
 GlobalMessage.install = function (options, type) {
-  console.log('123')
   if (options === undefined || options === null) {
     options = {
       content: ''
@@ -16,7 +13,7 @@ GlobalMessage.install = function (options, type) {
       options.type = type
     }
   }
-
+  const MessageBox = Vue.extend(GlobalMessage)
   let instance = new MessageBox({
     data: options
   }).$mount()
@@ -28,4 +25,4 @@ GlobalMessage.install = function (options, type) {
   })
 }
 
-export default GlobalMessage.install
+export default GlobalMessage

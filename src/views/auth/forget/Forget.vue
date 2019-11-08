@@ -154,5 +154,5 @@ export default {
 </script>
 
 <style scoped lang="stylus">
-  @import "form.styl"
+  @import "../form.styl"
 </style>

@@ -44,11 +44,12 @@ export const checkToken = (token) => {
     url: CHECK_TOKEN,
     method: 'post',
     headers: {
-      Authorization: authorizationBasic
+      Authorization: authorizationBasic,
+      'content-type': 'application/x-www-form-urlencoded'
     },
-    data: {
+    data: qs.stringify({
       token: token
-    }
+    })
   })
 }
 
