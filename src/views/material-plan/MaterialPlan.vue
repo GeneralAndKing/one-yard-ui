@@ -82,30 +82,33 @@
                         v-layout(wrap)
                           v-flex(xs12, md6, md4)
                             v-select(v-model="editedItem.materialType", label="物料分类", :items="materialTypes",
-                              item-text="name", return-object)
+                              item-text="name", return-object, :rules="rules.union(rules.required('需求部门'))")
                           v-flex(xs12, md6, md4)
                             v-select(v-model="editedItem.material", label="物料", :items="materials",
-                              item-text="name", return-object)
+                              item-text="name", return-object, :rules="rules.union(rules.required('物料'))")
                           v-flex(xs12, md6, md4)
-                            v-text-field(v-model="editedItem.specifications", label="规格")
+                            v-text-field(v-model="editedItem.specifications", label="规格", :rules="rules.union(rules.required('规格'))")
                           v-flex(xs12, md6, md4)
-                            v-text-field(v-model="editedItem.size", label="型号")
+                            v-text-field(v-model="editedItem.size", label="型号", :rules="rules.union(rules.required('型号'))")
                           v-flex(xs12, md6, md4)
-                            v-text-field(v-model="editedItem.unit", label="计量单位")
+                            v-text-field(v-model="editedItem.unit", label="计量单位", :rules="rules.union(rules.required('计量单位'))")
                           v-flex(xs12, md6, md4)
-                            v-text-field(v-model="editedItem.number", label="需求数量", type="number")
+                            v-text-field(v-model="editedItem.number", label="需求数量", type="number", :rules="rules.union(rules.required('需求数量'))")
                           v-flex(xs12, md6, md4)
                             v-menu(v-model="dayMenu", :close-on-content-click="false", transition="scale-transition",
                               offset-y, max-width="290px", min-width="290px")
                               template(v-slot:activator="{ on }")
-                                v-text-field(v-model="editedItem.date", v-on="on", label="需求日期", readonly)
+                                v-text-field(v-model="editedItem.date", v-on="on", label="需求日期", readonly, :rules="rules.union(rules.required('需求日期'))")
                               v-date-picker(v-model="editedItem.date", no-title, @input="dayMenu = false", locale="zh-cn")
                           v-flex(xs12, md6, md4)
-                            v-text-field(v-model="editedItem.expectationSupplier", label="期望供应商")
+                            v-select(v-model="editedItem.expectationSupplier", label="期望供应商", :items="suppliers",
+                              item-text="name", return-object, item-value="name")
                           v-flex(xs12, md6, md4)
-                            v-text-field(v-model="editedItem.fixedSupplier", label="固定供应商")
+                            v-select(v-model="editedItem.fixedSupplier", label="固定供应商", :items="suppliers",
+                              item-text="name", return-object, item-value="name")
                           v-flex(xs12, md6, md4)
-                            v-text-field(v-model="editedItem.inventory", label="需求库存组织")
+                            v-select(v-model="editedItem.inventory", label="需求库存组织", :items="inventory",
+                              item-text="name", return-object, item-value="name")
                           v-flex(xs12, md6, md4)
                             v-text-field(:value="editedItem.materialTrackingCode", label="物料追踪码", readonly, hint="此项为随机生成，请勿修改")
                           v-flex(xs12, md6, md4)
@@ -136,6 +139,8 @@ export default {
     dialog: false,
     materialTypes: [],
     materials: [],
+    suppliers: [],
+    inventory: [],
     rules: {
       required: requiredRules,
       union: unionRules
@@ -185,6 +190,8 @@ export default {
     restAPI.getAll('sysDepartment').then(res => { this.departments = res.data.content })
     restAPI.getAll('material').then(res => { this.materials = res.data.content })
     restAPI.getAll('materialType').then(res => { this.materialTypes = res.data.content })
+    restAPI.getAll('supplier').then(res => { this.suppliers = res.data.content })
+    restAPI.getAll('inventory').then(res => { this.inventory = res.data.content })
   },
   watch: {
     date (val) {
@@ -214,6 +221,7 @@ export default {
       }
     },
     handleAdd () {
+      if (!this.$refs.add.validate(true)) return
       this.editedItem.materialTypeCode = this.editedItem.materialType.code
       this.editedItem.materialTypeName = this.editedItem.materialType.name
       this.editedItem.materialCode = this.editedItem.material.code
