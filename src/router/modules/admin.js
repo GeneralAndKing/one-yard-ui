@@ -66,10 +66,21 @@ export default {
       meta: {
         route: true,
         menu: true,
-        meta: '创建计划表',
+        meta: '计划表创建',
         icon: 'location_city'
       },
       component: () => import(/* webpackChunkName: "sys-department" */ '_v/material-plan')
+    },
+    {
+      path: 'materialPlanManagement',
+      name: 'materialPlanManagement',
+      meta: {
+        route: true,
+        menu: true,
+        meta: '计划表管理',
+        icon: 'location_city'
+      },
+      component: () => import(/* webpackChunkName: "sys-department" */ '_v/material-plan-management')
     }
   ]
 }

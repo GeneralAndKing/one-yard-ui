@@ -19,14 +19,14 @@
           v-form(ref="base")
             v-layout(wrap, style="width:100%")
               v-flex(sm12, md6, lg4)
+                v-text-field(v-model="materialPlan.name", ref="name", label="需求计划名称",
+                  :rules="rules.union(rules.required('需求计划名称'))")
+              v-flex(sm12, md6, lg4)
                 v-select(v-model="materialPlan.planType", :items="planTypes", ref="planTypes",
                   label="需求计划类型" :rules="rules.union(rules.required('需求计划类型'))")
               v-flex(sm12, md6, lg4)
                 v-select(v-model="materialPlan.departmentId", :items="departments", ref="departmentId",
                   item-text="name", item-value="id", label="需求部门" :rules="rules.union(rules.required('需求部门'))")
-              v-flex(sm12, md6, lg4)
-                v-text-field(v-model="materialPlan.name", ref="name", label="需求计划名称",
-                  :rules="rules.union(rules.required('需求计划名称'))")
               v-flex(sm12, md6, lg4)
                 v-text-field(v-model="materialPlan.needPeople", ref="needPeople", label="需求人员",
                   :rules="rules.union(rules.required('需求人员'))")
@@ -69,7 +69,7 @@
               v-dialog(v-model="dialog", max-width="1200px", persistent)
                 template(v-slot:activator="{ on }")
                   v-btn.mb-2.ml-3.mr-3(text, color="primary", v-on="on") 添加
-                  v-btn.mb-2.ml-3.mr-3(text, color="error", @click="handleDeleteSelected") 删除所选
+                  v-btn.mb-2.ml-3.mr-3(text, color="error", @click="handleDeleteSelected") 删除所选物料
                 v-card
                   v-card-title(primary-title)
                     .headline.lighten-2 添加数据
@@ -158,7 +158,7 @@ export default {
       needPeople: null,
       planStatus: 'FREE',
       approvalStatus: 'NO_SUBMIT',
-      isBudgetPlan: true,
+      isBudgetPlan: false,
       remark: null
     },
     desserts: [],
