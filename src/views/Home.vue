@@ -19,24 +19,18 @@
                     )
                         v-list-item-title Option1  {{ n }}
         v-navigation-drawer(v-model="drawer", app, clipped)
-            v-list(dense)
-                template(v-for="menu in menus")
-                    v-subheader.grey--text.text--darken-1(v-if="menu.name") {{ menu.name }}
-                    v-list-item.auth-menu(v-for="item in menu.children",
-                        :key="item.text", @click="",
-                        :to="item.to")
-                        v-list-item-action
-                            v-icon {{ item.icon }}
-                        v-list-item-content
-                            v-list-item-title {{ item.text }}
+            treeMenu(:router="menus[0].children")
         v-content
             v-scroll-x-transition(hide-on-leave)
                 router-view
 </template>
 
 <script>
+import { genMenu } from '_u/util'
+import treeMenu from '_c/tree-menu'
 export default {
   name: 'home',
+  components: { treeMenu },
   data: () => ({
     drawer: true,
     theme: false,
@@ -74,21 +68,8 @@ export default {
   created () {
     this.$vuetify.theme.dark = false
     let router = this.$store.getters['auth/router']
-    console.log(router)
-    console.log('123')
-
-    let menu = { children: [] }
-    router.children.forEach((children) => {
-      if (children.meta.menu) {
-        console.log(menu)
-        menu.children.push({
-          icon: children.meta.icon,
-          text: children.meta.meta,
-          to: { name: children.name }
-        })
-      }
-    })
-    this.menus.push(menu)
+    console.log('asd')
+    this.menus = genMenu(router)
   },
   methods: {
     handleTheme () {

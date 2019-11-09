@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import { whiteRoutes, routeMap } from './router'
 import store from '_store'
+import { genRouter } from '_u/util'
 Vue.use(VueRouter)
 const router = new VueRouter({
   routes: whiteRoutes
@@ -16,12 +17,12 @@ router.beforeEach((to, from, next) => {
       console.log(store.getters['auth/refresh'])
       if (store.getters['auth/router'] === null) {
         let routers = routeMap[store.getters['auth/rule']]
-        router.addRoutes([routers])
+        router.addRoutes(genRouter(routers))
         store.commit('auth/SET_ROUTER', routers)
         next({ ...to, replace: true })
       } else {
         // 已登陆并拉取权限表 前往错误页面
-        next({ name: 'home' })
+        next({ name: 'error' })
       }
     } else {
       // 未登录 前往登陆页面
