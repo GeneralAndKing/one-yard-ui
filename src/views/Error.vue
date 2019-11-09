@@ -1,3 +1,3 @@
 <template lang="pug">
-    router-view
+    a 谁他妈买小米
 </template>
