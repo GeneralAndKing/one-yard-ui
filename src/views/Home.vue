@@ -21,7 +21,7 @@
         v-navigation-drawer(v-model="drawer", app, clipped)
             treeMenu(:router="menus[0].children")
         v-content
-            v-scroll-x-transition(hide-on-leave)
+            v-scroll-y-transition(hide-on-leave, mode="out-in")
                 router-view
 </template>
 

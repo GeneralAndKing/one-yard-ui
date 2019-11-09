@@ -1,7 +1,7 @@
 <template lang="pug">
   v-container#one-plan-create
-    v-speed-dial.mt-10(v-model="fab", top, right, fixed,
-      transition='slide-y-reverse-transition', direction='bottom')
+    v-speed-dial(v-model="fab", top, right, absolute, direction='bottom',
+      transition='slide-y-reverse-transition')
       template(v-slot:activator)
         v-btn(v-model="fab", color="blue darken-2", fab, dark)
           v-icon(v-if="fab") mdi-close
