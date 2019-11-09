@@ -13,26 +13,26 @@
       v-btn(fab, small, color="red", dark)
         v-icon mdi-delete
     v-card
-      v-card-title 创建计划表
+      v-card-title {{see?'计划表编辑':'计划表创建'}}
       v-card-text
         v-container(grid-list-md)
           v-form(ref="base")
             v-layout(wrap, style="width:100%")
               v-flex(sm12, md6, lg4)
-                v-text-field(v-model="materialPlan.name", ref="name", label="需求计划名称",
+                v-text-field(v-model="materialPlan.name", ref="name", label="需求计划名称", :readonly='see',
                   :rules="rules.union(rules.required('需求计划名称'))")
               v-flex(sm12, md6, lg4)
-                v-select(v-model="materialPlan.planType", :items="planTypes", ref="planTypes",
+                v-select(v-model="materialPlan.planType", :items="planTypes", ref="planTypes", :readonly='see',
                   label="需求计划类型" :rules="rules.union(rules.required('需求计划类型'))")
               v-flex(sm12, md6, lg4)
-                v-select(v-model="materialPlan.departmentId", :items="departments", ref="departmentId",
+                v-select(v-model="materialPlan.departmentId", :items="departments", ref="departmentId",  :readonly='see',
                   item-text="name", item-value="id", label="需求部门" :rules="rules.union(rules.required('需求部门'))")
               v-flex(sm12, md6, lg4)
-                v-text-field(v-model="materialPlan.needPeople", ref="needPeople", label="需求人员",
+                v-text-field(v-model="materialPlan.needPeople", ref="needPeople", label="需求人员",  :readonly='see',
                   :rules="rules.union(rules.required('需求人员'))")
               v-flex(xs12, md6, lg4, v-if="materialPlan.planType === '月度计划'")
                 v-menu(ref="month", :close-on-content-click="false", :return-value.sync="date", transition="scale-transition",
-                  v-model="menu", max-width="290px", min-width="290px")
+                  v-model="menu", max-width="290px", min-width="290px", :disabled="see")
                   template(v-slot:activator="{ on }")
                     v-text-field(v-model="materialPlan.month", label="需求月份", readonly, v-on="on",
                       :rules="rules.union(rules.required('需求月份'))")
@@ -41,25 +41,27 @@
                     v-btn(text, color="primary",  @click="menu = false") 取消
                     v-btn(text, color="primary",  @click="$refs.month.save(date)") 选择
               v-flex(sm12, md6, lg4)
-                v-text-field(v-model="materialPlan.remark", label="备注")
+                v-text-field(v-model="materialPlan.remark", label="备注", :readonly='see')
               v-flex(sm12, md6, lg4)
-                v-switch(v-model="materialPlan.isBudgetPlan", :label="`是否预算内计划：${materialPlan.isBudgetPlan? '是' : '否'}`")
-        v-data-table(v-model="selected", :headers="headers", :items="desserts",
+                v-switch(v-model="materialPlan.isBudgetPlan", :label="`是否预算内计划：${materialPlan.isBudgetPlan? '是' : '否'}`", :readonly='see')
+        v-data-table(v-model="selected", :headers="headers", :items="desserts", :loading="loading", no-data-text="暂无数据", no-results-text="暂无数据"
           item-key="materialTrackingCode", :mobile-breakpoint="1200", show-select)
+          template(v-slot:item.isSourceGoods="{ item }")
+            span {{item.isSourceGoods?'是':'否'}}
           template(v-slot:item.action="{ item }")
             v-tooltip(top)
               template(v-slot:activator="{ on }")
-                v-btn.mr-2(outlined, rounded, x-small, fab, color="error", @click="handleDelete(item)", v-on="on")
+                v-btn.mr-2(outlined, rounded, x-small, fab, color="error", @click="handleDelete(item)", v-on="on", :disabled="see")
                   v-icon mdi-delete
               span 删除
             v-tooltip(top)
               template(v-slot:activator="{ on }")
-                v-btn.mr-2(outlined, rounded, x-small, fab, color="success", @click="handleEdit(item)", v-on="on")
+                v-btn.mr-2(outlined, rounded, x-small, fab, color="success", @click="handleEdit(item)", v-on="on", :disabled="see")
                   v-icon mdi-pencil
               span 编辑
             v-tooltip(top)
               template(v-slot:activator="{ on }")
-                v-btn(outlined, rounded, x-small, fab, color="primary", @click="handleCopy(item)", v-on="on")
+                v-btn(outlined, rounded, x-small, fab, color="primary", @click="handleCopy(item)", v-on="on", :disabled="see")
                   v-icon file_copy
               span 复制
           template(v-slot:top)
@@ -68,13 +70,13 @@
               v-spacer
               v-dialog(v-model="dialog", max-width="1200px", persistent)
                 template(v-slot:activator="{ on }")
-                  v-btn.mb-2.ml-3.mr-3(text, color="primary", v-on="on") 添加
-                  v-btn.mb-2.ml-3.mr-3(text, color="error", @click="handleDeleteSelected") 删除所选物料
+                  v-btn.mb-2.ml-3.mr-3(text, color="primary", v-on="on", :disabled="see") 添加
+                  v-btn.mb-2.ml-3.mr-3(text, color="error", @click="handleDeleteSelected", :disabled="see") 删除所选物料
                 v-card
                   v-card-title(primary-title)
                     .headline.lighten-2 添加数据
                     v-spacer
-                    v-btn(icon,  @click="dialog = false")
+                    v-btn(icon,  @click="handleClose")
                       v-icon mdi-close
                   v-card-text
                     v-form(ref="add")
@@ -101,26 +103,24 @@
                                 v-text-field(v-model="editedItem.date", v-on="on", label="需求日期", readonly, :rules="rules.union(rules.required('需求日期'))")
                               v-date-picker(v-model="editedItem.date", no-title, @input="dayMenu = false", locale="zh-cn")
                           v-flex(xs12, md6, md4)
-                            v-select(v-model="editedItem.expectationSupplier", label="期望供应商", :items="suppliers",
-                              item-text="name", return-object, item-value="name")
+                            v-select(v-model="editedItem.expectationSupplier", label="期望供应商", :items="suppliers", item-text="name", item-value="name")
                           v-flex(xs12, md6, md4)
-                            v-select(v-model="editedItem.fixedSupplier", label="固定供应商", :items="suppliers",
-                              item-text="name", return-object, item-value="name")
+                            v-select(v-model="editedItem.fixedSupplier", label="固定供应商", :items="suppliers", item-text="name", item-value="name")
                           v-flex(xs12, md6, md4)
-                            v-select(v-model="editedItem.inventory", label="需求库存组织", :items="inventory",
-                              item-text="name", return-object, item-value="name")
+                            v-select(v-model="editedItem.inventory", label="需求库存组织", :items="inventory", item-text="name", item-value="name")
                           v-flex(xs12, md6, md4)
                             v-text-field(:value="editedItem.materialTrackingCode", label="物料追踪码", readonly, hint="此项为随机生成，请勿修改")
                           v-flex(xs12, md6, md4)
                             v-switch(v-model="editedItem.isSourceGoods", :label="`货源是否确定:${editedItem.isSourceGoods ? '是': '否'}`")
                   v-card-actions
                     v-spacer
-                    v-btn(text, color="error", @click="initEdit") 重置
-                    v-btn(text, color="success", @click="handleAdd") 添加
+                    v-btn(text, color="error", @click="handleReset") 重置
+                    v-btn(text, color="success", @click="handleAdd") {{editIndex < 0 ? '添加' : '保存修改'}}
       v-card-actions
         v-spacer
-        v-btn(text, color="purple", @click="handleSave") 保存
-        v-btn(text, color="success", @click="handleSaveAndSubmit") 保存并提交
+        slot
+        v-btn(text, color="purple", @click="handleSave") {{see? '编辑' : '保存'}}
+        v-btn(v-if="!see", text, color="success", @click="handleSaveAndSubmit") 保存并提交
 </template>
 
 <script>
@@ -132,6 +132,7 @@ const uuidv4 = require('uuid/v4')
 export default {
   name: 'MaterialPlan',
   data: () => ({
+    loading: false,
     selected: [],
     menu: false,
     dayMenu: false,
@@ -141,6 +142,7 @@ export default {
     materials: [],
     suppliers: [],
     inventory: [],
+    see: false,
     rules: {
       required: requiredRules,
       union: unionRules
@@ -162,27 +164,29 @@ export default {
       remark: null
     },
     desserts: [],
+    editIndex: -1,
     headers: [
-      { text: '物料分类编码', value: 'materialTypeCode' },
-      { text: '物料分类名称', value: 'materialTypeName' },
-      { text: '物料编码', value: 'materialCode' },
-      { text: '物料名称', value: 'materialName' },
-      { text: '规格', value: 'specifications' },
-      { text: '型号', value: 'size' },
-      { text: '计量单位', value: 'unit' },
-      { text: '需求数量', value: 'number' },
-      { text: '需求日期', value: 'date' },
-      { text: '货源是否确定', value: 'isSourceGoods' },
-      { text: '期望供应商', value: 'expectationSupplier' },
-      { text: '固定供应商', value: 'fixedSupplier' },
-      { text: '需求库存组织', value: 'inventory' },
+      { text: '物料分类编码', value: 'materialTypeCode', align: 'center' },
+      { text: '物料分类名称', value: 'materialTypeName', align: 'center' },
+      { text: '物料编码', value: 'materialCode', align: 'center' },
+      { text: '物料名称', value: 'materialName', align: 'center' },
+      { text: '规格', value: 'specifications', align: 'center' },
+      { text: '型号', value: 'size', align: 'center' },
+      { text: '计量单位', value: 'unit', align: 'center' },
+      { text: '需求数量', value: 'number', align: 'center' },
+      { text: '需求日期', value: 'date', align: 'center' },
+      { text: '货源是否确定', value: 'isSourceGoods', align: 'center' },
+      { text: '期望供应商', value: 'expectationSupplier', align: 'center' },
+      { text: '固定供应商', value: 'fixedSupplier', align: 'center' },
+      { text: '需求库存组织', value: 'inventory', align: 'center' },
+      { value: 'isEnable', filter: value => value, sortable: false, width: '0px' },
       { text: '操作', value: 'action', sortable: false, width: '160px', align: 'center' }
     ]
   }),
   props: {
-    edit: {
-      type: Boolean,
-      default: false
+    seeId: {
+      type: Number,
+      default: 0
     }
   },
   created () {
@@ -192,6 +196,15 @@ export default {
     restAPI.getAll('materialType').then(res => { this.materialTypes = res.data.content })
     restAPI.getAll('supplier').then(res => { this.suppliers = res.data.content })
     restAPI.getAll('inventory').then(res => { this.inventory = res.data.content })
+    if (this.seeId !== 0) {
+      this.see = true
+      this.loading = true
+      restAPI.getOne('materialDemandPlan', this.seeId).then(res => { this.materialPlan = res.data })
+      materialPlanAPI.planMaterialByPlanId(this.seeId).then(res => {
+        this.desserts = res.data.content
+        this.loading = false
+      })
+    }
   },
   watch: {
     date (val) {
@@ -217,7 +230,8 @@ export default {
         inventory: null,
         materialTrackingCode: uuidv4(),
         materialType: null,
-        material: null
+        material: null,
+        isEnable: true
       }
     },
     handleAdd () {
@@ -226,7 +240,9 @@ export default {
       this.editedItem.materialTypeName = this.editedItem.materialType.name
       this.editedItem.materialCode = this.editedItem.material.code
       this.editedItem.materialName = this.editedItem.material.name
-      this.desserts.unshift(this._.cloneDeep(this.editedItem))
+      if (this.editIndex < 0) this.desserts.unshift(this._.cloneDeep(this.editedItem))
+      else this.desserts[this.editIndex] = this._.cloneDeep(this.editedItem)
+      this.editIndex = -1
       this.initEdit()
       this.dialog = false
     },
@@ -236,37 +252,60 @@ export default {
       return `${year}${month}`
     },
     handleDelete (item) {
-      this.desserts.splice(this._.indexOf(this.desserts, item), 1)
+      if (this.seeId !== 0) item.isEnable = false
+      else this.desserts.splice(this._.indexOf(this.desserts, item), 1)
     },
     handleDeleteSelected () {
       if (this.selected.length <= 0) {
         this.$message('您没有选择任何数据', 'warning')
         return
       }
-      this._.forEach(this.selected, value => {
-        this.desserts.splice(this._.indexOf(this.desserts, value), 1)
-        this.selected = []
-      })
+      this._.forEach(this.selected, value => { this.handleDelete(value) })
+      this.selected = []
     },
     handleEdit (item) {
-      console.log(item)
+      this.editIndex = this._.indexOf(this.desserts, item)
+      this.editedItem = this._.cloneDeep(item)
+      this.editedItem.materialType = this._.find(this.materialTypes, { code: item.materialTypeCode })
+      this.editedItem.material = this._.find(this.materials, { code: item.materialCode })
+      this.dialog = true
     },
     handleCopy (item) {
       let copy = this._.cloneDeep(item)
       copy.materialTrackingCode = uuidv4()
+      copy.id = null
       this.desserts.unshift(copy)
     },
     handleSave () {
       if (!this.$refs.base.validate(true)) return
+      if (this.see) {
+        this.see = false
+        return
+      }
       materialPlanAPI.saveOrUpdate(this.materialPlan, this.desserts)
-        .then(() => this.$message('保存数据成功！', 'success'))
+        .then(() => {
+          this.$message('保存数据成功！', 'success')
+          this.see = true
+        })
     },
     handleSaveAndSubmit () {
       if (!this.$refs.base.validate(true)) return
       this.materialPlan.approvalStatus = 'APPROVAL_ING'
       this.materialPlan.planType = 'APPROVAL'
       materialPlanAPI.saveOrUpdate(this.materialPlan, this.desserts)
-        .then(() => this.$message('保存数据并提交成功！', 'success'))
+        .then(() => {
+          this.$message('保存数据并提交成功！', 'success')
+          this.see = true
+        })
+    },
+    handleReset () {
+      if (this.editIndex < 0) this.initEdit()
+      else this.editedItem = this.desserts[this.editIndex]
+    },
+    handleClose () {
+      this.dialog = false
+      this.editIndex = 0
+      this.initEdit()
     }
   }
 }

@@ -15,8 +15,7 @@ export const getAllByPage = (resource, params) => {
     }).then(res => {
       resolve(res)
     }).catch(error => {
-      // TODO:初始化失败提示
-      console.log(error)
+      Vue.prototype.$message('初始化失败', 'error')
       reject(error)
     })
   })
@@ -36,7 +35,6 @@ export const getAll = (resource) => {
       resolve(res)
     }).catch(error => {
       Vue.prototype.$message('初始化失败', 'error')
-      console.log(error)
       reject(error)
     })
   })
@@ -58,7 +56,6 @@ export const deleteByLink = (resource) => {
       resolve(res)
     }).catch(error => {
       Vue.prototype.$message('删除数据失败', 'error')
-      console.log(error)
       reject(error)
     })
   })
@@ -91,7 +88,7 @@ export const addOne = (resource, data) => {
  * 更新一个资源
  *
  * @param resource 资源名称
- * @param id 资源 ID
+ * @param data 资源
  * @param data 更新数据
  * @returns {*} 请求结果
  */
@@ -106,7 +103,6 @@ export const putOne = (resource, data) => {
       resolve(res)
     }).catch(error => {
       Vue.prototype.$message('更新数据失败', 'error')
-      console.log(error)
       reject(error)
     })
   })
@@ -132,6 +128,27 @@ export const patchOne = (resource, id, data) => {
     }).catch(error => {
       Vue.prototype.$message('更新数据失败', 'error')
       console.log(error)
+      reject(error)
+    })
+  })
+}
+
+/**
+ * 获取一个资源
+ *
+ * @param resource 资源名称
+ * @param id 资源 ID
+ * @returns {*} 请求结果
+ */
+export const getOne = (resource, id) => {
+  return new Promise((resolve, reject) => {
+    axios.request({
+      url: `/rest/${resource}/${id}`,
+      method: 'get'
+    }).then(res => {
+      resolve(res)
+    }).catch(error => {
+      Vue.prototype.$message('获取数据失败', 'error')
       reject(error)
     })
   })

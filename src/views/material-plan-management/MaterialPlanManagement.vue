@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-container.one-plan-mangement
+  v-container.one-plan-mangement(v-if="see < 1")
     v-card
       v-card-title 计划表管理
       v-card-text
@@ -23,7 +23,8 @@
                     v-text-field(v-model="search.createTime", v-on="on", label="需求日期", readonly)
                   v-date-picker(v-model="search.createTime", no-title, @input="dayMenu = false", locale="zh-cn")
           v-data-table(:headers="headers", :items="materialPlan", :loading="loading", loading-text="加载中......",
-            item-key="id", :mobile-breakpoint="900",  :custom-filter="filterSearch", :search="searchValue")
+            item-key="id", :mobile-breakpoint="900",  :custom-filter="filterSearch", :search="searchValue",
+            no-data-text="暂无数据", no-results-text="暂无数据")
             template(v-slot:item.planType="{ item }")
               v-chip(:color="item.planType === '紧急计划' ? 'error' : 'blue'", dark) {{item.planType}}
             template(v-slot:item.createTime="{ item }")
@@ -31,7 +32,7 @@
             template(v-slot:item.action="{ item }")
               v-tooltip(top)
                 template(v-slot:activator="{ on }")
-                  v-btn.mr-2(outlined, rounded, x-small, fab, color="success", @click="handleEdit(item)", v-on="on")
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="success", @click="handleSee(item)", v-on="on")
                     v-icon remove_red_eye
                 span 查看
               v-tooltip(top)
@@ -39,16 +40,23 @@
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="error", @click="handleDelete(item)", v-on="on")
                     v-icon mdi-delete
                 span 删除
-
+  material-plan(v-else, :see-id="see")
+    v-btn(text, color="primary", @click="handleBack") 返回
 </template>
 
 <script>
-import * as materialPlanAPI from '_api/materialPlan'
+import * as restAPI from '_api/rest'
+import MaterialPlan from '_c/material-plan'
+
 export default {
   name: 'MaterialPlanManagement',
+  components: {
+    MaterialPlan
+  },
   data: () => ({
     materialPlan: [],
     dayMenu: false,
+    see: 0,
     search: {
       name: '',
       planType: '',
@@ -80,7 +88,7 @@ export default {
   created () {
     let _this = this
     this.loading = true
-    materialPlanAPI.getAll()
+    restAPI.getAll('materialDemandPlan')
       .then(res => {
         res.data.content.forEach(p => {
           p.planStatus = _this.planStatusData(p.planStatus)
@@ -110,11 +118,14 @@ export default {
     dateFormat (date) {
       return date.replace('T', '&nbsp;&nbsp;')
     },
-    handleEdit (item) {
-      //
+    handleSee (item) {
+      this.see = item.id
     },
     handleDelete (item) {
       //
+    },
+    handleBack () {
+      this.see = 0
     },
     filterSearch (value, search, item) {
       const condition = search.split('&')
