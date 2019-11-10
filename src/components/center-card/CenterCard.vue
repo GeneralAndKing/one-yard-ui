@@ -18,5 +18,6 @@ export default {
 </script>
 
 <style scoped lang="stylus">
-
+  .one-center-card
+    overflow: hidden;
 </style>

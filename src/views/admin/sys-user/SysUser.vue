@@ -9,7 +9,7 @@
             v-avatar(size="36px")
               v-img(:src="item.icon", :alt="item.name", lazy-src="https://picsum.photos/id/11/10/6")
           template(v-slot:item.roles="{ item }")
-            v-chip {{item.role.name}}
+            v-chip.mr-1(v-for="role in item.roles", :key="role.name") {{role.description}}
           template(v-slot:item.status="{ item }")
             v-switch(:loading="item.loading", :disabled="item.disabled" v-model="item.status",
               true-value="NORMAL", false-value="LOCKED", :value="item.status", @click.stop="handleStatus(item)",
@@ -35,41 +35,41 @@
                     span.headline {{ formTitle }}
                   v-card-text
                     v-form(ref="editedItem")
-                        v-container(grid-list-md)
-                          v-layout(wrap)
-                            v-flex(xs12, sm12)
-                              v-img(:src="editedItem.icon", :width="64", :height="64" )
-                            v-flex(xs12, sm6, md4)
-                              v-text-field(v-model="editedItem.username", counter="18", label="用户名", validate-on-blur,
-                                :rules="rules.union(rules.required('用户名'))", ref="username", @blur="handleExist('username')")
-                                template(v-slot:append)
-                                  v-progress-circular(v-if="load.username", size="24", color="info", indeterminate)
-                            v-flex(xs12, sm6, md4)
-                              v-text-field(v-model="editedItem.name", counter="18", label="姓名", validate-on-blur,
-                                :rules="rules.union(rules.required('姓名'))", ref="name")
-                            v-flex(xs12, sm6, md4)
-                              v-text-field(type="password", v-model="editedItem.password", counter="60", label="密码", validate-on-blur,
-                                :rules="rules.password", ref="password")
-                                template(v-slot:append)
-                                  v-progress-circular(v-if="load.email", size="24", color="info", indeterminate)
-                            v-flex(xs12, sm6, md4)
-                              v-file-input(accept="image/*", label="上传头像", small-chips, prepend-icon="", validate-on-blur,
-                                :rules="rules.union(rules.image('头像', 2000000))", ref="icon")
-                                template(v-slot:append)
-                                  v-progress-circular(v-if="load.phone", size="24", color="info", indeterminate)
-                            v-flex(xs12, sm6, md4)
-                              v-text-field(type="email", v-model="editedItem.email", counter="30", hint="可能用于找回密码", validate-on-blur,
-                                label="电子邮箱" :rules="rules.email", ref="email", @blur="handleExist('email')")
-                            v-flex(xs12, sm6, md4)
-                              v-text-field(type="phone", v-model="editedItem.phone", counter="11", hint="长度为11位的手机号", validate-on-blur,
-                                label="手机号", :rules="rules.phone", @blur="handleExist('phone')", ref="phone")
-                            v-flex(xs12, sm6, md4)
-                              v-text-field(type="number", v-model="editedItem.sort", label="排序", :rules="rules.union(rules.required('排序'))")
-                            v-flex(xs12, sm12)
-                              v-select(v-model="editedItem.role", label="角色", :items="roles", item-text="name", chips, return-object,
-                                :rules="rules.union(rules.required('角色'))")
-                            v-flex(xs12, sm12)
-                              v-textarea(label="备注", v-model="editedItem.remark", counter="250")
+                      v-container(grid-list-md)
+                        v-layout(wrap)
+                          v-flex(xs12, sm12)
+                            v-img(:src="editedItem.icon", :width="64", :height="64" )
+                          v-flex(xs12, sm6, md4)
+                            v-text-field(v-model="editedItem.username", counter="18", label="用户名", validate-on-blur,
+                              :rules="rules.union(rules.required('用户名'))", ref="username", @blur="handleExist('username')")
+                              template(v-slot:append)
+                                v-progress-circular(v-if="load.username", size="24", color="info", indeterminate)
+                          v-flex(xs12, sm6, md4)
+                            v-text-field(v-model="editedItem.name", counter="18", label="姓名", validate-on-blur,
+                              :rules="rules.union(rules.required('姓名'))", ref="name")
+                          v-flex(xs12, sm6, md4)
+                            v-text-field(type="password", v-model="editedItem.password", counter="60", label="密码", validate-on-blur,
+                              :rules="rules.password", ref="password")
+                              template(v-slot:append)
+                                v-progress-circular(v-if="load.email", size="24", color="info", indeterminate)
+                          v-flex(xs12, sm6, md4)
+                            v-file-input(accept="image/*", label="上传头像", small-chips, prepend-icon="", validate-on-blur,
+                              :rules="rules.union(rules.image('头像', 2000000))", ref="icon")
+                              template(v-slot:append)
+                                v-progress-circular(v-if="load.phone", size="24", color="info", indeterminate)
+                          v-flex(xs12, sm6, md4)
+                            v-text-field(type="email", v-model="editedItem.email", counter="30", hint="可能用于找回密码", validate-on-blur,
+                              label="电子邮箱" :rules="rules.email", ref="email", @blur="handleExist('email')")
+                          v-flex(xs12, sm6, md4)
+                            v-text-field(type="phone", v-model="editedItem.phone", counter="11", hint="长度为11位的手机号", validate-on-blur,
+                              label="手机号", :rules="rules.phone", @blur="handleExist('phone')", ref="phone")
+                          v-flex(xs12, sm6, md4)
+                            v-text-field(type="number", v-model="editedItem.sort", label="排序", :rules="rules.union(rules.required('排序'))")
+                          v-flex(xs12, sm12)
+                            v-select(v-model="editedItem.roles", label="角色", :items="roles", item-text="description", return-object, chips, multiple,
+                              :rules="rules.union(rules.required('角色'))")
+                          v-flex(xs12, sm12)
+                            v-textarea(label="备注", v-model="editedItem.remark", counter="250")
                   v-card-actions.text-right.justify-end
                     v-btn.darken-1(text, @click="close", dark, color='error') 取消
                     v-btn.darken-1(text, @click="save", dark, color='success') 保存
@@ -104,8 +104,7 @@ export default {
       email: '',
       phone: '',
       sort: 1,
-      roleId: 1,
-      role: null,
+      roles: [],
       status: 'NORMAL',
       createTime: '',
       modifyTime: '',
@@ -123,7 +122,7 @@ export default {
       email: '',
       phone: '',
       sort: 1,
-      role: null,
+      roles: [],
       status: 'NORMAL',
       createTime: '',
       modifyTime: '',
@@ -166,19 +165,18 @@ export default {
   },
   async created () {
     this.loading = true
-    let _this = this
     try {
-      let users = await restAPI.getAll('sysUser')
+      let users = await restAPI.getLink('sysUser/all')
       let roles = await restAPI.getAll('sysRole')
       this.roles = roles.data.content
-      users.data.content.forEach(user => {
+      users.data.forEach(user => {
         user.model = false
-        user.password = 'xxxxxxxxxxxxxxxxxx'
         user.loading = false
         user.disabled = false
-        user.role = _this._.find(roles.data.content, { id: user.roleId })
+        const ids = user.roles.flatMap(r => r.id)
+        user.roles = roles.data.content.filter(r => ids.includes(r.id))
+        this.desserts.push(user)
       })
-      this.desserts = users.data.content
     } finally {
       this.loading = false
     }
@@ -207,20 +205,29 @@ export default {
         this.editedIndex = -1
       }, 300)
     },
-    async save () {
+    save () {
+      let _this = this
       if (this.$refs['editedItem'].validate(true)) {
-        this.editedItem.roleId = this.editedItem.role.id
         if (this.editedIndex > -1) {
           const data = this.editedItem.password === 'xxxxxxxxxxxxxxxxxx'
             ? this._.omit(this.editedItem, 'password')
             : this.editedItem
-          await restAPI.patchOne('sysUser', this.editedItem.id, data)
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          data.roles = []
+          this.editedItem.roles.forEach(role => data.roles.push(_this._.find(role.links, { rel: 'self' }).href))
+          restAPI.patchOne('sysUser', this.editedItem.id, data)
+            .then(() => {
+              Object.assign(this.desserts[this.editedIndex], this.editedItem)
+              this.close()
+            })
         } else {
-          await restAPI.addOne('sysUser', this.editedItem)
-          this.desserts.push(this.editedItem)
+          const data = this._.cloneDeep(this.editedItem)
+          data.roles = []
+          this.editedItem.roles.forEach(role => data.roles.push(_this._.find(role.links, { rel: 'self' }).href))
+          restAPI.addOne('sysUser', data).then(() => {
+            this.desserts.push(this.editedItem)
+            this.close()
+          })
         }
-        this.close()
       }
     },
     handleExist (action) {

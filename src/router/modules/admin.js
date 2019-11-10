@@ -60,7 +60,7 @@ export default {
       },
       component: () => import(/* webpackChunkName: "sys-department" */ '_v/admin/sys-department')
     },
-    { name: '计划表',
+    { name: '物料管理',
       children: [{
         path: 'materialPlanCreate',
         name: 'materialPlanCreate',
@@ -81,6 +81,16 @@ export default {
           icon: 'location_city'
         },
         component: () => import(/* webpackChunkName: "sys-department" */ '_v/material-plan-management')
+      }, {
+        path: 'Summary',
+        name: 'Summary',
+        meta: {
+          route: true,
+          menu: true,
+          meta: '汇总表管理',
+          icon: 'location_city'
+        },
+        component: () => import(/* webpackChunkName: "sys-department" */ '_v/summary')
       }]
     }
 

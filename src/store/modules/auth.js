@@ -14,7 +14,7 @@ const getters = {
     return state.token !== null
   },
   rule: state => {
-    return (state.auth === null || state.auth.authorities === null) ? null : state.auth.authorities[0]
+    return (state.auth === null || state.auth.authorities === null || state.auth.authorities.length === 0) ? null : state.auth.authorities[0]
   },
   token: state => {
     return state.token

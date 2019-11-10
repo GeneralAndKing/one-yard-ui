@@ -5,7 +5,6 @@ import { baseURL } from '_api/config'
 
 const refresh = async function () {
   try {
-    console.log('123')
     let res = await store.dispatch('auth/refreshToken', store.getters['auth/token'].refresh_token)
     let token = res.data
     if (token === null) {

@@ -153,3 +153,43 @@ export const getOne = (resource, id) => {
     })
   })
 }
+
+/**
+ * 获取资源
+ *
+ * @param link 链接
+ * @returns {*} 请求结果
+ */
+export const getRestLink = (link) => {
+  return new Promise((resolve, reject) => {
+    axios.request({
+      url: `/rest/${link}`,
+      method: 'get'
+    }).then(res => {
+      resolve(res)
+    }).catch(error => {
+      Vue.prototype.$message('获取数据失败', 'error')
+      reject(error)
+    })
+  })
+}
+
+/**
+ * 获取资源
+ *
+ * @param link 链接
+ * @returns {*} 请求结果
+ */
+export const getLink = (link) => {
+  return new Promise((resolve, reject) => {
+    axios.request({
+      url: `/${link}`,
+      method: 'get'
+    }).then(res => {
+      resolve(res)
+    }).catch(error => {
+      Vue.prototype.$message('获取数据失败', 'error')
+      reject(error)
+    })
+  })
+}
