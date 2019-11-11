@@ -1,28 +1,42 @@
 <template lang="pug">
-    #auth
-        v-app-bar#auth-bar(app, clipped-left, :color="color", dense)
-            v-app-bar-nav-icon.white--text(@click.stop="drawer = !drawer")
-            v-toolbar-title.mr-12.align-center
-                span.title.white--text G&K 智能制造管理系统
-            v-spacer
-            v-btn(icon)
-                v-icon.white--text(@click="handleTheme") navigation
-            v-menu(left, offset-y)
-                template(v-slot:activator="{ on }")
-                    v-btn(icon, v-on="on")
-                        v-icon.white--text mdi-dots-vertical
-                v-list
-                    v-list-item(
-                        v-for="n in 5",
-                        :key="n",
-                        @click="() => {}",
-                    )
-                        v-list-item-title Option1  {{ n }}
-        v-navigation-drawer(v-model="drawer", app, clipped)
-            treeMenu(:router="menus[0].children")
-        v-content
-            v-scroll-y-transition(hide-on-leave, mode="out-in")
-                router-view
+  #auth
+    v-app-bar#auth-bar(app, clipped-left, :color="color", dense)
+      v-app-bar-nav-icon.white--text(@click.stop="drawer = !drawer")
+      v-toolbar-title.mr-12.align-center
+        span.title.white--text G&K 智能制造管理系统
+      v-spacer
+      v-btn(icon, @click="handleTheme")
+        v-icon.white--text navigation
+      v-badge.one-badge(color="error", overlap, bottom)
+        template(v-slot:badge)
+          span !
+        v-btn(icon)
+          v-icon.white--text mdi-bell
+      v-menu(left, offset-y)
+        template(v-slot:activator="{ on }")
+          v-btn(icon, v-on="on", large)
+            v-icon.white--text mdi-dots-vertical
+        v-list(two-line, subheader, tile)
+          v-list-item(@click="() => {}", link)
+            v-list-item-avatar
+              v-img(src="https://randomuser.me/api/portraits/men/28.jpg", alt="avatar")
+            v-list-item-content
+              v-list-item-title 用户昵称
+              v-list-item-subtitle 574196898(用户名或邮箱)
+          v-list-item-group
+            v-list-item(@click="() => {}", link)
+              v-list-item-avatar
+                v-icon mdi-clock
+              v-list-item-content 个人设置
+            v-list-item(@click="() => {}", link)
+              v-list-item-avatar
+                v-icon mdi-flag
+              v-list-item-content 退出
+    v-navigation-drawer(v-model="drawer", app, clipped)
+      treeMenu(:router="menus[0].children")
+    v-content
+      v-scroll-y-transition(hide-on-leave, mode="out-in")
+        router-view
 </template>
 
 <script>
@@ -50,7 +64,7 @@ export default {
     this.connection()
   },
   beforeDestroy () {
-    this.disconnect()
+    if (this.socket !== null) this.socket.close()
   },
   methods: {
     handleTheme () {
@@ -72,13 +86,6 @@ export default {
       }
       this.socket.onclose = () => {
         console.log('连接关闭')
-      }
-    },
-    // 断开连接
-    disconnect () {
-      if (this.stompClient != null) {
-        this.stompClient.disconnect()
-        console.log('Disconnected')
       }
     }
   }

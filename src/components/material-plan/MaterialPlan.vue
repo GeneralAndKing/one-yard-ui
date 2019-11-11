@@ -83,7 +83,7 @@
                       v-container(grid-list-md)
                         v-layout(wrap)
                           v-flex(xs12, md6, md4)
-                            v-select(v-model="editedItem.materialType", label="物料分类", :items="materialTypes",
+                            v-select(v-model="editedItem.materialType", label="物料分类", :items="materialTypes", @change="materialSelect",
                               item-text="name", return-object, :rules="rules.union(rules.required('需求部门'))")
                           v-flex(xs12, md6, md4)
                             v-select(v-model="editedItem.material", label="物料", :items="materials",
@@ -192,7 +192,6 @@ export default {
   created () {
     this.initEdit()
     restAPI.getAll('sysDepartment').then(res => { this.departments = res.data.content })
-    restAPI.getAll('material').then(res => { this.materials = res.data.content })
     restAPI.getAll('materialType').then(res => { this.materialTypes = res.data.content })
     restAPI.getAll('supplier').then(res => { this.suppliers = res.data.content })
     restAPI.getAll('inventory').then(res => { this.inventory = res.data.content })
@@ -306,6 +305,11 @@ export default {
       this.dialog = false
       this.editIndex = 0
       this.initEdit()
+    },
+    materialSelect (item) {
+      this.material = null
+      restAPI.getRestLink(`material/search/byTypeId?typeId=${item.id}`)
+        .then(res => { this.materials = res.data.content })
     }
   }
 }
