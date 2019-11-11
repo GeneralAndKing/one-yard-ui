@@ -95,9 +95,8 @@ export default {
               scope: 'all'
             })
             await _this.$store.dispatch('auth/checkToken', _this.$store.getters['auth/token'].access_token)
-            _this.$router.push({ name: 'home' })
+            await _this.$router.push({ name: 'home' })
           } catch (e) {
-            console.log(e.data)
             _this.$refs['password'].errorBucket = (e.data && e.data.hasOwnProperty('error_description')) ? [e.data.error_description] : ['验证失败']
           } finally {
             _this.load = false

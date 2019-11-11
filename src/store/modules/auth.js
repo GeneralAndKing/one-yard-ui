@@ -73,7 +73,7 @@ const actions = {
         return Promise.resolve(res)
       }
     }).catch(error => {
-      return Promise.reject(error)
+      return Promise.reject(error.response)
     })
   },
   checkToken ({ commit, dispatch }, accessToken) {
@@ -83,7 +83,7 @@ const actions = {
       commit('SET_USER', res.data.user_name)
       return Promise.resolve(res)
     }).catch(error => {
-      return Promise.reject(error)
+      return Promise.reject(error.response)
     })
   },
   refreshToken ({ commit, dispatch }, refreshToken) {
@@ -92,7 +92,7 @@ const actions = {
       commit('SET_USER', res.data.user_name)
       return Promise.resolve(res)
     }).catch(error => {
-      return Promise.reject(error)
+      return Promise.reject(error.response)
     })
   },
   logout ({ commit }) {

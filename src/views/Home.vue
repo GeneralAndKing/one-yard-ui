@@ -28,6 +28,7 @@
 <script>
 import { genMenu } from '_u/util'
 import treeMenu from '_c/tree-menu'
+import * as restAPI from '_api/rest'
 export default {
   name: 'home',
   components: { treeMenu },
@@ -35,30 +36,6 @@ export default {
     drawer: true,
     theme: false,
     menus: []
-    // menus: [{
-    //   children: [
-    //     { icon: 'dashboard', text: '仪表盘', to: { name: 'dashboard' } },
-    //     { icon: 'account_circle', text: '用户管理', to: { name: 'sysUser' } },
-    //     { icon: 'mdi-account-badge-horizontal-outline', text: '角色管理', to: { name: 'sysRole' } },
-    //     { icon: 'mdi-home-account', text: '部门管理', to: { name: 'sysDepartment' } },
-    //     { icon: 'how_to_vote', text: '权限管理', to: { name: 'sysPermission' } }
-    //   ]
-    // }, {
-    //   name: '物料需求',
-    //   children: [
-    //     { icon: 'location_city', text: '创建计划表', to: { name: 'materialPlanCreate' } },
-    //     { icon: 'av_timer', text: '学期管理', to: { name: 'semester' } },
-    //     { icon: 'school', text: '教师管理', to: { name: 'teacher' } }
-    //   ]
-    // }, {
-    //   name: '系统管理',
-    //   children: [
-    //     { icon: 'cast_connected', text: '客户端管理', to: { name: 'client' } },
-    //     { icon: 'invert_colors', text: '令牌管理', to: { name: 'token' } },
-    //     { icon: 'trending_up', text: '统计分析', to: { name: 'analytics' } },
-    //     { icon: 'settings', text: '系统设置', to: { name: 'setting' } }
-    //   ]
-    // }]
   }),
   computed: {
     color: function () {
@@ -70,10 +47,39 @@ export default {
     let router = this.$store.getters['auth/router']
     console.log('asd')
     this.menus = genMenu(router)
+    this.connection()
+  },
+  beforeDestroy () {
+    this.disconnect()
   },
   methods: {
     handleTheme () {
       this.theme = this.$vuetify.theme.dark = !this.$vuetify.theme.dark
+    },
+    connection () {
+      // 建立连接对象
+      this.socket = new WebSocket('ws://localhost:8080/api/notify/1')
+      restAPI.getLink('notification/test/1')
+      this.socket.onerror = err => {
+        console.log(err)
+      }
+      this.socket.onopen = event => {
+        console.log(event)
+      }
+      this.socket.onmessage = mess => {
+        console.log(mess)
+        console.log(JSON.parse(mess.data))
+      }
+      this.socket.onclose = () => {
+        console.log('连接关闭')
+      }
+    },
+    // 断开连接
+    disconnect () {
+      if (this.stompClient != null) {
+        this.stompClient.disconnect()
+        console.log('Disconnected')
+      }
     }
   }
 }
