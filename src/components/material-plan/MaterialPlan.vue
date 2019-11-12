@@ -140,7 +140,7 @@
       v-card-actions
         v-spacer
         slot
-        v-btn(text, color="purple", @click="handleSave(false)", v-if="materialPlan === 'FREE'") {{see? '编辑' : '保存'}}
+        v-btn(text, color="purple", @click="handleSave(false)", v-if="materialPlan.planStatus === 'FREE'") {{see? '编辑' : '保存'}}
         v-btn(v-if="!see", text, color="success", @click="handleSave(true)") 保存并提交审批
 </template>
 
@@ -312,7 +312,7 @@ export default {
       }
       if (submit) {
         this.materialPlan.approvalStatus = 'APPROVAL_ING'
-        this.materialPlan.planType = 'APPROVAL'
+        this.materialPlan.planStatus = 'APPROVAL'
       }
       materialPlanAPI.saveOrUpdate(this.materialPlan, this.desserts)
         .then(() => {
