@@ -34,7 +34,7 @@
                 v-icon mdi-flag
               v-list-item-content 退出
     v-navigation-drawer(v-model="drawer", app, clipped)
-      treeMenu(:router="menus[0].children")
+      treeMenu(:router="menus")
     v-navigation-drawer(v-model="notice", fixed, right, temporary)
       v-tabs(v-model="currentItem", show-arrows)
         v-tab(v-for="(item) in messages", :href="`#tab-${item.type}`") {{item.type}}
@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { genMenu } from '_u/util'
+import { genMenu } from '_u/menu'
 import treeMenu from '_c/tree-menu'
 import * as restAPI from '_api/rest'
 export default {
@@ -101,8 +101,7 @@ export default {
   },
   created () {
     this.$vuetify.theme.dark = false
-    let router = this.$store.getters['auth/router']
-    this.menus = genMenu(router)
+    this.menus = genMenu()
     this.connection()
     this.initShowMessage()
   },

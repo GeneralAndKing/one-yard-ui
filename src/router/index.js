@@ -1,32 +1,43 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { whiteRoutes, routeMap } from './router'
+import { routes } from './router'
 import store from '_store'
-import { genRouter } from '_u/util'
+import { Role, checkPermissions } from '../utils/role'
 Vue.use(VueRouter)
 const router = new VueRouter({
-  routes: whiteRoutes
+  routes: routes
 })
 router.beforeEach((to, from, next) => {
-  console.log('asd')
   // TODO: 加载开始
   // iView.LoadingBar.start()
   // 所有的路由必须有name 利用name做路由认证
-  if (to.meta === undefined || to.meta.length === 0 || !to.meta.route) {
+  console.log(from)
+  if (to.meta === {} || to.meta.auth === undefined) {
+    next({ name: 'error',
+      query: {
+        text: '页面不存在',
+        code: 404
+      },
+      replace: true })
+  } else if (!to.meta.auth.includes(Role.ROLE_PUBLIC)) {
     if (store.getters['auth/isAuth']) {
-      console.log(store.getters['auth/refresh'])
-      if (store.getters['auth/router'] === null) {
-        let routers = routeMap[store.getters['auth/rule']]
-        router.addRoutes(genRouter(routers))
-        store.commit('auth/SET_ROUTER', routers)
-        next({ ...to, replace: true })
+      if (checkPermissions(to.meta.auth, store.getters['auth/role'])) {
+        next()
       } else {
-        // 已登陆并拉取权限表 前往错误页面
-        next({ name: 'error' })
+        next({ name: 'error',
+          query: {
+            text: '你没有权限访问',
+            code: 403
+          },
+          replace: true })
       }
     } else {
       // 未登录 前往登陆页面
-      next({ name: 'login' })
+      next({ name: 'error',
+        query: {
+          text: '请登陆后进行操作',
+          code: 401
+        } })
     }
   } else {
     next()

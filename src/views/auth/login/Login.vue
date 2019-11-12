@@ -27,7 +27,7 @@
 
 <script>
 import CenterCard from '_c/center-card/CenterCard'
-import { emailRules, passwordRules } from '_u/rules'
+import { emailRules, passwordRules } from '_u/rule'
 import * as oauthAPI from '_api/oauth'
 
 export default {
@@ -94,7 +94,7 @@ export default {
               grant_type: 'password',
               scope: 'all'
             })
-            await _this.$store.dispatch('auth/checkToken', _this.$store.getters['auth/token'].access_token)
+            await _this.$store.dispatch('auth/checkToken')
             await _this.$router.push({ name: 'home' })
           } catch (e) {
             _this.$refs['password'].errorBucket = (e.data && e.data.hasOwnProperty('error_description')) ? [e.data.error_description] : ['验证失败']

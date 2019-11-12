@@ -4,8 +4,8 @@
         v-container.fill-height
           v-layout(align-center, justify-center)
             v-flex.text-center
-              h1.display-1.blue--text 哎呀，出错了！ 404
-              p.mt-2 你访问的页面不存在哦～
+              h1.display-1.blue--text {{text}} {{code}}
+              p.mt-2 ~~~
               v-btn(outlined, color="primary", @click="handleBack") 点击返回
 </template>
 
@@ -13,10 +13,21 @@
 export default {
   name: 'error',
   data: () => ({
+    text: '未知错误',
+    code: 500
   }),
+  created () {
+    if (this.$route.query.text !== undefined) this.text = this.$route.query.text
+    if (this.$route.query.code !== undefined) this.code = this.$route.query.code
+  },
   methods: {
     handleBack () {
-      this.$router.push({ name: 'login' })
+      console.log(this.code)
+      if (parseInt(this.code) === 401) {
+        this.$router.push({ name: 'login' })
+      } else {
+        this.$router.back()
+      }
     }
   }
 }
