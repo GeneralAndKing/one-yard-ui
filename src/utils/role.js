@@ -12,7 +12,14 @@ export const Role = {
   ROLE_PROCUREMENT_SUPERVISOR: 11, // 采购部门主管
   ROLE_FINANCE: 12, // 财务管理员
   ROLE_FINANCE_PLANER: 13, // 财务部门提报员
-  ROLE_FINANCE_SUPERVISOR: 14 // 财务部门主管
+  ROLE_FINANCE_SUPERVISOR: 14, // 财务部门主管
+  all () {
+    let ROLE_ALL = []
+    Object.keys(Role).forEach((key) => {
+      ROLE_ALL.push(Role[key])
+    })
+    return ROLE_ALL
+  }
 }
 
 /**

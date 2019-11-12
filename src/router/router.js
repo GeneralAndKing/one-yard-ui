@@ -28,14 +28,22 @@ export const routes = [
     path: '/home',
     component: Home,
     name: 'home',
-    redirect: '/home/dashboard',
+    redirect: '/home/index',
     children: [
+      {
+        path: 'index',
+        name: 'index',
+        meta: {
+          meta: '欢迎使用',
+          auth: Role.all()
+        },
+        component: () => import(/* webpackChunkName: "dashboard" */ '_v/index')
+      },
       {
         path: 'dashboard',
         name: 'dashboard',
         meta: {
           meta: '仪表盘',
-          icon: 'dashboard',
           auth: [Role.ROLE_ADMIN]
 
         },
@@ -46,7 +54,6 @@ export const routes = [
         name: 'sysUser',
         meta: {
           meta: '用户管理',
-          icon: 'account_circle',
           auth: [Role.ROLE_ADMIN]
         },
         component: () => import(/* webpackChunkName: "sys-user" */ '_v/admin/sys-user')
@@ -56,7 +63,6 @@ export const routes = [
         name: 'sysRole',
         meta: {
           meta: '角色管理',
-          icon: 'mdi-account-badge-horizontal-outline',
           auth: [Role.ROLE_ADMIN]
         },
         component: () => import(/* webpackChunkName: "sys-role" */ '_v/admin/sys-role')
@@ -66,7 +72,6 @@ export const routes = [
         name: 'sysPermission',
         meta: {
           meta: '权限管理',
-          icon: 'how_to_vote',
           auth: [Role.ROLE_ADMIN]
         },
         component: () => import(/* webpackChunkName: "sys-permission" */ '_v/admin/sys-permission')
@@ -76,7 +81,6 @@ export const routes = [
         name: 'sysDepartment',
         meta: {
           meta: '部门管理',
-          icon: 'how_to_vote',
           auth: [Role.ROLE_ADMIN]
         },
         component: () => import(/* webpackChunkName: "sys-department" */ '_v/admin/sys-department')
@@ -85,7 +89,6 @@ export const routes = [
         name: 'materialPlanCreate',
         meta: {
           meta: '计划表创建',
-          icon: 'location_city',
           auth: [Role.ROLE_ADMIN]
         },
         component: () => import(/* webpackChunkName: "sys-department" */ '_v/material-plan-create')
@@ -94,7 +97,6 @@ export const routes = [
         name: 'materialPlanManagement',
         meta: {
           meta: '计划表管理',
-          icon: 'location_city',
           auth: [
             Role.ROLE_PRODUCTION_PLANER,
             Role.ROLE_WAREHOUSE_PLANER,
@@ -107,7 +109,6 @@ export const routes = [
         name: 'Summary',
         meta: {
           meta: '汇总表管理',
-          icon: 'location_city',
           auth: [
             Role.ROLE_PROCUREMENT_PLANER
           ]
