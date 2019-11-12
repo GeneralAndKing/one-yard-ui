@@ -11,7 +11,6 @@ router.beforeEach((to, from, next) => {
   // TODO: 加载开始
   console.log('router')
   // iView.LoadingBar.start()
-  // 所有的路由必须有name 利用name做路由认证
   if (store.getters['auth/isAuth']) {
     if (to.meta === {} || to.meta.auth === undefined) {
       next({ name: 'error',
@@ -47,7 +46,7 @@ router.beforeEach((to, from, next) => {
 router.afterEach(route => {
   // iView.LoadingBar.finish()
   // TODO: 加载完成
-  window.document.title = route.meta.title || 'admin'
+  window.document.title = route.meta.meta || '一马当先'
 })
 
 export default router

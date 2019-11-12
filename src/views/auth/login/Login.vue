@@ -75,7 +75,7 @@ export default {
   methods: {
     handleAccount () {
       if (this.window === 1) {
-        this.$router.push({ name: 'forget' })
+        this.$router.push({ name: 'forget', params: { email: this.user.email } })
       } else {
         this.$router.push({ name: 'register' })
       }

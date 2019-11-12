@@ -90,6 +90,7 @@ export default {
   },
   created () {
     this.$vuetify.theme.dark = false
+    this.email = this.$route.params.email
   },
   methods: {
     handleAccount () {

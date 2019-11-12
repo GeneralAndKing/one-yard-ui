@@ -5,20 +5,23 @@ export const routes = [
   {
     path: '/login',
     name: 'login',
-    meta: { auth: [Role.ROLE_PUBLIC] },
+    meta: { auth: [Role.ROLE_PUBLIC],
+      meta: '登陆' },
     component: () => import(/* webpackChunkName: "login" */ '_v/auth/login')
 
   },
   {
     path: '/register',
     name: 'register',
-    meta: { auth: [Role.ROLE_PUBLIC] },
+    meta: { auth: [Role.ROLE_PUBLIC],
+      meta: '注册' },
     component: () => import(/* webpackChunkName: "register" */ '_v/auth/register')
   },
   {
     path: '/forget',
     name: 'forget',
-    meta: { auth: [Role.ROLE_PUBLIC] },
+    meta: { auth: [Role.ROLE_PUBLIC],
+      meta: '忘记密码' },
     component: () => import(/* webpackChunkName: "about" */ '_v/auth/forget')
   },
   {
