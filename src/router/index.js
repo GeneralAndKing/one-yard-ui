@@ -9,7 +9,6 @@ const router = new VueRouter({
 })
 router.beforeEach((to, from, next) => {
   // TODO: 加载开始
-  console.log('router')
   // iView.LoadingBar.start()
   if (store.getters['auth/isAuth']) {
     if (to.meta === {} || to.meta.auth === undefined) {
@@ -35,11 +34,7 @@ router.beforeEach((to, from, next) => {
     next()
   } else {
     // 未登录 前往登陆页面
-    next({ name: 'error',
-      query: {
-        text: '请登陆后进行操作',
-        code: 401
-      } })
+    next({ name: 'login' })
   }
 })
 
