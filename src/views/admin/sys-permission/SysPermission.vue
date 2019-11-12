@@ -4,16 +4,14 @@
       v-btn(color="red", text, @click="tip = false") Close
     v-alert(type="warning", border="left", prominent, elevation="2", outlined) 权限管理是系统中极其重要的部分，暂时不提供添加和修改服务！！！
     v-card
-      v-card-text.pa-2.pa-sm-4
-        v-expansion-panels(popout)
+      v-card-text
+        v-expansion-panels
           v-expansion-panel(v-for="(item,i) in sysPermissions", :key="i")
-            v-expansion-panel-header.pa-sm-5.pa-1
+            v-expansion-panel-header
               v-layout(align-center="true", spacer)
-                v-flex(xs4, sm4, md4)
+                v-flex(xs9, sm10, md10)
                   strong {{ item.name }}
-                v-flex(xs6, sm6, md6)
-                  span {{ item.describe }}
-                v-flex(xs2, sm2, md2)
+                v-flex(xs3, sm2, md2)
                   v-chip.white--text(v-if="item.method === 'GET'", color="green") {{ item.method }}
                   v-chip.white--text(v-if="item.method === 'POST'", color="blue") {{ item.method }}
                   v-chip.white--text(v-if="item.method === 'PUT'", color="purple ") {{ item.method }}

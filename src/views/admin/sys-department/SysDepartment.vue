@@ -3,14 +3,14 @@
     v-card
       v-card-text
         v-row
-          v-col
+          v-col(sm="12", md="4", xl="3")
             v-treeview(:items="items", open-on-click, activatable, :open.sync="open",
               :load-children="handleLoading", @update:active="handleActive", item-key="name",
               :active.sync="active", transition, return-object)
               template(v-slot:prepend="{ item, active }")
                 v-icon(v-if="!item.children") mdi-account
           v-divider(vertical)
-          v-col(cols="8", md="7", xl="9")
+          v-col(sm="12", md="7", xl="8")
             v-tabs(v-model="tab")
               v-tabs-slider
               v-tab(href="#tab-1") 角色信息
@@ -40,14 +40,12 @@
                       | 请选择一个角色
                     v-card(v-else, :key="selected.id", flat)
                       v-card-text.pa-2.pa-sm-4
-                        v-expansion-panels(popout)
+                        v-expansion-panels
                           v-expansion-panel(v-for="(item,i) in permissions", :key="i")
                             v-expansion-panel-header.pa-sm-5.pa-1
                               v-layout(align-center="true", spacer)
-                                v-flex(xs4, sm4, md4)
+                                v-flex(xs10, sm10, md10)
                                   strong {{ item.name }}
-                                v-flex(xs6, sm6, md6)
-                                  span {{ item.description }}
                                 v-flex(xs2, sm2, md2)
                                   v-chip.white--text(v-if="item.method === 'GET'", color="green") {{ item.method }}
                                   v-chip.white--text(v-if="item.method === 'POST'", color="blue") {{ item.method }}
