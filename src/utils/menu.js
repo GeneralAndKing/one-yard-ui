@@ -13,12 +13,12 @@ export const MENUS = [
     to: { name: 'sysUser' },
     auth: [Role.ROLE_ADMIN]
   },
-  {
-    text: '角色管理',
-    to: { name: 'sysRole' },
-    icon: 'mdi-account-badge-horizontal-outline',
-    auth: [Role.ROLE_ADMIN]
-  },
+  // {
+  //   text: '角色管理',
+  //   to: { name: 'sysRole' },
+  //   icon: 'mdi-account-badge-horizontal-outline',
+  //   auth: [Role.ROLE_ADMIN]
+  // },
   {
     text: '权限管理',
     to: { name: 'sysPermission' },

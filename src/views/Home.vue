@@ -36,7 +36,7 @@
     v-navigation-drawer(v-model="drawer", app, clipped)
       treeMenu(:router="menus")
     v-navigation-drawer(v-model="notice", fixed, right, temporary, app)
-      v-tabs(v-model="currentItem")
+      v-tabs(v-model="currentItem",  fixed-tabs)
         v-tab(v-for="(item) in messages", :href="`#tab-${item.type}`") {{item.type}}
         v-tabs-items(v-model="currentItem")
           v-tab-item(v-for="item in messages", :key="item.type", :value="`tab-${item.type}`")
