@@ -1,6 +1,6 @@
 import * as oauthAPI from '_api/oauth'
-import { Role } from '../../utils/role'
-
+import { Role } from '_u/role'
+import router from '_router'
 const state = {
   token: null,
   // 授权信息，来源于 checkToken
@@ -37,7 +37,7 @@ const getters = {
     // let diffTime = JSON.parse(sessionStorage.diffTime)
     // /* 校验本地时间 */
     // nowTime -= diffTime
-    /* 如果 < 10分钟，则说明即将过期 */
+    /* 如果 < 5个小时，则说明即将过期 */
     return (expiredTime - nowTime) < (60 * 60 * 5)
   }
 }
@@ -62,7 +62,7 @@ const mutations = {
     state.token = null
     state.user = null
     state.auth = null
-    state.role = null
+    state.role = []
   }
 
 }
@@ -103,6 +103,7 @@ const actions = {
   },
   logout ({ commit }) {
     commit('LOGOUT')
+    router.push({ name: 'login' })
   }
 }
 

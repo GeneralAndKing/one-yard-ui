@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import { routes } from './router'
 import store from '_store'
-import { Role, checkPermissions } from '../utils/role'
+import { Role, checkPermissions } from '_u/role'
 Vue.use(VueRouter)
 const router = new VueRouter({
   routes: routes

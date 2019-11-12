@@ -16,6 +16,7 @@ module.exports = {
       .set('_lib', resolve('src/lib'))
       .set('_store', resolve('src/store'))
       .set('_plugins', resolve('src/plugins'))
+      .set('_router', resolve('src/router'))
   },
 
   productionSourceMap: false,

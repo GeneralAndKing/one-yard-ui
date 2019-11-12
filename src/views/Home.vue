@@ -19,17 +19,17 @@
         v-list(two-line, subheader, dense)
           v-list-item(@click="() => {}", link)
             v-list-item-avatar
-              v-img(src="https://randomuser.me/api/portraits/men/28.jpg", alt="avatar")
+              v-img(:src="me.icon", alt="avatar")
             v-list-item-content
-              v-list-item-title 用户昵称
-              v-list-item-subtitle 574196898(用户名或邮箱)
+              v-list-item-title {{me.name}}
+              v-list-item-subtitle {{me.email}}
           v-divider
           v-list-item-group
             v-list-item(@click="() => {}", link)
               v-list-item-avatar
                 v-icon mdi-clock
               v-list-item-content 个人设置
-            v-list-item(@click="() => {}", link)
+            v-list-item(@click="() => {$store.dispatch('auth/logout')}", link)
               v-list-item-avatar
                 v-icon mdi-flag
               v-list-item-content 退出
@@ -70,6 +70,7 @@ export default {
   name: 'home',
   components: { treeMenu },
   data: () => ({
+    me: null,
     currentItem: null,
     showMessage: null,
     drawer: true,
@@ -102,6 +103,7 @@ export default {
   created () {
     this.$vuetify.theme.dark = false
     this.menus = genMenu()
+    this.me = this.$store.getters['auth/me']
     this.connection()
     this.initShowMessage()
   },

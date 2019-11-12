@@ -1,6 +1,6 @@
 import Home from '_v//Home'
 import Error from '_v//Error'
-import { Role } from '../utils/role'
+import { Role } from '_u/role'
 export const routes = [
   {
     path: '/login',

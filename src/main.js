@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import App from './App.vue'
-import router from './router'
-import store from './store'
-import vuetify from './plugins/vuetify'
-import Message from './plugins/global-message'
+import router from '_router'
+import store from '_store'
+import vuetify from '_plugins/vuetify'
+import Message from '_plugins/global-message'
 import _ from 'lodash'
 Vue.prototype.$message = Message.install
 Vue.config.productionTip = false

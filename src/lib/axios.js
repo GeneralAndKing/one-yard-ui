@@ -77,6 +77,7 @@ class HttpRequest {
       this.destroy(url)
       if (error.response.status === 400 && error.data !== undefined && error.data.hasOwnProperty('error_description')) {
         Vue.prototype.$message(`请求错误:${error.data.error_description}`, 'error')
+        store.dispatch('auth/logout')
       }
       if (error.response.status === 401) {
         Vue.prototype.$message('未经授权:访问由于凭据无效被拒绝', 'error')
