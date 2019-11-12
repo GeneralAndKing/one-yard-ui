@@ -5,12 +5,12 @@ import { baseURL } from '_api/config'
 
 const refresh = async function () {
   try {
-    let res = await store.dispatch('auth/refreshToken', store.getters['auth/token'].refresh_token)
+    let res = await store.dispatch('auth/refreshToken')
     let token = res.data
     if (token === null) {
       return false
     }
-    await store.dispatch('auth/checkToken', token.access_token)
+    await store.dispatch('auth/checkToken')
     return true
   } catch (e) {
     return false

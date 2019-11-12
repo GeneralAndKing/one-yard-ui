@@ -40,7 +40,7 @@
 
 <script>
 import TableCardSheet from '_c/table-card-sheet'
-import { requiredRules, unionRules } from '_u/rules'
+import { requiredRules, unionRules } from '_u/rule'
 
 export default {
   name: 'SysRole',

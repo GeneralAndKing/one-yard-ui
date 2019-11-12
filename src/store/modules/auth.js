@@ -1,30 +1,24 @@
 import * as oauthAPI from '_api/oauth'
+import { Role } from '../../utils/role'
 
 const state = {
-  // 用户信息，来源于 oauthMe
-  user: null,
-  // token 信息，来源于 登录 或 刷新令牌
   token: null,
   // 授权信息，来源于 checkToken
   auth: null,
-  router: null
+  role: []
 }
 const getters = {
   isAuth: state => {
-    return state.token !== null
+    return state.token !== null && state.auth !== null
   },
-  rule: state => {
-    return (state.auth === null || state.auth.authorities === null || state.auth.authorities.length === 0) ? null : state.auth.authorities[0]
+  role: state => {
+    return state.role
   },
   token: state => {
     return state.token
   },
-  router: state => {
-    console.log('dsdsd')
-    return state.router
-  },
   username: state => {
-    return state.auth.user_name || null
+    return state.auth.user_name === null ? '' : state.auth.user_name
   },
   isTokenExpired: state => {
     /* 从localStorage中取出token过期时间 */
@@ -47,52 +41,50 @@ const mutations = {
   SET_TOKEN (state, params) {
     state.token = params
   },
-  SET_USER (state, user) {
-    state.user = user
-  },
   SET_AUTH (state, auth) {
     state.auth = auth
-  },
-  SET_ROUTER (state, router) {
-    state.router = router
+    console.log('role')
+    auth.authorities.forEach((item) => {
+      if (Role.hasOwnProperty(item)) {
+        console.log(Role[item])
+        state.role.push(Role[item])
+      }
+    })
   },
   // logout
   LOGOUT (state) {
     state.token = null
     state.user = null
     state.auth = null
+    state.role = null
   }
 }
 const actions = {
   oauthLogin ({ commit, dispatch }, formUser) {
-    return oauthAPI.oauthToken(formUser).then(res => {
+    return new Promise(async (resolve, reject) => {
+      const res = await oauthAPI.oauthToken(formUser)
+      if (res === null) return reject(new Error('请求失败'))
       let token = res.data
-      if (token !== null) {
-        // 登录完成后，获取用户信息，里面包括了路由权限和用户等信息
-        commit('SET_TOKEN', token)
-        return Promise.resolve(res)
-      }
-    }).catch(error => {
-      return Promise.reject(error.response)
+      if (token === null) return reject(new Error('请求失败'))
+      commit('SET_TOKEN', token)
+      resolve(token) // 接口请求完成
     })
   },
-  checkToken ({ commit, dispatch }, accessToken) {
-    return oauthAPI.checkToken(accessToken).then(res => {
-      console.log('12312')
+  checkToken ({ commit, dispatch, state }) {
+    return new Promise(async (resolve, reject) => {
+      const res = await oauthAPI.checkToken(state.token.access_token)
+      if (res === null) return reject(new Error('请求失败'))
       commit('SET_AUTH', res.data)
-      commit('SET_USER', res.data.user_name)
-      return Promise.resolve(res)
-    }).catch(error => {
-      return Promise.reject(error.response)
+      resolve(res.data) // 接口请求完成
     })
   },
-  refreshToken ({ commit, dispatch }, refreshToken) {
-    return oauthAPI.refreshToken(refreshToken).then(res => {
+  refreshToken ({ commit, dispatch, state }) {
+    console.log(state)
+    return new Promise(async (resolve, reject) => {
+      const res = await oauthAPI.refreshToken(state.token.refresh_token)
+      if (res === null) return reject(new Error('请求失败'))
       commit('SET_AUTH', res.data)
-      commit('SET_USER', res.data.user_name)
-      return Promise.resolve(res)
-    }).catch(error => {
-      return Promise.reject(error.response)
+      resolve(res.data) // 接口请求完成
     })
   },
   logout ({ commit }) {

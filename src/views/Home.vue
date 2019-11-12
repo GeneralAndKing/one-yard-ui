@@ -33,14 +33,14 @@
                 v-icon mdi-flag
               v-list-item-content 退出
     v-navigation-drawer(v-model="drawer", app, clipped)
-      treeMenu(:router="menus[0].children")
+      treeMenu(:router="menus")
     v-content
       v-scroll-y-transition(hide-on-leave, mode="out-in")
         router-view
 </template>
 
 <script>
-import { genMenu } from '_u/util'
+import { genMenu } from '_u/menu'
 import treeMenu from '_c/tree-menu'
 import * as restAPI from '_api/rest'
 export default {
@@ -58,9 +58,7 @@ export default {
   },
   created () {
     this.$vuetify.theme.dark = false
-    let router = this.$store.getters['auth/router']
-    console.log('asd')
-    this.menus = genMenu(router)
+    this.menus = genMenu()
     this.connection()
   },
   beforeDestroy () {

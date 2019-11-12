@@ -142,7 +142,7 @@
 </template>
 
 <script>
-import { requiredRules, unionRules, requiredMessageRules } from '_u/rules'
+import { requiredRules, unionRules, requiredMessageRules } from '_u/rule'
 import * as materialPlanAPI from '_api/materialPlan'
 import * as restAPI from '_api/rest'
 

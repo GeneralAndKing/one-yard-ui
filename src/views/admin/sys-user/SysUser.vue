@@ -77,7 +77,7 @@
 
 <script>
 import TableCardSheet from '_c/table-card-sheet'
-import { emailRules, passwordRules, requiredRules, unionRules, phoneRules, imageRequiredRules } from '_u/rules'
+import { emailRules, passwordRules, requiredRules, unionRules, phoneRules, imageRequiredRules } from '_u/rule'
 import * as restAPI from '_api/rest'
 import * as oauthAPI from '_api/oauth'
 
