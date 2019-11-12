@@ -22,12 +22,7 @@ export default {
   },
   methods: {
     handleBack () {
-      console.log(this.code)
-      if (parseInt(this.code) === 401) {
-        this.$router.push({ name: 'login' })
-      } else {
-        this.$router.back()
-      }
+      this.$router.back()
     }
   }
 }

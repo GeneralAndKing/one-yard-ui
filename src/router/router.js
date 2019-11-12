@@ -25,10 +25,10 @@ export const routes = [
     component: () => import(/* webpackChunkName: "about" */ '_v/auth/forget')
   },
   {
-    path: '/home',
+    path: '/',
     component: Home,
     name: 'home',
-    redirect: '/home/index',
+    redirect: '/index',
     children: [
       {
         path: 'index',
