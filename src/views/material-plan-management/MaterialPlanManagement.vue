@@ -65,6 +65,7 @@
 
 <script>
 import * as restAPI from '_api/rest'
+import * as materialPlanAPI from '_api/materialPlan'
 import MaterialPlan from '_c/material-plan'
 
 export default {
@@ -106,21 +107,24 @@ export default {
     }
   },
   created () {
-    let _this = this
     this.loading = true
     this.initApproval()
-    restAPI.getAll('materialDemandPlan')
-      .then(res => {
-        res.data.content.forEach(p => {
-          p.planStatus = _this.planStatusData(p.planStatus)
-          p.approvalStatus = _this.approvalStatusData(p.approvalStatus)
-          p.createTime = _this.dateFormat(p.createTime)
-        })
-        _this.materialPlan = res.data.content
-      })
-      .finally(() => { this.loading = false })
+    this.initData()
   },
   methods: {
+    initData () {
+      let _this = this
+      restAPI.getAll('materialDemandPlan')
+        .then(res => {
+          res.data.content.forEach(p => {
+            p.planStatus = _this.planStatusData(p.planStatus)
+            p.approvalStatus = _this.approvalStatusData(p.approvalStatus)
+            p.createTime = _this.dateFormat(p.createTime)
+          })
+          _this.materialPlan = res.data.content
+        })
+        .finally(() => { this.loading = false })
+    },
     initApproval () {
       this.approval = {
         show: false,
@@ -193,8 +197,15 @@ export default {
       this.approval.planId = this.approval.plan.id
       this.approval.plan.createTime = this.approval.plan.createTime.replace('&nbsp;&nbsp;', 'T')
       this.approval.approvalType = 'MATERIAL_APPROVAL'
-      // materialPlanAPI.approvalMaterialPlan(this.approval.plan, this.approval)
-      //   .then(res => { console.log(res) })
+      if (this.approval.plan.planType === '紧急计划') {
+        this.approval.plan.planStatus = 'FINALLY'
+        this.approval.plan.approvalStatus = 'APPROVAL_OK'
+      }
+      materialPlanAPI.approvalMaterialPlan(this.approval.plan, this.approval)
+        .then(() => {
+          this.initData()
+          this.approval.show = false
+        })
     }
   }
 }

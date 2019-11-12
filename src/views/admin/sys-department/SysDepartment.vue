@@ -56,7 +56,7 @@
                                   v-chip.white--text(v-if="item.method === 'ALL'", color="orange") {{ item.method }}
                                   v-chip.white--text(v-if="item.method === 'PATCH'", color="cyan") {{ item.method }}
                             v-expansion-panel-content
-                              code {{ item.url }}
+                              code {{ item.matchUrl }}
                               p {{ item.description }}
                 v-tab-item(:key="3", :value="'tab-' + 3")
                   v-scroll-y-transition(mode="out-in")
