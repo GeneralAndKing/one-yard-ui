@@ -1,6 +1,6 @@
 <template lang="pug">
     v-snackbar(v-model="snackbar"
-        absolute=true,
+        absolute=false,
         :bottom="y === 'bottom'"
         :color="type"
         :left="x === 'left'"
