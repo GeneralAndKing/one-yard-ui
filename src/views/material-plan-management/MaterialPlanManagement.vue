@@ -65,7 +65,6 @@
 
 <script>
 import * as restAPI from '_api/rest'
-import * as materialPlanAPI from '_api/materialPlan'
 import MaterialPlan from '_c/material-plan'
 
 export default {
