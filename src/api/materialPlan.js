@@ -38,3 +38,18 @@ export const planMaterialByPlanId = (id) => {
     })
   })
 }
+
+export const materialPlanById = (id) => {
+  return new Promise((resolve, reject) => {
+    axios.request({
+      url: `/materialDemandPlan/materialPlan`,
+      method: 'get',
+      params: { id }
+    }).then(res => {
+      resolve(res)
+    }).catch(error => {
+      Vue.prototype.$message('初始化失败', 'error')
+      reject(error)
+    })
+  })
+}

@@ -46,6 +46,20 @@
                 v-switch(v-model="materialPlan.isBudgetPlan", :label="`是否预算内计划：${materialPlan.isBudgetPlan? '是' : '否'}`", :readonly='see')
         v-data-table(v-model="selected", :headers="headers", :items="desserts", :loading="loading", no-data-text="暂无数据", no-results-text="暂无数据"
           item-key="materialTrackingCode", :mobile-breakpoint="1200", show-select)
+          template(v-slot:item.materialCode="{ item }")
+            span {{item.material.code}}
+          template(v-slot:item.materialName="{ item }")
+            span {{item.material.name}}
+          template(v-slot:item.materialTypeCode="{ item }")
+            span {{item.materialType.code}}
+          template(v-slot:item.materialTypeName="{ item }")
+            span {{item.materialType.name}}
+          template(v-slot:item.specifications="{ item }")
+            span {{item.material.specifications}}
+          template(v-slot:item.size="{ item }")
+            span {{item.material.size}}
+          template(v-slot:item.unit="{ item }")
+            span {{item.material.unit}}
           template(v-slot:item.isSourceGoods="{ item }")
             span {{item.isSourceGoods?'是':'否'}}
           template(v-slot:item.action="{ item }")
@@ -83,19 +97,23 @@
                       v-container(grid-list-md)
                         v-layout(wrap)
                           v-flex(xs12, md6, md4)
-                            v-select(v-model="editedItem.materialType", label="物料分类", :items="materialTypes", @change="materialSelect",
-                              item-text="name", return-object, :rules="rules.union(rules.required('需求部门'))")
+                            v-select(v-model="editedItem.materialType", label="物料分类", :items="materialTypes", @change="materialTypeSelect",
+                              item-text="name", return-object, :rules="rules.union(rules.required('物料分类'))")
                           v-flex(xs12, md6, md4)
-                            v-select(v-model="editedItem.material", label="物料", :items="materials",
-                              item-text="name", return-object, :rules="rules.union(rules.required('物料'))")
+                            v-select(v-model="editedItem.material", label="物料", :items="materials", @change="materialSelect", item-text="name", return-object,
+                              :rules="rules.union(rules.required('物料'))", no-data-text="未选择物料分类或当前分类下无物料信息")
                           v-flex(xs12, md6, md4)
-                            v-text-field(v-model="editedItem.specifications", label="规格", :rules="rules.union(rules.required('规格'))")
+                            v-text-field(v-model="editedItem.specifications", label="规格", :rules="rules.union(rules.required('规格'))",
+                              readonly, hint="当前物料规格")
                           v-flex(xs12, md6, md4)
-                            v-text-field(v-model="editedItem.size", label="型号", :rules="rules.union(rules.required('型号'))")
+                            v-text-field(v-model="editedItem.size", label="型号", :rules="rules.union(rules.required('型号'))",
+                              readonly, hint="当前物料型号")
                           v-flex(xs12, md6, md4)
-                            v-text-field(v-model="editedItem.unit", label="计量单位", :rules="rules.union(rules.required('计量单位'))")
+                            v-text-field(v-model="editedItem.unit", label="计量单位", :rules="rules.union(rules.required('计量单位'))",
+                              readonly, hint="当前物料计量单位")
                           v-flex(xs12, md6, md4)
-                            v-text-field(v-model="editedItem.number", label="需求数量", type="number", :rules="rules.union(rules.required('需求数量'))")
+                            v-text-field(v-model="editedItem.number", label="需求数量", type="number", :rules="rules.union(rules.requiredMessage('需求数量'))",
+                              hint="当前物料所需数量")
                           v-flex(xs12, md6, md4)
                             v-menu(v-model="dayMenu", :close-on-content-click="false", transition="scale-transition",
                               offset-y, max-width="290px", min-width="290px")
@@ -124,7 +142,7 @@
 </template>
 
 <script>
-import { requiredRules, unionRules } from '_u/rules'
+import { requiredRules, unionRules, requiredMessageRules } from '_u/rules'
 import * as materialPlanAPI from '_api/materialPlan'
 import * as restAPI from '_api/rest'
 
@@ -140,11 +158,13 @@ export default {
     dialog: false,
     materialTypes: [],
     materials: [],
+    materialItems: [],
     suppliers: [],
     inventory: [],
     see: false,
     rules: {
       required: requiredRules,
+      requiredMessage: requiredMessageRules,
       union: unionRules
     },
     date: new Date().toISOString().substr(0, 7),
@@ -166,10 +186,10 @@ export default {
     desserts: [],
     editIndex: -1,
     headers: [
-      { text: '物料分类编码', value: 'materialTypeCode', align: 'center' },
-      { text: '物料分类名称', value: 'materialTypeName', align: 'center' },
       { text: '物料编码', value: 'materialCode', align: 'center' },
       { text: '物料名称', value: 'materialName', align: 'center' },
+      { text: '物料分类编码', value: 'materialTypeCode', align: 'center' },
+      { text: '物料分类名称', value: 'materialTypeName', align: 'center' },
       { text: '规格', value: 'specifications', align: 'center' },
       { text: '型号', value: 'size', align: 'center' },
       { text: '计量单位', value: 'unit', align: 'center' },
@@ -195,14 +215,16 @@ export default {
     restAPI.getAll('materialType').then(res => { this.materialTypes = res.data.content })
     restAPI.getAll('supplier').then(res => { this.suppliers = res.data.content })
     restAPI.getAll('inventory').then(res => { this.inventory = res.data.content })
+    restAPI.getAll('material').then(res => { this.materialItems = res.data.content })
     if (this.seeId !== 0) {
       this.see = true
       this.loading = true
-      restAPI.getOne('materialDemandPlan', this.seeId).then(res => { this.materialPlan = res.data })
-      materialPlanAPI.planMaterialByPlanId(this.seeId).then(res => {
-        this.desserts = res.data.content
-        this.loading = false
-      })
+      materialPlanAPI.materialPlanById(this.seeId)
+        .then(res => {
+          this.materialPlan = res.data
+          this.desserts = res.data.materials
+        })
+        .finally(() => { this.loading = false })
     }
   },
   watch: {
@@ -212,11 +234,12 @@ export default {
   },
   methods: {
     initEdit () {
+      this.editIndex = -1
       this.editedItem = {
-        materialTypeCode: null,
-        materialTypeName: null,
-        materialCode: null,
-        materialName: null,
+        materialTypeId: null,
+        materialId: null,
+        materialType: null,
+        material: null,
         specifications: null,
         size: null,
         unit: null,
@@ -228,22 +251,19 @@ export default {
         fixedSupplier: null,
         inventory: null,
         materialTrackingCode: uuidv4(),
-        materialType: null,
-        material: null,
-        isEnable: true
+        isEnable: true,
+        status: 'INIT'
       }
     },
     handleAdd () {
       if (!this.$refs.add.validate(true)) return
-      this.editedItem.materialTypeCode = this.editedItem.materialType.code
-      this.editedItem.materialTypeName = this.editedItem.materialType.name
-      this.editedItem.materialCode = this.editedItem.material.code
-      this.editedItem.materialName = this.editedItem.material.name
-      if (this.editIndex < 0) this.desserts.unshift(this._.cloneDeep(this.editedItem))
-      else this.desserts[this.editIndex] = this._.cloneDeep(this.editedItem)
-      this.editIndex = -1
+      this.editedItem.materialTypeId = this.editedItem.materialType.id
+      this.editedItem.materialId = this.editedItem.material.id
+      if (this.editIndex < 0) this.desserts.unshift(this._.cloneDeepWith(this.editedItem))
+      else this.desserts.splice(this.editIndex, 1, this._.cloneDeepWith(this.editedItem))
       this.initEdit()
       this.dialog = false
+      this.$refs.add.resetValidation()
     },
     formatDate (date) {
       if (!date) return null
@@ -264,9 +284,13 @@ export default {
     },
     handleEdit (item) {
       this.editIndex = this._.indexOf(this.desserts, item)
-      this.editedItem = this._.cloneDeep(item)
-      this.editedItem.materialType = this._.find(this.materialTypes, { code: item.materialTypeCode })
-      this.editedItem.material = this._.find(this.materials, { code: item.materialCode })
+      this.editedItem = this._.cloneDeepWith(item)
+      this.editedItem.materialType = this._.find(this.materialTypes, { id: item.materialTypeId })
+      this.materials = this.materialItems.filter(material => { return material.typeId === item.materialTypeId })
+      this.editedItem.material = item.material
+      this.editedItem.specifications = item.material.specifications
+      this.editedItem.size = item.material.size
+      this.editedItem.unit = item.material.unit
       this.dialog = true
     },
     handleCopy (item) {
@@ -284,7 +308,8 @@ export default {
       materialPlanAPI.saveOrUpdate(this.materialPlan, this.desserts)
         .then(() => {
           this.$message('保存数据成功！', 'success')
-          this.see = true
+          if (this.seeId <= 0) this.$router.push({ name: 'materialPlanManagement' })
+          else this.see = true
         })
     },
     handleSaveAndSubmit () {
@@ -294,22 +319,29 @@ export default {
       materialPlanAPI.saveOrUpdate(this.materialPlan, this.desserts)
         .then(() => {
           this.$message('保存数据并提交成功！', 'success')
-          this.see = true
+          if (this.seeId <= 0) this.$router.push({ name: 'materialPlanManagement' })
+          else this.see = true
         })
     },
     handleReset () {
       if (this.editIndex < 0) this.initEdit()
-      else this.editedItem = this.desserts[this.editIndex]
+      else this.handleEdit(this.desserts[this.editIndex])
+      this.$refs.add.resetValidation()
     },
     handleClose () {
       this.dialog = false
-      this.editIndex = 0
+      this.editIndex = -1
       this.initEdit()
+      this.$refs.add.resetValidation()
+    },
+    materialTypeSelect (item) {
+      this.editedItem.material = null
+      this.materials = this.materialItems.filter(material => { return material.typeId === item.id })
     },
     materialSelect (item) {
-      this.material = null
-      restAPI.getRestLink(`material/search/byTypeId?typeId=${item.id}`)
-        .then(res => { this.materials = res.data.content })
+      this.editedItem.specifications = item.specifications
+      this.editedItem.size = item.size
+      this.editedItem.unit = item.unit
     }
   }
 }

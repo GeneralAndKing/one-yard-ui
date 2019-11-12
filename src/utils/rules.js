@@ -3,6 +3,10 @@ export let requiredRules = (name) => {
   return v => (!!v && v.length !== 0) || `${name}不能为空`
 }
 
+export let requiredMessageRules = (name) => {
+  return v => (!!v && v.length !== 0) || `${name}不合法`
+}
+
 export let imageRequiredRules = (name, size) => {
   return v => !v || v.size < size || `${name}图片大小要小于${size / 1000000}MB`
 }

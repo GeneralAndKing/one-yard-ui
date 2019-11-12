@@ -37,9 +37,28 @@
                 span 查看
               v-tooltip(top)
                 template(v-slot:activator="{ on }")
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="primary", @click="handleApproval(item)", v-on="on")
+                    v-icon mdi-book-open-variant
+                span 审批
+              v-tooltip(top)
+                template(v-slot:activator="{ on }")
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="error", @click="handleDelete(item)", v-on="on")
                     v-icon mdi-delete
                 span 删除
+          v-dialog(v-model="approval.show", max-width="350px")
+            v-card
+              v-card-title.headline
+                span.title 计划审批
+                v-spacer
+                v-btn(text, color="error", icon, @click="initApproval")
+                  v-icon mdi-close
+              v-card-text
+                v-textarea(v-model="approval.message", label="审批意见", hint="请输入您的审批意见", autofocus,
+                  rows="5", auto-grow, counter)
+              v-card-actions
+                v-spacer
+                v-btn(text, color="error") 不通过
+                v-btn(text, color="success") 通过
   material-plan(v-else, :see-id="see")
     v-btn(text, color="primary", @click="handleBack") 返回
 </template>
@@ -57,6 +76,11 @@ export default {
     materialPlan: [],
     dayMenu: false,
     see: 0,
+    approval: {
+      show: false,
+      message: null,
+      item: null
+    },
     search: {
       name: '',
       planType: '',
@@ -100,6 +124,11 @@ export default {
       .finally(() => { this.loading = false })
   },
   methods: {
+    initApproval () {
+      this.approval.show = false
+      this.approval.message = null
+      this.approval.item = null
+    },
     planStatusData (data) {
       let msg = '自由'
       if (data === 'APPROVAL') msg = '提交审批'
@@ -120,6 +149,11 @@ export default {
     },
     handleSee (item) {
       this.see = item.id
+    },
+    handleApproval (item) {
+      this.approval.show = true
+      this.approval.message = null
+      this.approval.item = item
     },
     handleDelete (item) {
       //
