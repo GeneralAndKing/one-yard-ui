@@ -21,8 +21,8 @@
                   v-chip.white--text(v-if="item.method === 'ALL'", color="orange") {{ item.method }}
                   v-chip.white--text(v-if="item.method === 'PATCH'", color="cyan") {{ item.method }}
             v-expansion-panel-content
-              code {{ item.url }}
-              p {{ item.describe }}
+              code {{ item.matchUrl }}
+              p {{ item.description }}
 
 </template>
 

@@ -1,4 +1,3 @@
-
 import axios from 'axios'
 import authAxios from './index'
 import qs from 'qs'
@@ -172,7 +171,7 @@ export const authForgetEmail = ({ email }) => {
       return Promise.resolve(res)
     })
     .catch(error => {
-      return Promise.reject(error)
+      return Promise.reject(error.response)
     })
 }
 
