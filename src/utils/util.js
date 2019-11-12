@@ -18,3 +18,14 @@ export const isExpired = (time) => {
 export const getUrl = (link) => {
   return link.split('8080')[1]
 }
+/**
+ * 避免使用过多的try catch
+ * @param promise
+ * @returns {Promise<T | [any]>}
+ */
+export const to = (promise) => {
+  return promise.then(data => {
+    return [null, data]
+  })
+    .catch(err => [err])
+}

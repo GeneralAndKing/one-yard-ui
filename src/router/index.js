@@ -46,7 +46,7 @@ router.beforeEach((to, from, next) => {
 router.afterEach(route => {
   // iView.LoadingBar.finish()
   // TODO: 加载完成
-  window.document.title = route.meta.meta || '一马当先'
+  window.document.title = route.meta.meta || '一码当先'
 })
 
 export default router

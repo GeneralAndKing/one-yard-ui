@@ -75,12 +75,13 @@ class HttpRequest {
       return res
     }, error => {
       this.destroy(url)
+      console.log('3123123')
       if (error.response.status === 400 && error.data !== undefined && error.data.hasOwnProperty('error_description')) {
         Vue.prototype.$message(`请求错误:${error.data.error_description}`, 'error')
-        store.dispatch('auth/logout')
       }
       if (error.response.status === 401) {
         Vue.prototype.$message('未经授权:访问由于凭据无效被拒绝', 'error')
+        store.dispatch('auth/logout')
       }
       if (error.response.status === 403) {
         Vue.prototype.$message('鉴权失败:您没有权限访问该资源', 'error')

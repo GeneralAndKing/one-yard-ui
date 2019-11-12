@@ -1,5 +1,6 @@
 import * as oauthAPI from '_api/oauth'
 import { Role } from '_u/role'
+import { to } from '_u/util'
 import router from '_router'
 const state = {
   token: null,
@@ -69,8 +70,10 @@ const mutations = {
 const actions = {
   oauthLogin ({ commit, dispatch }, formUser) {
     return new Promise(async (resolve, reject) => {
-      const res = await oauthAPI.oauthToken(formUser)
+      let err, res
+      [err, res] = await to(oauthAPI.oauthToken(formUser))
       if (res === null) return reject(new Error('请求失败'))
+      if (err) return reject(err.response)
       let token = res.data
       if (token === null) return reject(new Error('请求失败'))
       commit('SET_TOKEN', token)
@@ -79,8 +82,10 @@ const actions = {
   },
   checkToken ({ commit, dispatch, state }) {
     return new Promise(async (resolve, reject) => {
-      const res = await oauthAPI.checkToken(state.token.access_token)
+      let err, res
+      [err, res] = await to(oauthAPI.checkToken(state.token.access_token))
       if (res === null) return reject(new Error('请求失败'))
+      if (err) return reject(err.response)
       commit('SET_AUTH', res.data)
       resolve(res.data) // 接口请求完成
     })
