@@ -122,7 +122,7 @@
                               offset-y, max-width="290px", min-width="290px")
                               template(v-slot:activator="{ on }")
                                 v-text-field(v-model="editedItem.date", v-on="on", label="需求日期", readonly, :rules="rules.union(rules.required('需求日期'))")
-                              v-date-picker(v-model="editedItem.date", no-title, @input="dayMenu = false", locale="zh-cn")
+                              v-date-picker(v-model="needDate", no-title, @input="dayMenu = false", locale="zh-cn")
                           v-flex(xs12, md6, md4)
                             v-select(v-model="editedItem.expectationSupplier", label="期望供应商", :items="suppliers", item-text="name", item-value="name")
                           v-flex(xs12, md6, md4)
@@ -172,6 +172,7 @@ export default {
       union: unionRules
     },
     date: new Date().toISOString().substr(0, 7),
+    needDate: new Date().toISOString().substr(0, 10),
     planTypes: [ '订单型需求计划', '年度计划', '月度计划', '紧急计划' ],
     departments: [],
     editedItem: {},
@@ -235,7 +236,12 @@ export default {
   },
   watch: {
     date (val) {
-      this.materialPlan.month = this.formatDate(val)
+      if (!val) return
+      this.materialPlan.month = val.replace(/-/g, '')
+    },
+    needDate (val) {
+      if (!val) return
+      this.editedItem.date = val.replace(/-/g, '')
     }
   },
   methods: {
@@ -270,11 +276,6 @@ export default {
       this.initEdit()
       this.dialog = false
       this.$refs.add.resetValidation()
-    },
-    formatDate (date) {
-      if (!date) return null
-      const [year, month] = date.split('-')
-      return `${year}${month}`
     },
     handleDelete (item) {
       if (this.seeId !== 0) item.isEnable = false
