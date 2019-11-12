@@ -40,6 +40,9 @@
                     v-spacer
                     v-btn(text, color="primary",  @click="menu = false") 取消
                     v-btn(text, color="primary",  @click="$refs.month.save(date)") 选择
+              v-flex(xs12, md6, lg4, v-if="materialPlan.planType === '年度计划'")
+                v-select(v-model="materialPlan.month", :items="years", ref="month", :readonly='see',
+                  label="需求年份" :rules="rules.union(rules.required('需求年份'))")
               v-flex(sm12, md6, lg4)
                 v-text-field(v-model="materialPlan.remark", label="备注", :readonly='see')
               v-flex(sm12, md6, lg4)
@@ -137,8 +140,8 @@
       v-card-actions
         v-spacer
         slot
-        v-btn(text, color="purple", @click="handleSave") {{see? '编辑' : '保存'}}
-        v-btn(v-if="!see", text, color="success", @click="handleSaveAndSubmit") 保存并提交
+        v-btn(text, color="purple", @click="handleSave(false)", v-if="materialPlan === 'FREE'") {{see? '编辑' : '保存'}}
+        v-btn(v-if="!see", text, color="success", @click="handleSave(true)") 保存并提交审批
 </template>
 
 <script>
@@ -162,6 +165,7 @@ export default {
     suppliers: [],
     inventory: [],
     see: false,
+    years: [],
     rules: {
       required: requiredRules,
       requiredMessage: requiredMessageRules,
@@ -216,6 +220,7 @@ export default {
     restAPI.getAll('supplier').then(res => { this.suppliers = res.data.content })
     restAPI.getAll('inventory').then(res => { this.inventory = res.data.content })
     restAPI.getAll('material').then(res => { this.materialItems = res.data.content })
+    this.years = Array.from({ length: 11 }, (a, i) => `${i + 2019}`)
     if (this.seeId !== 0) {
       this.see = true
       this.loading = true
@@ -299,26 +304,19 @@ export default {
       copy.id = null
       this.desserts.unshift(copy)
     },
-    handleSave () {
+    handleSave (submit) {
       if (!this.$refs.base.validate(true)) return
       if (this.see) {
         this.see = false
         return
       }
+      if (submit) {
+        this.materialPlan.approvalStatus = 'APPROVAL_ING'
+        this.materialPlan.planType = 'APPROVAL'
+      }
       materialPlanAPI.saveOrUpdate(this.materialPlan, this.desserts)
         .then(() => {
           this.$message('保存数据成功！', 'success')
-          if (this.seeId <= 0) this.$router.push({ name: 'materialPlanManagement' })
-          else this.see = true
-        })
-    },
-    handleSaveAndSubmit () {
-      if (!this.$refs.base.validate(true)) return
-      this.materialPlan.approvalStatus = 'APPROVAL_ING'
-      this.materialPlan.planType = 'APPROVAL'
-      materialPlanAPI.saveOrUpdate(this.materialPlan, this.desserts)
-        .then(() => {
-          this.$message('保存数据并提交成功！', 'success')
           if (this.seeId <= 0) this.$router.push({ name: 'materialPlanManagement' })
           else this.see = true
         })
