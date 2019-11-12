@@ -1,6 +1,6 @@
 <template lang="pug">
   v-app#inspire
-    v-fade-transition
+    v-fade-transition(hide-on-leave)
       router-view
 </template>
 
