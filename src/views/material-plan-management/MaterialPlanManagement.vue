@@ -57,8 +57,8 @@
                   rows="5", auto-grow, counter)
               v-card-actions
                 v-spacer
-                v-btn(text, color="error", @click="handlePlanApproval('SUMMARY', 'NO_SUBMIT', '审批不通过')") 不通过
-                v-btn(text, color="success", @click="handlePlanApproval('FREE', 'APPROVAL_ING', '审批通过')") 通过
+                v-btn(text, color="error", @click="handlePlanApproval('FREE', 'APPROVAL_NO', '审批退回')") 需求退回
+                v-btn(text, color="success", @click="handlePlanApproval('SUMMARY', 'APPROVAL_ING', '审批通过')") 需求通过
   material-plan(v-else, :see-id="see")
     v-btn(text, color="primary", @click="handleBack") 返回
 </template>
