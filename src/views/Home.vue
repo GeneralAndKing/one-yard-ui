@@ -41,7 +41,7 @@
         v-tabs-items(v-model="currentItem")
           v-tab-item(v-for="item in messages", :key="item.type", :value="`tab-${item.type}`")
             v-list(three-line)
-              v-list-item.mb-1(v-for="message in item.items",
+              v-list-item.mb-1(v-for="message in item.items", :key="message.type",
                 :class="message.status === 'READ'? 'one-read' : 'one-un-read'")
                 v-list-item-content
                   v-list-item-title {{message.name}}

@@ -35,7 +35,7 @@
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="success", @click="handleSee(item)", v-on="on")
                     v-icon remove_red_eye
                 span 查看
-              v-tooltip(top)
+              v-tooltip(top, v-if="item.approvalStatus === '审批中' && item.planStatus === '提交审批'")
                 template(v-slot:activator="{ on }")
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="primary", @click="handleApproval(item)", v-on="on")
                     v-icon mdi-book-open-variant
@@ -53,18 +53,19 @@
                 v-btn(text, color="error", icon, @click="initApproval")
                   v-icon mdi-close
               v-card-text
-                v-textarea(v-model="approval.message", label="审批意见", hint="请输入您的审批意见", autofocus,
+                v-textarea(v-model="approval.description", label="审批意见", hint="请输入您的审批意见", autofocus,
                   rows="5", auto-grow, counter)
               v-card-actions
                 v-spacer
-                v-btn(text, color="error") 不通过
-                v-btn(text, color="success") 通过
+                v-btn(text, color="error", @click="handlePlanApproval('SUMMARY', 'NO_SUBMIT', '审批不通过')") 不通过
+                v-btn(text, color="success", @click="handlePlanApproval('FREE', 'APPROVAL_ING', '审批通过')") 通过
   material-plan(v-else, :see-id="see")
     v-btn(text, color="primary", @click="handleBack") 返回
 </template>
 
 <script>
 import * as restAPI from '_api/rest'
+import * as materialPlanAPI from '_api/materialPlan'
 import MaterialPlan from '_c/material-plan'
 
 export default {
@@ -76,11 +77,7 @@ export default {
     materialPlan: [],
     dayMenu: false,
     see: 0,
-    approval: {
-      show: false,
-      message: null,
-      item: null
-    },
+    approval: {},
     search: {
       name: '',
       planType: '',
@@ -112,11 +109,12 @@ export default {
   created () {
     let _this = this
     this.loading = true
+    this.initApproval()
     restAPI.getAll('materialDemandPlan')
       .then(res => {
         res.data.content.forEach(p => {
           p.planStatus = _this.planStatusData(p.planStatus)
-          p.approvalStatus = _this.approvalStatusData(p.planStatus)
+          p.approvalStatus = _this.approvalStatusData(p.approvalStatus)
           p.createTime = _this.dateFormat(p.createTime)
         })
         _this.materialPlan = res.data.content
@@ -125,9 +123,14 @@ export default {
   },
   methods: {
     initApproval () {
-      this.approval.show = false
-      this.approval.message = null
-      this.approval.item = null
+      this.approval = {
+        show: false,
+        description: '',
+        plan: null,
+        result: null,
+        approvalType: 'MATERIAL_APPROVAL',
+        planId: -1
+      }
     },
     planStatusData (data) {
       let msg = '自由'
@@ -150,17 +153,26 @@ export default {
     handleSee (item) {
       this.see = item.id
     },
+    /**
+     * 审批按钮事件
+     **/
     handleApproval (item) {
       this.approval.show = true
-      this.approval.message = null
-      this.approval.item = item
+      this.approval.description = null
+      this.approval.plan = this._.cloneDeep(item)
     },
     handleDelete (item) {
       //
     },
+    /**
+     * 返回
+     **/
     handleBack () {
       this.see = 0
     },
+    /**
+     * 搜索过滤
+     **/
     filterSearch (value, search, item) {
       const condition = search.split('&')
       const createDate = item.createTime.split('&nbsp;&nbsp;')[0]
@@ -171,6 +183,19 @@ export default {
         item.planStatus.includes(condition[3]) &&
         item.approvalStatus.includes(condition[4]) &&
         new Date(createDate).getTime() < new Date(condition[5]).getTime()
+    },
+    /**
+     * 审批方法
+     */
+    handlePlanApproval (planStatus, approvalStatus, result) {
+      this.approval.plan.planStatus = planStatus
+      this.approval.plan.approvalStatus = approvalStatus
+      this.approval.result = result
+      this.approval.planId = this.approval.plan.id
+      this.approval.plan.createTime = this.approval.plan.createTime.replace('&nbsp;&nbsp;', 'T')
+      this.approval.approvalType = 'MATERIAL_APPROVAL'
+      // materialPlanAPI.approvalMaterialPlan(this.approval.plan, this.approval)
+      //   .then(res => { console.log(res) })
     }
   }
 }

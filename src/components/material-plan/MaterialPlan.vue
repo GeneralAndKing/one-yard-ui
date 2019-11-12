@@ -137,8 +137,8 @@
       v-card-actions
         v-spacer
         slot
-        v-btn(text, color="purple", @click="handleSave") {{see? '编辑' : '保存'}}
-        v-btn(v-if="!see", text, color="success", @click="handleSaveAndSubmit") 保存并提交
+        v-btn(text, color="purple", @click="handleSave", v-if="materialPlan === 'FREE'") {{see? '编辑' : '保存'}}
+        v-btn(v-if="!see", text, color="success", @click="handleSaveAndSubmit") 保存并提交审批
 </template>
 
 <script>
