@@ -151,8 +151,8 @@ export default {
 <style scoped lang="stylus">
 .one-un-read
   border-left 4px solid #EF5350
-  background #FFEBEE
+  background rgba(255,235,238,0.2)
 .one-read
   border-left 4px solid #00C853
-  background #F1F8E9
+  background rgba(241,248,233,0.2)
 </style>
