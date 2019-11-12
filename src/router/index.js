@@ -9,38 +9,38 @@ const router = new VueRouter({
 })
 router.beforeEach((to, from, next) => {
   // TODO: 加载开始
+  console.log('router')
   // iView.LoadingBar.start()
   // 所有的路由必须有name 利用name做路由认证
-  console.log(from)
-  if (to.meta === {} || to.meta.auth === undefined) {
-    next({ name: 'error',
-      query: {
-        text: '页面不存在',
-        code: 404
-      },
-      replace: true })
-  } else if (!to.meta.auth.includes(Role.ROLE_PUBLIC)) {
-    if (store.getters['auth/isAuth']) {
-      if (checkPermissions(to.meta.auth, store.getters['auth/role'])) {
-        next()
-      } else {
-        next({ name: 'error',
-          query: {
-            text: '你没有权限访问',
-            code: 403
-          },
-          replace: true })
-      }
-    } else {
-      // 未登录 前往登陆页面
+  if (store.getters['auth/isAuth']) {
+    if (to.meta === {} || to.meta.auth === undefined) {
       next({ name: 'error',
         query: {
-          text: '请登陆后进行操作',
-          code: 401
-        } })
+          text: '页面不存在',
+          code: 404
+        },
+        replace: true })
+    } else if (to.meta.auth.includes(Role.ROLE_PUBLIC)) {
+      next()
+    } else if (checkPermissions(to.meta.auth, store.getters['auth/role'])) {
+      next()
+    } else {
+      next({ name: 'error',
+        query: {
+          text: '你没有权限访问',
+          code: 403
+        },
+        replace: true })
     }
-  } else {
+  } else if (to.meta !== {} && to.meta.auth !== undefined && to.meta.auth.includes(Role.ROLE_PUBLIC)) {
     next()
+  } else {
+    // 未登录 前往登陆页面
+    next({ name: 'error',
+      query: {
+        text: '请登陆后进行操作',
+        code: 401
+      } })
   }
 })
 

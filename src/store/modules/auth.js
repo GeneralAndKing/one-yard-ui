@@ -5,7 +5,8 @@ const state = {
   token: null,
   // 授权信息，来源于 checkToken
   auth: null,
-  role: []
+  role: [],
+  me: null
 }
 const getters = {
   isAuth: state => {
@@ -19,6 +20,9 @@ const getters = {
   },
   username: state => {
     return state.auth.user_name === null ? '' : state.auth.user_name
+  },
+  me: state => {
+    return state.me
   },
   isTokenExpired: state => {
     /* 从localStorage中取出token过期时间 */
@@ -43,13 +47,15 @@ const mutations = {
   },
   SET_AUTH (state, auth) {
     state.auth = auth
-    console.log('role')
     auth.authorities.forEach((item) => {
       if (Role.hasOwnProperty(item)) {
         console.log(Role[item])
         state.role.push(Role[item])
       }
     })
+  },
+  SET_ME (state, me) {
+    state.me = me
   },
   // logout
   LOGOUT (state) {
@@ -58,6 +64,7 @@ const mutations = {
     state.auth = null
     state.role = null
   }
+
 }
 const actions = {
   oauthLogin ({ commit, dispatch }, formUser) {
@@ -78,8 +85,15 @@ const actions = {
       resolve(res.data) // 接口请求完成
     })
   },
+  getMe ({ commit }) {
+    return new Promise(async (resolve, reject) => {
+      const res = await oauthAPI.getMe()
+      if (res === null) return reject(new Error('请求失败'))
+      commit('SET_ME', res.data.me)
+      resolve(res.data) // 接口请求完成
+    })
+  },
   refreshToken ({ commit, dispatch, state }) {
-    console.log(state)
     return new Promise(async (resolve, reject) => {
       const res = await oauthAPI.refreshToken(state.token.refresh_token)
       if (res === null) return reject(new Error('请求失败'))

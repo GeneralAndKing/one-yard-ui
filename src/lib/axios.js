@@ -4,17 +4,9 @@ import store from '_store'
 import { baseURL } from '_api/config'
 
 const refresh = async function () {
-  try {
-    let res = await store.dispatch('auth/refreshToken')
-    let token = res.data
-    if (token === null) {
-      return false
-    }
-    await store.dispatch('auth/checkToken')
-    return true
-  } catch (e) {
-    return false
-  }
+  await store.dispatch('auth/refreshToken')
+  await store.dispatch('auth/checkToken')
+  await store.dispatch('auth/getMe')
 }
 
 class HttpRequest {
@@ -63,12 +55,16 @@ class HttpRequest {
         // iView.Spin.show()
       }
       this.queue[url] = true
-      if (store.getters['auth/isTokenExpired']) {
-        if (!refresh()) {
-          store.dispatch('auth/logout')
-          Vue.prototype.$message('登陆已失效,请重新登陆', 'error')
+      // 如果有token 在header里加authorization
+      if (store.getters['auth/isAuth']) {
+        let token = store.getters['auth/token']
+        // 如果token 快过期 刷新token
+        if (store.getters['auth/isTokenExpired']) {
+          refresh()
         }
+        if (token.access_token) config.headers.Authorization = 'Bearer ' + token.access_token
       }
+
       return config
     }, error => {
       return Promise.reject(error)

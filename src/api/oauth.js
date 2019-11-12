@@ -1,5 +1,6 @@
 
 import axios from 'axios'
+import authAxios from './index'
 import qs from 'qs'
 import { baseURL } from './config'
 const OAUTH_TOKEN = baseURL + 'oauth/token'
@@ -238,4 +239,19 @@ export const authExist = ({ username, email, phone, action }) => {
     .catch(error => {
       return Promise.reject(error)
     })
+}
+export const getMe = () => {
+  return new Promise((resolve, reject) => {
+    authAxios.request({
+      url: '/sysUser/me',
+      method: 'get',
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded'
+      }
+    }).then(res => {
+      resolve(res)
+    }).catch(error => {
+      reject(error)
+    })
+  })
 }
