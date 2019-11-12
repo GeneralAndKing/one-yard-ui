@@ -96,7 +96,7 @@ export default {
     }
   },
   created () {
-    this.$vuetify.theme.dark = false
+    this.changeTheme()
     this.menus = genMenu()
     this.me = this.$store.getters['auth/me']
     this.initNotice()
@@ -114,7 +114,12 @@ export default {
       }
     },
     handleTheme () {
-      this.theme = this.$vuetify.theme.dark = !this.$vuetify.theme.dark
+      this.$store.dispatch('sundry/changeTheme')
+      this.changeTheme()
+    },
+    changeTheme () {
+      this.$vuetify.theme.dark = this.$store.getters['sundry/theme']
+      this.theme = this.$store.getters['sundry/theme']
     },
     initNotice () {
       this.socket = new WebSocket(`ws://localhost:8080/api/notify/${this.me.id}`)
