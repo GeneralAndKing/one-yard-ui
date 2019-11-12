@@ -47,96 +47,133 @@
                 v-text-field(v-model="materialPlan.remark", label="备注", :readonly='see')
               v-flex(sm12, md6, lg4)
                 v-switch(v-model="materialPlan.isBudgetPlan", :label="`是否预算内计划：${materialPlan.isBudgetPlan? '是' : '否'}`", :readonly='see')
-        v-data-table(v-model="selected", :headers="headers", :items="desserts", :loading="loading", no-data-text="暂无数据", no-results-text="暂无数据"
-          item-key="materialTrackingCode", :mobile-breakpoint="1200", show-select)
-          template(v-slot:item.materialCode="{ item }")
-            span {{item.material.code}}
-          template(v-slot:item.materialName="{ item }")
-            span {{item.material.name}}
-          template(v-slot:item.materialTypeCode="{ item }")
-            span {{item.materialType.code}}
-          template(v-slot:item.materialTypeName="{ item }")
-            span {{item.materialType.name}}
-          template(v-slot:item.specifications="{ item }")
-            span {{item.material.specifications}}
-          template(v-slot:item.size="{ item }")
-            span {{item.material.size}}
-          template(v-slot:item.unit="{ item }")
-            span {{item.material.unit}}
-          template(v-slot:item.isSourceGoods="{ item }")
-            span {{item.isSourceGoods?'是':'否'}}
-          template(v-slot:item.action="{ item }")
-            v-tooltip(top)
-              template(v-slot:activator="{ on }")
-                v-btn.mr-2(outlined, rounded, x-small, fab, color="error", @click="handleDelete(item)", v-on="on", :disabled="see")
-                  v-icon mdi-delete
-              span 删除
-            v-tooltip(top)
-              template(v-slot:activator="{ on }")
-                v-btn.mr-2(outlined, rounded, x-small, fab, color="success", @click="handleEdit(item)", v-on="on", :disabled="see")
-                  v-icon mdi-pencil
-              span 编辑
-            v-tooltip(top)
-              template(v-slot:activator="{ on }")
-                v-btn(outlined, rounded, x-small, fab, color="primary", @click="handleCopy(item)", v-on="on", :disabled="see")
-                  v-icon file_copy
-              span 复制
-          template(v-slot:top)
-            v-toolbar(flat, justify-content="right")
-              h3 您的物料单
-              v-spacer
-              v-dialog(v-model="dialog", max-width="1200px", persistent)
-                template(v-slot:activator="{ on }")
-                  v-btn.mb-2.ml-3.mr-3(text, color="primary", v-on="on", :disabled="see") 添加
-                  v-btn.mb-2.ml-3.mr-3(text, color="error", @click="handleDeleteSelected", :disabled="see") 删除所选物料
-                v-card
-                  v-card-title(primary-title)
-                    .headline.lighten-2 添加数据
-                    v-spacer
-                    v-btn(icon,  @click="handleClose")
-                      v-icon mdi-close
-                  v-card-text
-                    v-form(ref="add")
-                      v-container(grid-list-md)
-                        v-layout(wrap)
-                          v-flex(xs12, md6, md4)
-                            v-select(v-model="editedItem.materialType", label="物料分类", :items="materialTypes", @change="materialTypeSelect",
-                              item-text="name", return-object, :rules="rules.union(rules.required('物料分类'))")
-                          v-flex(xs12, md6, md4)
-                            v-select(v-model="editedItem.material", label="物料", :items="materials", @change="materialSelect", item-text="name", return-object,
-                              :rules="rules.union(rules.required('物料'))", no-data-text="未选择物料分类或当前分类下无物料信息")
-                          v-flex(xs12, md6, md4)
-                            v-text-field(v-model="editedItem.specifications", label="规格", :rules="rules.union(rules.required('规格'))",
-                              readonly, hint="当前物料规格")
-                          v-flex(xs12, md6, md4)
-                            v-text-field(v-model="editedItem.size", label="型号", :rules="rules.union(rules.required('型号'))",
-                              readonly, hint="当前物料型号")
-                          v-flex(xs12, md6, md4)
-                            v-text-field(v-model="editedItem.unit", label="计量单位", :rules="rules.union(rules.required('计量单位'))",
-                              readonly, hint="当前物料计量单位")
-                          v-flex(xs12, md6, md4)
-                            v-text-field(v-model="editedItem.number", label="需求数量", type="number", :rules="rules.union(rules.requiredMessage('需求数量'))",
-                              hint="当前物料所需数量")
-                          v-flex(xs12, md6, md4)
-                            v-menu(v-model="dayMenu", :close-on-content-click="false", transition="scale-transition",
-                              offset-y, max-width="290px", min-width="290px")
-                              template(v-slot:activator="{ on }")
-                                v-text-field(v-model="editedItem.date", v-on="on", label="需求日期", readonly, :rules="rules.union(rules.required('需求日期'))")
-                              v-date-picker(v-model="needDate", no-title, @input="dayMenu = false", locale="zh-cn")
-                          v-flex(xs12, md6, md4)
-                            v-select(v-model="editedItem.expectationSupplier", label="期望供应商", :items="suppliers", item-text="name", item-value="name")
-                          v-flex(xs12, md6, md4)
-                            v-select(v-model="editedItem.fixedSupplier", label="固定供应商", :items="suppliers", item-text="name", item-value="name")
-                          v-flex(xs12, md6, md4)
-                            v-select(v-model="editedItem.inventory", label="需求库存组织", :items="inventory", item-text="name", item-value="name")
-                          v-flex(xs12, md6, md4)
-                            v-text-field(:value="editedItem.materialTrackingCode", label="物料追踪码", readonly, hint="此项为随机生成，请勿修改")
-                          v-flex(xs12, md6, md4)
-                            v-switch(v-model="editedItem.isSourceGoods", :label="`货源是否确定:${editedItem.isSourceGoods ? '是': '否'}`")
-                  v-card-actions
-                    v-spacer
-                    v-btn(text, color="error", @click="handleReset") 重置
-                    v-btn(text, color="success", @click="handleAdd") {{editIndex < 0 ? '添加' : '保存修改'}}
+        v-toolbar(flat, color="primary")
+        v-tabs(vertical)
+          v-tab
+            v-icon(left) mdi-account
+            | 物料信息
+          v-tab
+            v-icon(left) mdi-account
+            | 审批信息
+          v-tab
+            v-icon(left) mdi-account
+            | 系统信息
+          v-tab-item
+            v-card(flat)
+              v-card-text
+                v-data-table(v-model="selected", :headers="headers", :items="desserts", :loading="loading", no-data-text="暂无数据", no-results-text="暂无数据"
+                  item-key="materialTrackingCode", :mobile-breakpoint="1200", show-select)
+                  template(v-slot:item.materialCode="{ item }")
+                    span {{item.material.code}}
+                  template(v-slot:item.materialName="{ item }")
+                    span {{item.material.name}}
+                  template(v-slot:item.materialTypeCode="{ item }")
+                    span {{item.materialType.code}}
+                  template(v-slot:item.materialTypeName="{ item }")
+                    span {{item.materialType.name}}
+                  template(v-slot:item.specifications="{ item }")
+                    span {{item.material.specifications}}
+                  template(v-slot:item.size="{ item }")
+                    span {{item.material.size}}
+                  template(v-slot:item.unit="{ item }")
+                    span {{item.material.unit}}
+                  template(v-slot:item.isSourceGoods="{ item }")
+                    span {{item.isSourceGoods?'是':'否'}}
+                  template(v-slot:item.action="{ item }")
+                    v-tooltip(top)
+                      template(v-slot:activator="{ on }")
+                        v-btn.mr-2(outlined, rounded, x-small, fab, color="error", @click="handleDelete(item)", v-on="on", :disabled="see")
+                          v-icon mdi-delete
+                      span 删除
+                    v-tooltip(top)
+                      template(v-slot:activator="{ on }")
+                        v-btn.mr-2(outlined, rounded, x-small, fab, color="success", @click="handleEdit(item)", v-on="on", :disabled="see")
+                          v-icon mdi-pencil
+                      span 编辑
+                    v-tooltip(top)
+                      template(v-slot:activator="{ on }")
+                        v-btn(outlined, rounded, x-small, fab, color="primary", @click="handleCopy(item)", v-on="on", :disabled="see")
+                          v-icon file_copy
+                      span 复制
+                  template(v-slot:top)
+                    v-toolbar(flat, justify-content="right")
+                      h3 您的物料单
+                      v-spacer
+                      v-dialog(v-model="dialog", max-width="1200px", persistent)
+                        template(v-slot:activator="{ on }")
+                          v-btn.mb-2.ml-3.mr-3(text, color="primary", v-on="on", :disabled="see") 添加
+                          v-btn.mb-2.ml-3.mr-3(text, color="error", @click="handleDeleteSelected", :disabled="see") 删除所选物料
+                        v-card
+                          v-card-title(primary-title)
+                            .headline.lighten-2 添加数据
+                            v-spacer
+                            v-btn(icon,  @click="handleClose")
+                              v-icon mdi-close
+                          v-card-text
+                            v-form(ref="add")
+                              v-container(grid-list-md)
+                                v-layout(wrap)
+                                  v-flex(xs12, md6, md4)
+                                    v-select(v-model="editedItem.materialType", label="物料分类", :items="materialTypes", @change="materialTypeSelect",
+                                      item-text="name", return-object, :rules="rules.union(rules.required('物料分类'))")
+                                  v-flex(xs12, md6, md4)
+                                    v-select(v-model="editedItem.material", label="物料", :items="materials", @change="materialSelect", item-text="name", return-object,
+                                      :rules="rules.union(rules.required('物料'))", no-data-text="未选择物料分类或当前分类下无物料信息")
+                                  v-flex(xs12, md6, md4)
+                                    v-text-field(v-model="editedItem.specifications", label="规格", :rules="rules.union(rules.required('规格'))",
+                                      readonly, hint="当前物料规格")
+                                  v-flex(xs12, md6, md4)
+                                    v-text-field(v-model="editedItem.size", label="型号", :rules="rules.union(rules.required('型号'))",
+                                      readonly, hint="当前物料型号")
+                                  v-flex(xs12, md6, md4)
+                                    v-text-field(v-model="editedItem.unit", label="计量单位", :rules="rules.union(rules.required('计量单位'))",
+                                      readonly, hint="当前物料计量单位")
+                                  v-flex(xs12, md6, md4)
+                                    v-text-field(v-model="editedItem.number", label="需求数量", type="number", :rules="rules.union(rules.requiredMessage('需求数量'))",
+                                      hint="当前物料所需数量")
+                                  v-flex(xs12, md6, md4)
+                                    v-menu(v-model="dayMenu", :close-on-content-click="false", transition="scale-transition",
+                                      offset-y, max-width="290px", min-width="290px")
+                                      template(v-slot:activator="{ on }")
+                                        v-text-field(v-model="editedItem.date", v-on="on", label="需求日期", readonly, :rules="rules.union(rules.required('需求日期'))")
+                                      v-date-picker(v-model="needDate", no-title, @input="dayMenu = false", locale="zh-cn")
+                                  v-flex(xs12, md6, md4)
+                                    v-select(v-model="editedItem.expectationSupplier", label="期望供应商", :items="suppliers", item-text="name", item-value="name")
+                                  v-flex(xs12, md6, md4)
+                                    v-select(v-model="editedItem.fixedSupplier", label="固定供应商", :items="suppliers", item-text="name", item-value="name")
+                                  v-flex(xs12, md6, md4)
+                                    v-select(v-model="editedItem.inventory", label="需求库存组织", :items="inventory", item-text="name", item-value="name")
+                                  v-flex(xs12, md6, md4)
+                                    v-text-field(:value="editedItem.materialTrackingCode", label="物料追踪码", readonly, hint="此项为随机生成，请勿修改")
+                                  v-flex(xs12, md6, md4)
+                                    v-switch(v-model="editedItem.isSourceGoods", :label="`货源是否确定:${editedItem.isSourceGoods ? '是': '否'}`")
+                          v-card-actions
+                            v-spacer
+                            v-btn(text, color="error", @click="handleReset") 重置
+                            v-btn(text, color="success", @click="handleAdd") {{editIndex < 0 ? '添加' : '保存修改'}}
+          v-tab-item
+            v-card(flat)
+              v-card-text
+                v-data-table(:headers="approvalHeaders", :items="approvalDesserts", :loading="approvalLoading", no-data-text="暂无数据", no-results-text="暂无数据"
+                  item-key="id", :mobile-breakpoint="900")
+          v-tab-item
+            v-card(flat)
+              v-card-text
+                v-container(grid-list-md)
+                  v-form(ref="system")
+                    v-layout(wrap, style="width:100%")
+                      v-flex(sm12, md6, lg4)
+                        v-text-field(v-model="materialPlan.createUser", label="编制用户", readonly)
+                      v-flex(sm12, md6, lg4)
+                        v-text-field(v-model="materialPlan.createTime", label="编制时间", readonly)
+                      v-flex(sm12, md6, lg4)
+                        v-text-field(v-model="materialPlan.modifyUser", label="修改用户", readonly)
+                      v-flex(sm12, md6, lg4)
+                        v-text-field(v-model="materialPlan.modifyTime", label="修改时间", readonly)
+                      v-flex(sm12, md6, lg4)
+                        v-text-field(v-model="materialPlan.modifyTime", label="修改时间", readonly)
+                      v-flex(sm12, md6, lg4)
+                        v-text-field(v-model="materialPlan.modifyIdea", label="修改意见")
       v-card-actions
         v-spacer
         slot
@@ -154,6 +191,7 @@ export default {
   name: 'MaterialPlan',
   data: () => ({
     loading: false,
+    approvalLoading: false,
     selected: [],
     menu: false,
     dayMenu: false,
@@ -182,6 +220,11 @@ export default {
       name: null,
       planType: null,
       departmentId: null,
+      modifyUser: null,
+      modifyTime: null,
+      createTime: null,
+      createUser: null,
+      modifyIdea: null,
       needPeople: null,
       planStatus: 'FREE',
       approvalStatus: 'NO_SUBMIT',
@@ -206,6 +249,25 @@ export default {
       { text: '需求库存组织', value: 'inventory', align: 'center' },
       { value: 'isEnable', filter: value => value, sortable: false, width: '0px' },
       { text: '操作', value: 'action', sortable: false, width: '160px', align: 'center' }
+    ],
+    approvalHeaders: [
+      { text: '审批类型', value: 'approvalType', align: 'center' },
+      { text: '审批意见', value: 'result', align: 'center' },
+      { text: '说明', value: 'description', align: 'center' },
+      { text: '审批时间', value: 'createTime', align: 'center' },
+      { text: '审批用户', value: 'createUser', align: 'center' }
+    ],
+    approvalDesserts: [
+      { id: 1, approvalType: 'MATERIAL_APPROVAL', result: '这是一个十年皮一件', description: '百年大庆难得一见', createTime: '2019-10-5 11:12:11', createUser: 'admin' },
+      { id: 2, approvalType: 'MATERIAL_APPROVAL', result: '这是一个十年皮一件', description: '百年大庆难得一见', createTime: '2019-10-5 11:12:11', createUser: 'admin' },
+      { id: 3, approvalType: 'MATERIAL_APPROVAL', result: '这是一个十年皮一件', description: '百年大庆难得一见', createTime: '2019-10-5 11:12:11', createUser: 'admin' },
+      { id: 4, approvalType: 'MATERIAL_APPROVAL', result: '这是一个十年皮一件', description: '百年大庆难得一见', createTime: '2019-10-5 11:12:11', createUser: 'admin' },
+      { id: 5, approvalType: 'MATERIAL_APPROVAL', result: '这是一个十年皮一件', description: '百年大庆难得一见', createTime: '2019-10-5 11:12:11', createUser: 'admin' },
+      { id: 6, approvalType: 'MATERIAL_APPROVAL', result: '这是一个十年皮一件', description: '百年大庆难得一见', createTime: '2019-10-5 11:12:11', createUser: 'admin' },
+      { id: 7, approvalType: 'MATERIAL_APPROVAL', result: '这是一个十年皮一件', description: '百年大庆难得一见', createTime: '2019-10-5 11:12:11', createUser: 'admin' },
+      { id: 8, approvalType: 'MATERIAL_APPROVAL', result: '这是一个十年皮一件', description: '百年大庆难得一见', createTime: '2019-10-5 11:12:11', createUser: 'admin' },
+      { id: 9, approvalType: 'MATERIAL_APPROVAL', result: '这是一个十年皮一件', description: '百年大庆难得一见', createTime: '2019-10-5 11:12:11', createUser: 'admin' },
+      { id: 10, approvalType: 'MATERIAL_APPROVAL', result: '这是一个十年皮一件', description: '百年大庆难得一见', createTime: '2019-10-5 11:12:11', createUser: 'admin' }
     ]
   }),
   props: {
