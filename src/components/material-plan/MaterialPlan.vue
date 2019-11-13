@@ -46,7 +46,10 @@
               v-flex(sm12, md6, lg4)
                 v-text-field(v-model="materialPlan.remark", label="备注", :readonly='see')
               v-flex(sm12, md6, lg4)
-                v-switch(v-model="materialPlan.isBudgetPlan", :label="`是否预算内计划：${materialPlan.isBudgetPlan? '是' : '否'}`", :readonly='see')
+                v-switch(v-model="materialPlan.isBudgetPlan", :readonly='see')
+                  template(v-slot:label)
+                    span 是否预算内计划：
+                    span(:class="materialPlan.isBudgetPlan? 'green--text' : 'red--text'") {{materialPlan.isBudgetPlan? '是' : '否'}}
         v-toolbar(flat, color="primary")
         v-tabs(vertical)
           v-tab
@@ -163,17 +166,17 @@
                   v-form(ref="system")
                     v-layout(wrap, style="width:100%")
                       v-flex(sm12, md6, lg4)
-                        v-text-field(v-model="materialPlan.createUser", label="编制用户", readonly)
+                        v-text-field(v-model="materialPlan.createUser", label="编制用户", disabled)
                       v-flex(sm12, md6, lg4)
-                        v-text-field(v-model="materialPlan.createTime", label="编制时间", readonly)
+                        v-text-field(v-model="materialPlan.createTime", label="编制时间", disabled)
                       v-flex(sm12, md6, lg4)
-                        v-text-field(v-model="materialPlan.modifyUser", label="修改用户", readonly)
+                        v-text-field(v-model="materialPlan.modifyUser", label="修改用户", disabled)
                       v-flex(sm12, md6, lg4)
-                        v-text-field(v-model="materialPlan.modifyTime", label="修改时间", readonly)
+                        v-text-field(v-model="materialPlan.modifyTime", label="修改时间", disabled)
                       v-flex(sm12, md6, lg4)
-                        v-text-field(v-model="materialPlan.modifyTime", label="修改时间", readonly)
+                        v-text-field(v-model="materialPlan.modifyTime", label="修改时间", disabled)
                       v-flex(sm12, md6, lg4)
-                        v-text-field(v-model="materialPlan.modifyIdea", label="修改意见")
+                        v-text-field(v-model="materialPlan.modifyIdea", label="修改意见", :disabled="seeId === 0 || see")
       v-card-actions
         v-spacer
         slot
@@ -251,24 +254,12 @@ export default {
       { text: '操作', value: 'action', sortable: false, width: '160px', align: 'center' }
     ],
     approvalHeaders: [
-      { text: '审批类型', value: 'approvalType', align: 'center' },
-      { text: '审批意见', value: 'result', align: 'center' },
+      { text: '审批意见', value: 'result' },
       { text: '说明', value: 'description', align: 'center' },
       { text: '审批时间', value: 'createTime', align: 'center' },
       { text: '审批用户', value: 'createUser', align: 'center' }
     ],
-    approvalDesserts: [
-      { id: 1, approvalType: 'MATERIAL_APPROVAL', result: '这是一个十年皮一件', description: '百年大庆难得一见', createTime: '2019-10-5 11:12:11', createUser: 'admin' },
-      { id: 2, approvalType: 'MATERIAL_APPROVAL', result: '这是一个十年皮一件', description: '百年大庆难得一见', createTime: '2019-10-5 11:12:11', createUser: 'admin' },
-      { id: 3, approvalType: 'MATERIAL_APPROVAL', result: '这是一个十年皮一件', description: '百年大庆难得一见', createTime: '2019-10-5 11:12:11', createUser: 'admin' },
-      { id: 4, approvalType: 'MATERIAL_APPROVAL', result: '这是一个十年皮一件', description: '百年大庆难得一见', createTime: '2019-10-5 11:12:11', createUser: 'admin' },
-      { id: 5, approvalType: 'MATERIAL_APPROVAL', result: '这是一个十年皮一件', description: '百年大庆难得一见', createTime: '2019-10-5 11:12:11', createUser: 'admin' },
-      { id: 6, approvalType: 'MATERIAL_APPROVAL', result: '这是一个十年皮一件', description: '百年大庆难得一见', createTime: '2019-10-5 11:12:11', createUser: 'admin' },
-      { id: 7, approvalType: 'MATERIAL_APPROVAL', result: '这是一个十年皮一件', description: '百年大庆难得一见', createTime: '2019-10-5 11:12:11', createUser: 'admin' },
-      { id: 8, approvalType: 'MATERIAL_APPROVAL', result: '这是一个十年皮一件', description: '百年大庆难得一见', createTime: '2019-10-5 11:12:11', createUser: 'admin' },
-      { id: 9, approvalType: 'MATERIAL_APPROVAL', result: '这是一个十年皮一件', description: '百年大庆难得一见', createTime: '2019-10-5 11:12:11', createUser: 'admin' },
-      { id: 10, approvalType: 'MATERIAL_APPROVAL', result: '这是一个十年皮一件', description: '百年大庆难得一见', createTime: '2019-10-5 11:12:11', createUser: 'admin' }
-    ]
+    approvalDesserts: []
   }),
   props: {
     seeId: {
@@ -288,6 +279,8 @@ export default {
     if (this.seeId !== 0) {
       this.see = true
       this.loading = true
+      restAPI.getRestLink(`approval/search/byPlanIdAndApprovalType?approvalType=MATERIAL_APPROVAL&planId=${this.seeId}`)
+        .then(res => { this.approvalDesserts = res.data.content.filter(d => !d.hasOwnProperty('relTargetType')) })
       materialPlanAPI.materialPlanById(this.seeId)
         .then(res => {
           this.materialPlan = res.data
