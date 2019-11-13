@@ -19,22 +19,22 @@
           v-form(ref="base")
             v-layout(wrap, style="width:100%")
               v-flex(sm12, md6, lg4)
-                v-text-field(v-model="materialPlan.name", ref="name", label="需求计划名称", :readonly='see',
+                v-text-field(v-model="materialPlan.name", ref="name", label="需求计划名称", :disabled='see',
                   :rules="rules.union(rules.required('需求计划名称'))")
               v-flex(sm12, md6, lg4)
-                v-select(v-model="materialPlan.planType", :items="planTypes", ref="planTypes", :readonly='see',
+                v-select(v-model="materialPlan.planType", :items="planTypes", ref="planTypes", :disabled='see',
                   label="需求计划类型" :rules="rules.union(rules.required('需求计划类型'))")
               v-flex(sm12, md6, lg4)
-                v-select(v-model="materialPlan.departmentId", :items="departments", ref="departmentId",  :readonly='see',
+                v-select(v-model="materialPlan.departmentId", :items="departments", ref="departmentId",  :disabled='see',
                   item-text="name", item-value="id", label="需求部门" :rules="rules.union(rules.required('需求部门'))")
               v-flex(sm12, md6, lg4)
-                v-text-field(v-model="materialPlan.needPeople", ref="needPeople", label="需求人员",  :readonly='see',
+                v-text-field(v-model="materialPlan.needPeople", ref="needPeople", label="需求人员",  :disabled='see',
                   :rules="rules.union(rules.required('需求人员'))")
               v-flex(xs12, md6, lg4, v-if="materialPlan.planType === '月度计划'")
                 v-menu(ref="month", :close-on-content-click="false", :return-value.sync="date", transition="scale-transition",
                   v-model="menu", max-width="290px", min-width="290px", :disabled="see")
                   template(v-slot:activator="{ on }")
-                    v-text-field(v-model="materialPlan.month", label="需求月份", readonly, v-on="on",
+                    v-text-field(v-model="materialPlan.month", label="需求月份", disabled, v-on="on",
                       :rules="rules.union(rules.required('需求月份'))")
                   v-date-picker(v-model="date", type="month", no-title, scrollable, locale="zh-cn")
                     v-spacer
@@ -44,9 +44,9 @@
                 v-select(v-model="materialPlan.month", :items="years", ref="month", :readonly='see',
                   label="需求年份" :rules="rules.union(rules.required('需求年份'))")
               v-flex(sm12, md6, lg4)
-                v-text-field(v-model="materialPlan.remark", label="备注", :readonly='see')
+                v-text-field(v-model="materialPlan.remark", label="备注", :disabled='see')
               v-flex(sm12, md6, lg4)
-                v-switch(v-model="materialPlan.isBudgetPlan", :readonly='see')
+                v-switch(v-model="materialPlan.isBudgetPlan", :disabled='see')
                   template(v-slot:label)
                     span 是否预算内计划：
                     span(:class="materialPlan.isBudgetPlan? 'green--text' : 'red--text'") {{materialPlan.isBudgetPlan? '是' : '否'}}

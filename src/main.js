@@ -4,7 +4,9 @@ import router from '_router'
 import store from '_store'
 import vuetify from '_plugins/vuetify'
 import Message from '_plugins/global-message'
+import Print from '_plugins/print'
 import _ from 'lodash'
+Vue.use(Print) // 注册
 Vue.prototype.$message = Message.install
 Vue.config.productionTip = false
 Vue.prototype._ = _
