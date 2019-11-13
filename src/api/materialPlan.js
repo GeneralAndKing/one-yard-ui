@@ -10,57 +10,33 @@ const MATERIAL_DEMAND_PLAN = 'materialDemandPlan'
  * @returns {Promise<unknown>}
  */
 export const saveOrUpdate = (materialPlan, desserts) => {
-  return new Promise((resolve, reject) => {
-    axios.request({
-      url: `/${MATERIAL_DEMAND_PLAN}/materialPlan`,
-      method: 'post',
-      data: { materialPlan, desserts }
-    }).then(res => {
-      resolve(res)
-    }).catch(error => {
-      reject(error)
-    })
+  return axios.request({
+    url: `/${MATERIAL_DEMAND_PLAN}/materialPlan`,
+    method: 'post',
+    data: { materialPlan, desserts }
   })
 }
 
 export const planMaterialByPlanId = (id) => {
-  return new Promise((resolve, reject) => {
-    axios.request({
-      url: `/rest/planMaterial/search/byPlanId`,
-      method: 'get',
-      params: { id }
-    }).then(res => {
-      resolve(res)
-    }).catch(error => {
-      reject(error)
-    })
+  return axios.request({
+    url: `/rest/planMaterial/search/byPlanId`,
+    method: 'get',
+    params: { id }
   })
 }
 
 export const materialPlanById = (id) => {
-  return new Promise((resolve, reject) => {
-    axios.request({
-      url: `/materialDemandPlan/materialPlan`,
-      method: 'get',
-      params: { id }
-    }).then(res => {
-      resolve(res)
-    }).catch(error => {
-      reject(error)
-    })
+  return axios.request({
+    url: `/materialDemandPlan/materialPlan`,
+    method: 'get',
+    params: { id }
   })
 }
 
 export const approvalMaterialPlan = (materialPlan, approval) => {
-  return new Promise((resolve, reject) => {
-    axios.request({
-      url: `/materialDemandPlan/approvalMaterialPlan`,
-      method: 'post',
-      data: { materialPlan, approval }
-    }).then(res => {
-      resolve(res)
-    }).catch(error => {
-      reject(error)
-    })
+  return axios.request({
+    url: `/materialDemandPlan/approvalMaterialPlan`,
+    method: 'post',
+    data: { materialPlan, approval }
   })
 }

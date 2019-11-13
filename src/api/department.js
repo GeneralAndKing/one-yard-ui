@@ -6,16 +6,10 @@ import axios from './index'
  * @returns 响应
  */
 export const getRoleByDepartment = (id) => {
-  return new Promise((resolve, reject) => {
-    axios.request({
-      url: `/rest/sysRole/search/byDepartment`,
-      method: 'get',
-      params: { id }
-    }).then(res => {
-      resolve(res)
-    }).catch(error => {
-      reject(error)
-    })
+  return axios.request({
+    url: `/rest/sysRole/search/byDepartment`,
+    method: 'get',
+    params: { id }
   })
 }
 
@@ -25,16 +19,10 @@ export const getRoleByDepartment = (id) => {
  * @returns 响应
  */
 export const getPermissionByRole = (id) => {
-  return new Promise((resolve, reject) => {
-    axios.request({
-      url: `/rest/sysPermission/search/byRole`,
-      method: 'get',
-      params: { id }
-    }).then(res => {
-      resolve(res)
-    }).catch(error => {
-      reject(error)
-    })
+  return axios.request({
+    url: `/rest/sysPermission/search/byRole`,
+    method: 'get',
+    params: { id }
   })
 }
 
@@ -44,15 +32,9 @@ export const getPermissionByRole = (id) => {
  * @returns 响应
  */
 export const getUserByRole = (id) => {
-  return new Promise((resolve, reject) => {
-    axios.request({
-      url: `/rest/sysUser/search/byRole`,
-      method: 'get',
-      params: { id }
-    }).then(res => {
-      resolve(res)
-    }).catch(error => {
-      reject(error)
-    })
+  return axios.request({
+    url: `/rest/sysUser/search/byRole`,
+    method: 'get',
+    params: { id }
   })
 }
