@@ -17,7 +17,7 @@
           v-btn(icon, v-on="on", large)
             v-icon.white--text mdi-dots-vertical
         v-list(two-line, subheader, dense)
-          v-list-item(@click="() => {}", link)
+          v-list-item(link)
             v-list-item-avatar
               v-img(:src="me.icon", alt="avatar")
             v-list-item-content
@@ -25,7 +25,7 @@
               v-list-item-subtitle {{me.email}}
           v-divider
           v-list-item-group
-            v-list-item(@click="() => {}", link)
+            v-list-item(:to="{ name: 'userSetting' }", link)
               v-list-item-avatar
                 v-icon mdi-clock
               v-list-item-content 个人设置

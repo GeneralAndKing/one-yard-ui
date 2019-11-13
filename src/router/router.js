@@ -40,6 +40,15 @@ export const routes = [
         component: () => import(/* webpackChunkName: "dashboard" */ '_v/index')
       },
       {
+        path: 'userSetting',
+        name: 'userSetting',
+        meta: {
+          meta: '个人设置',
+          auth: Role.all()
+        },
+        component: () => import(/* webpackChunkName: "dashboard" */ '_v/user-setting')
+      },
+      {
         path: 'dashboard',
         name: 'dashboard',
         meta: {

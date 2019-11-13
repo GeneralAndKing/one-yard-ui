@@ -9,6 +9,9 @@
               :active.sync="active", transition, return-object)
               template(v-slot:prepend="{ item, active }")
                 v-icon(v-if="!item.children") mdi-account
+              template(v-slot:label="{ item, leaf }")
+                span(v-if="leaf") {{item.description}}
+                span(v-else) {{item.name}}
           v-divider(vertical)
           v-col(sm="12", md="7", xl="8")
             v-tabs(v-model="tab")
@@ -31,9 +34,9 @@
                         v-col.text-right.mr-4.mb-2(tag="strong", cols="6") 描述
                         v-col {{ selected.description }}
                         v-col.text-right.mr-4.mb-2(tag="strong", cols="6") 所属部门
-                        v-col 采购部门
+                        v-col {{ selected.department.name }}
                         v-col.text-right.mr-4.mb-2(tag="strong", cols="6") 备注
-                        v-col {{ selected.remark }}
+                        v-col {{ selected.remark === null ? '无' : selected.remark }}
                 v-tab-item(:key="2", :value="'tab-' + 2")
                   v-scroll-y-transition(mode="out-in")
                     .title.grey--text.text--lighten-1.font-weight-light.text-center(v-if="!isSelected")
@@ -100,6 +103,7 @@ export default {
     handleActive (item) {
       if (!item.length) return
       this.selected = item[0]
+      this.selected.department = this._.find(this.items, { id: this.selected.departmentId })
       departmentAPI.getPermissionByRole(this.selected.id)
         .then(res => { this.permissions = res.data.content })
       departmentAPI.getUserByRole(this.selected.id)

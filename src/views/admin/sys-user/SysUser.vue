@@ -2,7 +2,7 @@
   v-container#auth-user.mt-9
     v-card
       v-card-text
-        TableCardSheet(title="用户管理", description="你可以自由查看与管理当前系统的用户信息", color="orange")
+        table-card-sheet(title="用户管理", description="你可以自由查看与管理当前系统的用户信息", color="orange")
         v-data-table(:headers="headers", :items="desserts", item-key="username", :loading="loading",
           loading-text="正在加载数据", :search="search")
           template(v-slot:item.icon="{ item }")
