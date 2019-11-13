@@ -53,7 +53,7 @@
                 v-btn(text, color="error", icon, @click="initApproval")
                   v-icon mdi-close
               v-card-text
-                v-textarea(v-model="approval.description", label="审批意见", hint="请输入您的审批意见", autofocus,
+                v-textarea(v-model="approval.description", label="审批意见", hint="请输入您的审批意见", :rules="rules.union(rules.required('审批意见'))",
                   rows="5", auto-grow, counter)
               v-card-actions
                 v-spacer
@@ -64,6 +64,7 @@
 </template>
 
 <script>
+import { requiredRules, unionRules, requiredMessageRules } from '_u/rule'
 import * as restAPI from '_api/rest'
 import * as materialPlanAPI from '_api/materialPlan'
 import MaterialPlan from '_c/material-plan'
@@ -90,6 +91,11 @@ export default {
     planStatus: [ '', '自由', '提交审批', '提交至汇总', '已删除', '已终止' ],
     approvalStatus: [ '', '未提交', '审批中', '审批通过', '审批退回' ],
     loading: false,
+    rules: {
+      required: requiredRules,
+      requiredMessage: requiredMessageRules,
+      union: unionRules
+    },
     headers: [
       { text: '编码', value: 'id' },
       { text: '名称', value: 'name' },
@@ -172,6 +178,7 @@ export default {
      **/
     handleBack () {
       this.see = 0
+      // TODO点击返回时更新数据
     },
     /**
      * 搜索过滤
@@ -205,6 +212,7 @@ export default {
         .then(() => {
           this.initData()
           this.approval.show = false
+          this.$message('审批成功！', 'success')
         })
     }
   }
