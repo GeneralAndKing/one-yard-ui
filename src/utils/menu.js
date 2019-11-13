@@ -76,6 +76,13 @@ export const MENUS = [
           Role.ROLE_FINANCE_PLANER,
           Role.ROLE_FINANCE_SUPERVISOR
         ]
+      }, {
+        text: '物资供应方案',
+        to: { name: 'summary' },
+        icon: 'location_city',
+        auth: [
+          Role.ROLE_PROCUREMENT_PLANER
+        ]
       }
     ]
   }

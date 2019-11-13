@@ -127,6 +127,16 @@ export const routes = [
           ]
         },
         component: () => import(/* webpackChunkName: "sys-department" */ '_v/procurement-plan-management')
+      }, {
+        path: 'summary',
+        name: 'summary',
+        meta: {
+          meta: '物资供应方案',
+          auth: [
+            Role.ROLE_PROCUREMENT_PLANER
+          ]
+        },
+        component: () => import(/* webpackChunkName: "sys-department" */ '_v/summary')
       }
 
     ]

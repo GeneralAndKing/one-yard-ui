@@ -30,7 +30,7 @@
               v-flex(sm12, md6, lg4)
                 v-text-field(v-model="materialPlan.needPeople", ref="needPeople", label="需求人员",  :readonly='see',
                   :rules="rules.union(rules.required('需求人员'))")
-              v-flex(xs12, md6, lg4, v-if="materialPlan.planType === '月度计划'")
+              v-flex(xs12, md6, lg4, v-if="materialPlan.planType === '月度计划' || materialPlan.planType === '订单型需求计划'")
                 v-menu(ref="month", :close-on-content-click="false", :return-value.sync="date", transition="scale-transition",
                   v-model="menu", max-width="290px", min-width="290px", :disabled="see")
                   template(v-slot:activator="{ on }")
@@ -51,7 +51,7 @@
                     span 是否预算内计划：
                     span(:class="materialPlan.isBudgetPlan? 'green--text' : 'red--text'") {{materialPlan.isBudgetPlan? '是' : '否'}}
         v-toolbar(flat, color="primary")
-        v-tabs(vertical, v-model="tab")
+        v-tabs(v-model="tab", show-arrows)
           v-tab(:key="1")
             v-icon(left) mdi-account
             | 物料信息
@@ -101,7 +101,7 @@
                         span 复制
                     template(v-slot:top)
                       v-toolbar(flat, justify-content="right")
-                        h3 您的物料单
+                        h3.d-none 您的物料单
                         v-spacer
                         v-dialog(v-model="dialog", max-width="1200px", persistent)
                           template(v-slot:activator="{ on }")
