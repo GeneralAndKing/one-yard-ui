@@ -75,23 +75,27 @@ class HttpRequest {
       return res
     }, error => {
       this.destroy(url)
-      console.log('3123123')
-      if (error.response.status === 400 && error.data !== undefined && error.data.hasOwnProperty('error_description')) {
-        Vue.prototype.$message(`请求错误:${error.data.error_description}`, 'error')
+      let message = '未知错误'
+      if (error.response.status === 400) {
+        message = '请求体错误'
       }
       if (error.response.status === 401) {
-        Vue.prototype.$message('未经授权:访问由于凭据无效被拒绝', 'error')
+        message = '未经授权:访问由于凭据无效被拒绝'
         store.dispatch('auth/logout')
       }
       if (error.response.status === 403) {
-        Vue.prototype.$message('鉴权失败:您没有权限访问该资源', 'error')
+        message = '鉴权失败:您没有权限访问该资源'
       }
       if (error.response.status === 404) {
-        Vue.prototype.$message('资源未找到:找不到您访问的资源信息', 'error')
+        message = '资源未找到:找不到您访问的资源信息'
       }
       if (error.response.status === 500) {
-        Vue.prototype.$message('服务错误:服务器出现内部错误，请联系管理员', 'error')
+        message = '服务错误:服务器出现内部错误，请联系管理员'
       }
+      if (error.response.data !== undefined && (error.response.data.hasOwnProperty('error') || error.response.data.hasOwnProperty('error_description'))) {
+        message = error.response.data.error + ': ' + error.response.data.error_description
+      }
+      Vue.prototype.$message(message, 'error')
       return Promise.reject(error.response)
     })
   }

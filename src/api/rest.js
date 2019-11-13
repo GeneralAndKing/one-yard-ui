@@ -1,5 +1,4 @@
 import axios from './index'
-import Vue from 'vue'
 /**
  * 请一定写注释！格式和这个类似！
  * 获取所有资源（分页）
@@ -7,17 +6,10 @@ import Vue from 'vue'
  * @returns 响应
  */
 export const getAllByPage = (resource, params) => {
-  return new Promise((resolve, reject) => {
-    axios.request({
-      url: `/rest/${resource}`,
-      method: 'get',
-      params: params
-    }).then(res => {
-      resolve(res)
-    }).catch(error => {
-      Vue.prototype.$message('初始化失败', 'error')
-      reject(error)
-    })
+  return axios.request({
+    url: `/rest/${resource}`,
+    method: 'get',
+    params: params
   })
 }
 
@@ -27,16 +19,9 @@ export const getAllByPage = (resource, params) => {
  * @returns 响应
  */
 export const getAll = (resource) => {
-  return new Promise((resolve, reject) => {
-    axios.request({
-      url: `/rest/${resource}/search/all`,
-      method: 'get'
-    }).then(res => {
-      resolve(res)
-    }).catch(error => {
-      Vue.prototype.$message('初始化失败', 'error')
-      reject(error)
-    })
+  return axios.request({
+    url: `/rest/${resource}/search/all`,
+    method: 'get'
   })
 }
 
@@ -47,17 +32,9 @@ export const getAll = (resource) => {
  * @returns 响应
  */
 export const deleteByLink = (resource) => {
-  return new Promise((resolve, reject) => {
-    axios.request({
-      url: `/rest/${resource}`,
-      method: 'delete'
-    }).then(res => {
-      Vue.prototype.$message('删除数据成功', 'success')
-      resolve(res)
-    }).catch(error => {
-      Vue.prototype.$message('删除数据失败', 'error')
-      reject(error)
-    })
+  return axios.request({
+    url: `/rest/${resource}`,
+    method: 'delete'
   })
 }
 
@@ -69,18 +46,10 @@ export const deleteByLink = (resource) => {
  * @returns {*} 结果
  */
 export const addOne = (resource, data) => {
-  return new Promise((resolve, reject) => {
-    axios.request({
-      url: `/rest/${resource}`,
-      method: 'post',
-      data: data
-    }).then(res => {
-      Vue.prototype.$message('添加数据成功', 'success')
-      resolve(res)
-    }).catch(error => {
-      Vue.prototype.$message('添加数据失败', 'error')
-      reject(error)
-    })
+  return axios.request({
+    url: `/rest/${resource}`,
+    method: 'post',
+    data: data
   })
 }
 
@@ -93,18 +62,10 @@ export const addOne = (resource, data) => {
  * @returns {*} 请求结果
  */
 export const putOne = (resource, data) => {
-  return new Promise((resolve, reject) => {
-    axios.request({
-      url: `/rest/${resource}/${data.id}`,
-      method: 'put',
-      data: data
-    }).then(res => {
-      Vue.prototype.$message('更新数据成功', 'success')
-      resolve(res)
-    }).catch(error => {
-      Vue.prototype.$message('更新数据失败', 'error')
-      reject(error)
-    })
+  return axios.request({
+    url: `/rest/${resource}/${data.id}`,
+    method: 'put',
+    data: data
   })
 }
 
@@ -117,19 +78,10 @@ export const putOne = (resource, data) => {
  * @returns {*} 请求结果
  */
 export const patchOne = (resource, id, data) => {
-  return new Promise((resolve, reject) => {
-    axios.request({
-      url: `/rest/${resource}/${id}`,
-      method: 'patch',
-      data: data
-    }).then(res => {
-      Vue.prototype.$message('更新数据成功', 'success')
-      resolve(res)
-    }).catch(error => {
-      Vue.prototype.$message('更新数据失败', 'error')
-      console.log(error)
-      reject(error)
-    })
+  return axios.request({
+    url: `/rest/${resource}/${id}`,
+    method: 'patch',
+    data: data
   })
 }
 
@@ -141,16 +93,9 @@ export const patchOne = (resource, id, data) => {
  * @returns {*} 请求结果
  */
 export const getOne = (resource, id) => {
-  return new Promise((resolve, reject) => {
-    axios.request({
-      url: `/rest/${resource}/${id}`,
-      method: 'get'
-    }).then(res => {
-      resolve(res)
-    }).catch(error => {
-      Vue.prototype.$message('获取数据失败', 'error')
-      reject(error)
-    })
+  return axios.request({
+    url: `/rest/${resource}/${id}`,
+    method: 'get'
   })
 }
 
@@ -161,16 +106,9 @@ export const getOne = (resource, id) => {
  * @returns {*} 请求结果
  */
 export const getRestLink = (link) => {
-  return new Promise((resolve, reject) => {
-    axios.request({
-      url: `/rest/${link}`,
-      method: 'get'
-    }).then(res => {
-      resolve(res)
-    }).catch(error => {
-      Vue.prototype.$message('获取数据失败', 'error')
-      reject(error)
-    })
+  return axios.request({
+    url: `/rest/${link}`,
+    method: 'get'
   })
 }
 
@@ -181,15 +119,8 @@ export const getRestLink = (link) => {
  * @returns {*} 请求结果
  */
 export const getLink = (link) => {
-  return new Promise((resolve, reject) => {
-    axios.request({
-      url: `/${link}`,
-      method: 'get'
-    }).then(res => {
-      resolve(res)
-    }).catch(error => {
-      Vue.prototype.$message('获取数据失败', 'error')
-      reject(error)
-    })
+  return axios.request({
+    url: `/${link}`,
+    method: 'get'
   })
 }

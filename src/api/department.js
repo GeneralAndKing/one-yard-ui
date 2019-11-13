@@ -1,5 +1,4 @@
 import axios from './index'
-import Message from '_plugins/global-message'
 
 /**
  * 根据部门id获取所属角色
@@ -15,7 +14,6 @@ export const getRoleByDepartment = (id) => {
     }).then(res => {
       resolve(res)
     }).catch(error => {
-      Message('获取角色失败', 'error')
       reject(error)
     })
   })
@@ -35,7 +33,6 @@ export const getPermissionByRole = (id) => {
     }).then(res => {
       resolve(res)
     }).catch(error => {
-      Message('获取权限失败', 'error')
       reject(error)
     })
   })
@@ -55,7 +52,6 @@ export const getUserByRole = (id) => {
     }).then(res => {
       resolve(res)
     }).catch(error => {
-      Message('获取用户失败', 'error')
       reject(error)
     })
   })

@@ -1,5 +1,4 @@
 import axios from './index'
-import Vue from 'vue'
 
 const MATERIAL_DEMAND_PLAN = 'materialDemandPlan'
 
@@ -33,7 +32,6 @@ export const planMaterialByPlanId = (id) => {
     }).then(res => {
       resolve(res)
     }).catch(error => {
-      Vue.prototype.$message('初始化失败', 'error')
       reject(error)
     })
   })
@@ -48,7 +46,6 @@ export const materialPlanById = (id) => {
     }).then(res => {
       resolve(res)
     }).catch(error => {
-      Vue.prototype.$message('初始化失败', 'error')
       reject(error)
     })
   })
@@ -63,7 +60,6 @@ export const approvalMaterialPlan = (materialPlan, approval) => {
     }).then(res => {
       resolve(res)
     }).catch(error => {
-      Vue.prototype.$message('提交失败', 'error')
       reject(error)
     })
   })

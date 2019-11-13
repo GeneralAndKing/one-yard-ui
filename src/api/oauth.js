@@ -31,12 +31,6 @@ export const oauthToken = ({ username, password }) => {
       scope: 'all'
     })
   })
-    .then(res => {
-      return Promise.resolve(res)
-    })
-    .catch(error => {
-      return Promise.reject(error)
-    })
 }
 
 /**
@@ -57,12 +51,6 @@ export const checkToken = (token) => {
       token: token
     })
   })
-    .then(res => {
-      return Promise.resolve(res)
-    })
-    .catch(error => {
-      return Promise.reject(error)
-    })
 }
 /**
  * 刷新token
@@ -82,12 +70,6 @@ export const refreshToken = (refreshToken) => {
       refresh_token: refreshToken
     })
   })
-    .then(res => {
-      return Promise.resolve(res)
-    })
-    .catch(error => {
-      return Promise.reject(error)
-    })
 }
 /**
  * 注册请求
@@ -106,12 +88,6 @@ export const authRegister = ({ username, email, phone, password, rePassword, cod
     method: 'post',
     data: { username, email, phone, password, rePassword, code }
   })
-    .then(res => {
-      return Promise.resolve(res)
-    })
-    .catch(error => {
-      return Promise.reject(error)
-    })
 }
 
 /**
@@ -125,12 +101,6 @@ export const authRegisterEmail = ({ email }) => {
     url: `${AUTH_REGISTER}/${email}`,
     method: 'get'
   })
-    .then(res => {
-      return Promise.resolve(res)
-    })
-    .catch(error => {
-      return Promise.reject(error)
-    })
 }
 
 /**
@@ -148,12 +118,6 @@ export const authForget = ({ email, password, rePassword, code }) => {
     method: 'post',
     data: { email, password, rePassword, code }
   })
-    .then(res => {
-      return Promise.resolve(res)
-    })
-    .catch(error => {
-      return Promise.reject(error)
-    })
 }
 
 /**
@@ -167,12 +131,6 @@ export const authForgetEmail = ({ email }) => {
     url: `${AUTH_FORGET}/${email}`,
     method: 'get'
   })
-    .then(res => {
-      return Promise.resolve(res)
-    })
-    .catch(error => {
-      return Promise.reject(error.response)
-    })
 }
 
 /**
@@ -187,12 +145,6 @@ export const authForgetValidate = ({ email, code }) => {
     url: `${AUTH_FORGET}/${email}/${code}`,
     method: 'get'
   })
-    .then(res => {
-      return Promise.resolve(res)
-    })
-    .catch(error => {
-      return Promise.reject(error)
-    })
 }
 
 /**
@@ -209,12 +161,6 @@ export const authExistEmail = ({ email }) => {
       email: email
     }
   })
-    .then(res => {
-      return Promise.resolve(res)
-    })
-    .catch(error => {
-      return Promise.reject(error)
-    })
 }
 
 /**
@@ -232,25 +178,17 @@ export const authExist = ({ username, email, phone, action }) => {
     method: 'get',
     params: { username, email, phone }
   })
-    .then(res => {
-      return Promise.resolve(res)
-    })
-    .catch(error => {
-      return Promise.reject(error)
-    })
 }
 export const getMe = () => {
-  return new Promise((resolve, reject) => {
-    authAxios.request({
-      url: '/sysUser/me',
-      method: 'get',
-      headers: {
-        'content-type': 'application/x-www-form-urlencoded'
-      }
-    }).then(res => {
-      resolve(res)
-    }).catch(error => {
-      reject(error)
-    })
+  return authAxios.request({
+    url: '/sysUser/me',
+    method: 'get'
+  })
+}
+export const modifyPassword = (passwords) => {
+  return authAxios.request({
+    url: '/sysUser/password/modify',
+    method: 'post',
+    data: passwords
   })
 }
