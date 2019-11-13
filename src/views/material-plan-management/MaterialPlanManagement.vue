@@ -197,7 +197,7 @@ export default {
       this.approval.planId = this.approval.plan.id
       this.approval.plan.createTime = this.approval.plan.createTime.replace('&nbsp;&nbsp;', 'T')
       this.approval.approvalType = 'MATERIAL_APPROVAL'
-      if (this.approval.plan.planType === '紧急计划') {
+      if (this.approval.plan.planType === '紧急计划' && result === '审批通过') {
         this.approval.plan.planStatus = 'FINALLY'
         this.approval.plan.approvalStatus = 'APPROVAL_OK'
       }
