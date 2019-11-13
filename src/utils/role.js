@@ -15,7 +15,6 @@ export const Role = {
   ROLE_FINANCE_SUPERVISOR: 14, // 财务部门主管
   all () {
     let ROLE_ALL = []
-    console.log('123')
     Object.keys(Role).forEach((key) => {
       if (Role[key] !== Role.ROLE_PUBLIC) {
         ROLE_ALL.push(Role[key])

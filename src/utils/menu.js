@@ -11,7 +11,14 @@ export const MENUS = [
     text: '用户管理',
     icon: 'account_circle',
     to: { name: 'sysUser' },
-    auth: [Role.ROLE_ADMIN]
+    auth: [
+      Role.ROLE_ADMIN,
+      Role.ROLE_PRODUCTION_SUPERVISOR,
+      Role.ROLE_WORKSHOP_SUPERVISOR,
+      Role.ROLE_WAREHOUSE_SUPERVISOR,
+      Role.ROLE_PROCUREMENT_SUPERVISOR,
+      Role.ROLE_FINANCE_SUPERVISOR
+    ]
   },
   // {
   //   text: '角色管理',
@@ -31,10 +38,10 @@ export const MENUS = [
     icon: 'how_to_vote',
     auth: [Role.ROLE_ADMIN]
   }, {
-    name: '计划表',
+    name: '物料需求计划',
     children: [
       {
-        text: '计划表管理',
+        text: '需求计划管理',
         to: { name: 'materialPlanManagement' },
         icon: 'location_city',
         auth: [
@@ -44,7 +51,7 @@ export const MENUS = [
         ]
       },
       {
-        text: '计划表创建',
+        text: '需求计划创建',
         to: { name: 'materialPlanCreate' },
         meta: '计划表创建',
         icon: 'location_city',
@@ -56,14 +63,18 @@ export const MENUS = [
       }
     ]
   }, {
-    name: '汇总表',
+    name: '采购计划',
     children: [
       {
-        text: '汇总表管理',
-        to: { name: 'Summary' },
+        text: '采购计划管理',
+        to: { name: 'procurementPlanManagement' },
         icon: 'location_city',
         auth: [
-          Role.ROLE_PROCUREMENT_PLANER
+          Role.ROLE_PROCUREMENT_PLANER,
+          Role.ROLE_PROCUREMENT_SUPERVISOR,
+          Role.ROLE_FINANCE,
+          Role.ROLE_FINANCE_PLANER,
+          Role.ROLE_FINANCE_SUPERVISOR
         ]
       }
     ]

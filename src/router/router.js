@@ -114,15 +114,19 @@ export const routes = [
         },
         component: () => import(/* webpackChunkName: "sys-department" */ '_v/material-plan-management')
       }, {
-        path: 'Summary',
-        name: 'Summary',
+        path: 'procurementPlanManagement',
+        name: 'procurementPlanManagement',
         meta: {
-          meta: '汇总表管理',
+          meta: '采购计划管理',
           auth: [
-            Role.ROLE_PROCUREMENT_PLANER
+            Role.ROLE_PROCUREMENT_PLANER,
+            Role.ROLE_PROCUREMENT_SUPERVISOR,
+            Role.ROLE_FINANCE,
+            Role.ROLE_FINANCE_PLANER,
+            Role.ROLE_FINANCE_SUPERVISOR
           ]
         },
-        component: () => import(/* webpackChunkName: "sys-department" */ '_v/summary')
+        component: () => import(/* webpackChunkName: "sys-department" */ '_v/procurement-plan-management')
       }
 
     ]
