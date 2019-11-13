@@ -54,7 +54,7 @@
                   v-icon mdi-close
               v-card-text
                 v-textarea(v-model="approval.description", label="审批意见", hint="请输入您的审批意见", :rules="rules.union(rules.required('审批意见'))",
-                  rows="5", auto-grow, counter)
+                  rows="5", ref='description', auto-grow, counter)
               v-card-actions
                 v-spacer
                 v-btn(text, color="error", @click="handlePlanApproval('FREE', 'APPROVAL_NO', '审批退回')") 需求退回
@@ -169,9 +169,18 @@ export default {
       this.approval.show = true
       this.approval.description = null
       this.approval.plan = this._.cloneDeep(item)
+      if (this.$refs['description']) this.$refs['description'].reset()
     },
+    /**
+     * 删除
+     **/
     handleDelete (item) {
-      //
+      restAPI.patchOne('materialDemandPlan', item.id, {
+        planStatus: 'DELETED'
+      }).then(() => {
+        this.$message('需求计划删除成功', 'success')
+        item.planStatus = '已删除'
+      })
     },
     /**
      * 返回
@@ -198,6 +207,7 @@ export default {
      * 审批方法
      */
     handlePlanApproval (planStatus, approvalStatus, result) {
+      if (!this.$refs['description'].validate(true)) return
       this.approval.plan.planStatus = planStatus
       this.approval.plan.approvalStatus = approvalStatus
       this.approval.result = result

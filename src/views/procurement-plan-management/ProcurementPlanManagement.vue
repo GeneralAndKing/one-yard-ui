@@ -40,7 +40,7 @@
                 span 审批
               v-tooltip(top)
                 template(v-slot:activator="{ on }")
-                  v-btn.mr-2(outlined, rounded, x-small, fab, color="error", v-on="on")
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="error", v-on="on" , @click="handleDelete(item)")
                     v-icon mdi-delete
                 span 删除
 
@@ -97,6 +97,18 @@ export default {
     }
   },
   methods: {
+    /**
+     * 删除
+     **/
+    handleDelete (item) {
+      // TODO：删除采购计划
+      // restAPI.patchOne('procurementPlan', item.id, {
+      //   planStatus: 'DELETED'
+      // }).then(() => {
+      //   this.$message('采购计划删除成功', 'success')
+      //   item.planStatus = 'DELETED'
+      // })
+    },
     filterSearch (value, search, item) {
       const condition = search.split('&')
       if (condition[3] === '') condition[3] = new Date()
