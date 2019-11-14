@@ -63,7 +63,14 @@ export const routes = [
         name: 'sysUser',
         meta: {
           meta: '用户管理',
-          auth: [Role.ROLE_ADMIN]
+          auth: [
+            Role.ROLE_ADMIN,
+            Role.ROLE_PRODUCTION_SUPERVISOR,
+            Role.ROLE_WORKSHOP_SUPERVISOR,
+            Role.ROLE_WAREHOUSE_SUPERVISOR,
+            Role.ROLE_PROCUREMENT_SUPERVISOR,
+            Role.ROLE_FINANCE_SUPERVISOR
+          ]
         },
         component: () => import(/* webpackChunkName: "sys-user" */ '_v/admin/sys-user')
       },
@@ -97,19 +104,29 @@ export const routes = [
         path: 'materialPlanCreate',
         name: 'materialPlanCreate',
         meta: {
-          meta: '计划表创建',
-          auth: [Role.ROLE_ADMIN]
+          meta: '需求计划表创建',
+          auth: [
+            Role.ROLE_PRODUCTION_PLANER,
+            Role.ROLE_WAREHOUSE_PLANER,
+            Role.ROLE_FINANCE_PLANER,
+            Role.ROLE_WORKSHOP_PLANER
+          ]
         },
         component: () => import(/* webpackChunkName: "sys-department" */ '_v/material-plan-create')
       }, {
         path: 'materialPlanManagement',
         name: 'materialPlanManagement',
         meta: {
-          meta: '计划表管理',
+          meta: '需求计划表管理',
           auth: [
             Role.ROLE_PRODUCTION_PLANER,
             Role.ROLE_WAREHOUSE_PLANER,
-            Role.ROLE_FINANCE_PLANER
+            Role.ROLE_FINANCE_PLANER,
+            Role.ROLE_WORKSHOP_PLANER,
+            Role.ROLE_WORKSHOP_SUPERVISOR,
+            Role.ROLE_FINANCE_SUPERVISOR,
+            Role.ROLE_WAREHOUSE_SUPERVISOR,
+            Role.ROLE_PRODUCTION_SUPERVISOR
           ]
         },
         component: () => import(/* webpackChunkName: "sys-department" */ '_v/material-plan-management')
