@@ -39,6 +39,11 @@
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="success", @click="handleSee(item)", v-on="on")
                     v-icon remove_red_eye
                 span 查看
+              v-tooltip(top, v-if="item.approvalStatus === 'NO_SUBMIT' && item.planStatus === 'FREE'")
+                template(v-slot:activator="{ on }")
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="success", @click="handleSubmit(item)", v-on="on")
+                    v-icon mdi-chevron-double-up
+                span 提交审批
               v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
                 template(v-slot:activator="{ on }")
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="primary", @click="handleApproval(item)", v-on="on")
@@ -180,6 +185,18 @@ export default {
     },
     handleSee (item) {
       this.see = item.id
+    },
+    handleSubmit (item) {
+      this.loading = true
+      restAPI.patchOne('materialDemandPlan', item.id, {
+        approvalStatus: 'APPROVAL_ING',
+        planStatus: 'APPROVAL'
+      }).then(() => {
+        this.loading = false
+        item.approvalStatus = 'APPROVAL_ING'
+        item.planStatus = 'APPROVAL'
+        this.$message('操作成功！', 'success')
+      })
     },
     /**
      * 审批按钮事件
