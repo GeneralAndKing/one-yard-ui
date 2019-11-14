@@ -2,6 +2,7 @@ import Vue from 'vue'
 import axios from 'axios'
 import store from '_store'
 import { baseURL } from '_api/config'
+import router from '_router/index'
 
 const refresh = async function () {
   await store.dispatch('auth/refreshToken')
@@ -83,6 +84,7 @@ class HttpRequest {
             break
           case 401:
             message = '未经授权:访问由于凭据无效被拒绝'
+            router.push({ name: 'login' })
             break
           case 403:
             message = '鉴权失败:您没有权限访问该资源'
