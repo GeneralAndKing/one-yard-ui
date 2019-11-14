@@ -1,0 +1,16 @@
+{
+  "name": "智能制造协同平台",
+  "short_name": "协同平台",
+  "description": "智能制造协同平台文档说明",
+  "theme_color": "#2196f3",
+  "background_color": "#2196f3",
+  "display": "standalone",
+  "start_url": "index.html",
+  "icons": [
+    {
+      "src": "/gak.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    }
+  ]
+}
