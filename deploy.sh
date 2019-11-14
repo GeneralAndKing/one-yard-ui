@@ -12,6 +12,7 @@ cd docs/.vuepress/dist
 # 如果是发布到自定义域名
 # echo 'www.example.com' > CNAME
 
+git init
 git add -A
 git commit -m ':rocket: Deploy docs!'
 git push -f git@github.com:GeneralAndKing/one-yard-ui.git master:gh-pages
