@@ -222,7 +222,7 @@ export default {
      **/
     handleBack () {
       this.see = 0
-      // TODO点击返回时更新数据
+      this.initData()
     },
     /**
      * 搜索过滤
