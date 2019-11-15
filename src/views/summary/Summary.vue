@@ -116,7 +116,6 @@ export default {
       { text: '货源是否确定', value: 'isSourceGoods', align: 'center' },
       { text: '期望供应商', value: 'expectationSupplier', align: 'center' },
       { text: '固定供应商', value: 'fixedSupplier', align: 'center' },
-      { text: '需求库存组织', value: 'inventory', align: 'center' },
       { text: '操作', value: 'action', sortable: false, width: '160px', align: 'center' }
     ],
     rules: {

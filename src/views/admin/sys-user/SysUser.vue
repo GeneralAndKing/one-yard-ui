@@ -44,7 +44,7 @@
                                   v-img(:src="editedItem.icon", :width="64", :height="64" )
                                   v-fade-transition
                                     v-overlay(v-if="hover", absolute)
-                                      v-btn(test, x-small, @click="handleUpload") 上传头像
+                                      v-btn(test, x-small, @click="handleUpload", :loading="load.upload") 上传头像
                             v-file-input.d-none(accept="image/*", label="上传头像", prepend-icon="", ref="icon", @change="uploadAvatar")
                           v-flex(xs12, sm6, md4)
                             v-text-field(v-model="editedItem.username", counter="18", label="用户名", validate-on-blur,
@@ -99,7 +99,8 @@ export default {
     load: {
       username: false,
       phone: false,
-      email: false
+      email: false,
+      upload: false
     },
     editedIndex: -1,
     editedItem: {
@@ -266,7 +267,9 @@ export default {
       this.$refs.icon.$refs.input.click()
     },
     uploadAvatar (file) {
+      this.load.upload = true
       sysUserAPI.uploadAvatar(file, this.editedItem.username).then(res => {
+        this.load.upload = false
         this.editedItem.icon = res.data.icon
         this.defaultItem.icon = res.data.icon
         let user = this.desserts.find(d => d.id === res.data.id)

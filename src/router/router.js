@@ -113,7 +113,7 @@ export const routes = [
         path: 'materialPlanManagement',
         name: 'materialPlanManagement',
         meta: {
-          meta: '计划表管理',
+          meta: '需求计划表管理',
           auth: [
             Role.ROLE_PRODUCTION_PLANER,
             Role.ROLE_WAREHOUSE_PLANER,
