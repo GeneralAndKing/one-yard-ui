@@ -145,14 +145,14 @@ export default {
     initData () {
       let _this = this
       let role = _this.$store.getters['auth/role']
-      let requestLink = null
+      let resourcesLink = null
       if (Role.isPlaner(role)) {
-        requestLink = `materialDemandPlan/search/byCreateUser?createUser=${this.$store.getters['auth/username']}`
+        resourcesLink = `materialDemandPlan/search/byCreateUser?createUser=${this.$store.getters['auth/username']}`
       }
       if (Role.isSupervisor(role)) {
-        requestLink = `materialDemandPlan/search/byDepartmentIds?departmentIds=${Role.supervisorList(role)}`
+        resourcesLink = `materialDemandPlan/search/byDepartmentIds?departmentIds=${Role.supervisorList(role)}`
       }
-      restAPI.getRestLink(requestLink)
+      restAPI.getRestLink(resourcesLink)
         .then(res => {
           res.data.content.forEach(p => {
             p.createTime = _this.dateFormat(p.createTime)

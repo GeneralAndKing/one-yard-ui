@@ -1,4 +1,57 @@
 <template lang="pug">
+    v-container#one-user-setting.mt-9
+        v-layout(wrap, justify-center)
+            v-flex.pa-2(xs12, md8)
+                v-card.mt-5.mb-3
+                    v-card-text
+                        table-card-sheet(title="个人设置", description="您可以在这里设置或更改您的个人信息，并通过右上角刷新按钮实时更新您的数据。",
+                            :color="$store.getters['sundry/theme'] ? 'orange' : 'green'")
+                        v-form(ref="user").pt-6
+                            v-container(grid-list-md)
+                                v-layout(wrap)
+                                    v-flex(xs12, sm6, md6)
+                                        v-text-field(type="email", v-model="me.email", counter="30", hint="可能用于找回密码", validate-on-blur,
+                                            label="电子邮箱" :rules="rules.email", ref="email",  disabled)
+                                    v-flex(xs12, sm6, md6)
+                                        v-text-field(v-model="me.username", counter="18", label="用户名", validate-on-blur,  disabled)
+                                            template(v-slot:append)
+                                                v-progress-circular(v-if="load.username", size="24", color="info", indeterminate)
+                                    v-flex(xs12, sm6, md6)
+                                        v-text-field(v-model="me.name", counter="18", label="姓名", validate-on-blur, :disabled='!edit'
+                                            :rules="rules.union(rules.required('姓名'),rules.maxLength(18))", ref="name")
+
+                                    v-flex(xs12, sm6, md6)
+                                        v-text-field(type="phone", v-model="me.phone", counter="11", hint="长度为11位的手机号", validate-on-blur,
+                                            label="手机号", :rules="rules.phone", @blur="handleExist('phone')", ref="phone", :disabled='!edit')
+                                    v-flex(xs12, sm12)
+                                        v-textarea(label="备注", v-model="me.remark", counter="250", :disabled='!edit' :rules="rules.union(rules.maxLength(250))")
+                    v-card-actions.justify-end
+                        v-btn(v-if="edit", text, color="error", @click="handleCancel") 取消
+                        v-btn(text, :color="edit ? 'success' : 'primary'", @click="handleSubmit") {{edit ? '保存' : '编辑' }}
+            v-flex.pa-2(xs12, md4)
+                v-card.mt-5.mb-3
+                    .one-avatar.text-center
+                        v-avatar.mx-auto.one-avatar-img.elevation-18(height="130px", width="130px")
+                            v-img(:src="me.icon")
+                    v-flex.text-center(xs12, sm12)
+                        v-btn(color="light-blue", dark, @click="handleUpload") 上传头像
+                        v-file-input.d-none(accept="image/*", label="上传头像", prepend-icon="", ref="icon", @change="uploadAvatar")
+                    v-card-text
+                        v-form(ref="password")
+                            v-container(grid-list-md)
+                                v-layout(wrap)
+                                    v-flex(xs12, sm12)
+                                        v-text-field(type="password", v-model="passwords.oldPassword", counter="18", label="旧密码", validate-on-blur,
+                                            :rules="rules.password", :disabled='!editPassword')
+                                    v-flex(xs12, sm12)
+                                        v-text-field(type="password", v-model="passwords.newPassword", counter="18", label="新密码", validate-on-blur,
+                                            :rules="rules.password", :disabled='!editPassword')
+                                    v-flex(xs12, sm12)
+                                        v-text-field(type="password", v-model="passwords.rePassword", counter="18", label="重复密码", validate-on-blur,
+                                            :rules="rules.union(rules.password,rules.rePassword)", :disabled='!editPassword')
+                    v-card-actions.justify-end
+                        v-btn(text, color="error" v-show="editPassword" @click="initModifyPassword") 取消
+                        v-btn(text, @click="handlePassword" :color="editPassword ? 'orange' : 'primary'") {{editPassword?'确认':'修改密码'}}
   v-container#one-user-setting.mt-9
     v-layout(wrap, justify-center)
       v-flex.pa-2(xs12, md8)
@@ -60,7 +113,7 @@
 import TableCardSheet from '_c/table-card-sheet'
 import * as oauthAPI from '_api/oauth'
 import * as restAPI from '_api/rest'
-import { emailRules, passwordRules, requiredRules, unionRules, phoneRules, imageRequiredRules } from '_u/rule'
+import { emailRules, passwordRules, requiredRules, unionRules, phoneRules, imageRequiredRules, maxLengthRules } from '_u/rule'
 import * as utils from '_u/util'
 import * as sysUserAPI from '_api/sysUser'
 export default {
@@ -100,12 +153,13 @@ export default {
         required: requiredRules,
         union: unionRules,
         phone: phoneRules,
-        image: imageRequiredRules
+        image: imageRequiredRules,
+        maxLength: maxLengthRules
       }
     }
   },
   created () {
-    this.me = this.$store.getters['auth/me']
+    this.me = this._.cloneDeep(this.$store.getters['auth/me'])
   },
   methods: {
     handleExist (action) {
@@ -175,7 +229,7 @@ export default {
       sysUserAPI.uploadAvatarMe(file).then(res => {
         this.me.icon = res.data.icon
         this.$message('头像更新成功！由于使用免费图床，头像更新具有一定延迟，请稍后查看。')
-        this.$store.dispatch('auth/checkToken')
+        this.$store.commit('auth/SET_ME', res.data)
       }).finally(() => { this.loading.upload = false })
     }
   }

@@ -77,34 +77,37 @@ import * as restAPI from '_api/rest'
 export default {
   name: 'home',
   components: { treeMenu },
-  data: () => ({
-    me: null,
-    currentItem: null,
-    showMessage: null,
-    drawer: true,
-    theme: false,
-    noticeDialog: false,
-    menus: [],
-    notice: false,
-    messages: [ {
-      type: '未读',
-      items: []
-    }, {
-      type: '已读',
-      items: []
-    }]
-  }),
+  data () {
+    return {
+      currentItem: null,
+      showMessage: null,
+      drawer: true,
+      theme: false,
+      noticeDialog: false,
+      menus: genMenu(),
+      notice: false,
+      messages: [{
+        type: '未读',
+        items: []
+      }, {
+        type: '已读',
+        items: []
+      }]
+    }
+  },
   computed: {
     color: function () {
       return this.theme ? 'red' : 'blue'
+    },
+    me: function () {
+      return this.$store.getters['auth/me']
     }
   },
   created () {
     this.changeTheme()
-    this.menus = genMenu()
-    this.me = this.$store.getters['auth/me']
     this.initNotice()
     this.initShowMessage()
+    this.$store.dispatch('auth/getMe')
   },
   beforeDestroy () {
     if (this.socket !== null) this.socket.close()
