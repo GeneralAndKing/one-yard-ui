@@ -26,9 +26,9 @@
             item-key="id", :mobile-breakpoint="900",  :custom-filter="filterSearch", :search="searchValue",
             no-data-text="暂无数据", no-results-text="暂无数据")
             template(v-slot:item.planStatus="{ item }")
-              span {{formatPlanStatus(item.planStatus).name}}
+              span {{ formatPlanStatus(item.planStatus).name }}
             template(v-slot:item.approvalStatus="{ item }")
-              span {{formatApprovalStatus(item.approvalStatus).name}}
+              span {{ formatApprovalStatus(item.approvalStatus).name }}
             template(v-slot:item.planType="{ item }")
               v-chip(:color="item.planType === '紧急计划' ? 'error' : 'blue'", dark) {{item.planType}}
             template(v-slot:item.createTime="{ item }")
@@ -114,6 +114,7 @@ export default {
       { name: '提交审批', value: 'APPROVAL' },
       { name: '提交至汇总', value: 'SUMMARY' },
       { name: '已删除', value: 'DELETED' },
+      { name: '采购主管审批通过', value: 'PROCUREMENT_OK' },
       { name: '已终止', value: 'FINALLY' }
     ],
     approvalStatus: [
