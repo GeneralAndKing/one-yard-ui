@@ -220,16 +220,12 @@ export default {
       this.revokeSnackbar = true
     },
     revokeOk () {
-      // TODO: 具体撤回操作
-      // restAPI.patchOne('materialDemandPlan', this.revoke.id, {
-      //   planStatus: 'FREE',
-      //   approvalStatus: 'NO_SUBMIT'
-      // }).then(res => {
-      //   this.$message('撤回成功', 'success')
-      //   this.revoke.planStatus = 'FREE'
-      //   this.revoke.approvalStatus = 'NO_SUBMIT'
-      this.revokeSnackbar = false
-      // })
+      materialPlanAPI.withdrawApproval(this.revoke.id)
+        .then(() => {
+          this.initData()
+          this.revokeSnackbar = false
+          this.$message('撤回成功！', 'success')
+        })
     },
     /**
      * 返回

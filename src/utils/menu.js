@@ -53,7 +53,6 @@ export const MENUS = [
           Role.ROLE_FINANCE_SUPERVISOR,
           Role.ROLE_WAREHOUSE_SUPERVISOR,
           Role.ROLE_PRODUCTION_SUPERVISOR
-
         ]
       },
       {
