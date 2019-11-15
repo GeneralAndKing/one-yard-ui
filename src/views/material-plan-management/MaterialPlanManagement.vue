@@ -76,7 +76,7 @@
               v-card-actions
                 v-spacer
                 v-btn(text, color="error", @click="handlePlanApproval('FREE', 'APPROVAL_NO', '审批退回')") 需求退回
-                v-btn(text, color="success", @click="handlePlanApproval('SUMMARY', 'APPROVAL_ING', '审批通过')") 需求通过
+                v-btn(text, color="success", @click="handlePlanApproval('SUMMARY', 'APPROVAL_OK', '部门主管审批通过')") 需求通过
   material-plan(v-else, :see-id="see")
     v-btn(text, color="primary", @click="handleBack") 返回
 </template>
@@ -261,7 +261,6 @@ export default {
       this.approval.approvalType = 'MATERIAL_APPROVAL'
       if (this.approval.plan.planType === '紧急计划' && result === '审批通过') {
         this.approval.plan.planStatus = 'FINALLY'
-        this.approval.plan.approvalStatus = 'APPROVAL_OK'
       }
       materialPlanAPI.approvalMaterialPlan(this.approval.plan, this.approval)
         .then(() => {

@@ -59,15 +59,15 @@
                   rows="5", ref='description', auto-grow, counter)
               v-card-actions
                 v-spacer
-                v-btn(text, color="error", @click="handlePlanApproval('FREE', 'APPROVAL_NO', '审批退回')") 需求退回
-                v-btn(text, color="success", @click="handlePlanApproval('SUMMARY', 'APPROVAL_ING', '审批通过')") 需求通过
+                v-btn(text, color="error", @click="handlePlanApproval('审批退回')") 需求退回
+                v-btn(text, color="success", @click="handlePlanApproval('审批通过')") 需求通过
     procurement-plan(v-else, :see-id="see")
       v-btn(text, color='warning', @click="handleBack") 返回
 </template>
 
 <script>
 import * as restAPI from '_api/rest'
-import * as procurementPlan from '_api/procurementPlan'
+import * as procurementPlanAPI from '_api/procurementPlan'
 import ProcurementPlan from '_c/procurement-plan'
 import { planStatus, approvalStatus } from '_u/status'
 import { requiredRules, unionRules, requiredMessageRules } from '_u/rule'
@@ -124,13 +124,12 @@ export default {
       this.revokeSnackbar = true
     },
     initApproval () {
-      // TODO: 点击审批按钮，初始化基本对象，show字段必须存在，其他字段和表对应
       this.approval = {
         show: false,
         description: '',
         plan: null,
         result: null,
-        approvalType: 'MATERIAL_APPROVAL',
+        approvalType: '',
         planId: -1
       }
     },
@@ -144,7 +143,7 @@ export default {
         this.$message('撤回失败，当前采购计划状态异常，请刷新后再试！', 'error')
         return
       }
-      procurementPlan.withdrawApproval(this.revoke, role)
+      procurementPlanAPI.withdrawApproval(this.revoke, role)
         .then(() => {
           this.revokeSnackbar = false
           this.initData()
@@ -181,9 +180,36 @@ export default {
     /**
      * 审批方法
      */
-    handlePlanApproval (planStatus, approvalStatus, result) {
+    handlePlanApproval (result) {
       // TODO: 审批通过和审批不通过按钮的的点击事件，传递 this.approval 作为参数
-      // if (!this.$refs['description'].validate(true)) return
+      if (!this.$refs['description'].validate(true)) return
+      if (this.approval.plan.planStatus === 'APPROVAL' && this.approval.plan.approvalStatus === 'APPROVAL_ING') {
+        this.approval.approvalType = 'PROCUREMENT_APPROVAL_ONE'
+        if (result === '审批通过') {
+          this.approval.plan.planStatus = 'PROCUREMENT_OK'
+          this.approval.plan.approvalStatus = 'APPROVAL_ING'
+        } else {
+          this.approval.plan.planStatus = 'FREE'
+          this.approval.plan.approvalStatus = 'NO_SUBMIT'
+        }
+      } else if (this.approval.plan.planStatus === 'PROCUREMENT_OK' && this.approval.plan.approvalStatus === 'APPROVAL_ING') {
+        this.approval.approvalType = 'PROCUREMENT_APPROVAL_TWO'
+        if (result === '审批通过') {
+          this.approval.plan.planStatus = 'FINALLY'
+          this.approval.plan.approvalStatus = 'APPROVAL_OK'
+        } else {
+          this.approval.plan.planStatus = 'FREE'
+          this.approval.plan.approvalStatus = 'NO_SUBMIT'
+        }
+      }
+      this.approval.result = result
+      this.approval.planId = this.approval.plan.id
+      procurementPlanAPI.approvalProcurementPlan(this.approval.plan, this.approval)
+        .then(() => {
+          this.initData()
+          this.approval.show = false
+          this.$message('审批成功！', 'success')
+        })
     }
   }
 }
