@@ -28,6 +28,9 @@ export const Role = {
       role.includes(Role.ROLE_WAREHOUSE_PLANER) ||
       role.includes(Role.ROLE_FINANCE_PLANER)
   },
+  isAdmin (role) {
+    return role.includes(Role.ROLE_ADMIN)
+  },
   isSupervisor (role) {
     return role.includes(Role.ROLE_PRODUCTION_SUPERVISOR) ||
       role.includes(Role.ROLE_WORKSHOP_SUPERVISOR) ||

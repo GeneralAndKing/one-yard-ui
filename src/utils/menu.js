@@ -20,12 +20,6 @@ export const MENUS = [
       Role.ROLE_FINANCE_SUPERVISOR
     ]
   },
-  // {
-  //   text: '角色管理',
-  //   to: { name: 'sysRole' },
-  //   icon: 'mdi-account-badge-horizontal-outline',
-  //   auth: [Role.ROLE_ADMIN]
-  // },
   {
     text: '权限管理',
     to: { name: 'sysPermission' },
@@ -47,18 +41,23 @@ export const MENUS = [
         auth: [
           Role.ROLE_PRODUCTION_PLANER,
           Role.ROLE_WAREHOUSE_PLANER,
-          Role.ROLE_FINANCE_PLANER
+          Role.ROLE_FINANCE_PLANER,
+          Role.ROLE_WORKSHOP_PLANER,
+          Role.ROLE_WORKSHOP_SUPERVISOR,
+          Role.ROLE_FINANCE_SUPERVISOR,
+          Role.ROLE_WAREHOUSE_SUPERVISOR,
+          Role.ROLE_PRODUCTION_SUPERVISOR
         ]
       },
       {
         text: '需求计划创建',
         to: { name: 'materialPlanCreate' },
-        meta: '计划表创建',
         icon: 'location_city',
         auth: [
           Role.ROLE_PRODUCTION_PLANER,
           Role.ROLE_WAREHOUSE_PLANER,
-          Role.ROLE_FINANCE_PLANER
+          Role.ROLE_FINANCE_PLANER,
+          Role.ROLE_WORKSHOP_PLANER
         ]
       }
     ]

@@ -85,7 +85,7 @@ import { emailRules, passwordRules, requiredRules, unionRules, phoneRules, image
 import * as restAPI from '_api/rest'
 import * as oauthAPI from '_api/oauth'
 import * as sysUserAPI from '_api/sysUser'
-
+import { Role } from '_u/role'
 export default {
   name: 'SysUser',
   components: {
@@ -172,10 +172,21 @@ export default {
   async created () {
     this.loading = true
     try {
-      let users = await restAPI.getLink('sysUser/all')
+      let role = this.$store.getters['auth/role']
+      let resourcesLink
+      console.log('123')
+      if (Role.isSupervisor(role)) {
+        // TODO: 啊啊啊啊
+        resourcesLink = `sysUser/search/byDepartments?ids=${Role.supervisorList(role)}`
+      }
+      if (Role.isAdmin(role)) {
+        resourcesLink = 'sysUser/all'
+      }
+      let users = await restAPI.getRestLink(resourcesLink)
+      console.log(users)
       let roles = await restAPI.getAll('sysRole')
       this.roles = roles.data.content
-      users.data.forEach(user => {
+      users.data.content.forEach(user => {
         user.model = false
         user.loading = false
         user.disabled = false
