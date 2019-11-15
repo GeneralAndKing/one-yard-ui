@@ -47,7 +47,13 @@ export const MENUS = [
         auth: [
           Role.ROLE_PRODUCTION_PLANER,
           Role.ROLE_WAREHOUSE_PLANER,
-          Role.ROLE_FINANCE_PLANER
+          Role.ROLE_FINANCE_PLANER,
+          Role.ROLE_WORKSHOP_PLANER,
+          Role.ROLE_WORKSHOP_SUPERVISOR,
+          Role.ROLE_FINANCE_SUPERVISOR,
+          Role.ROLE_WAREHOUSE_SUPERVISOR,
+          Role.ROLE_PRODUCTION_SUPERVISOR
+
         ]
       },
       {
@@ -58,7 +64,8 @@ export const MENUS = [
         auth: [
           Role.ROLE_PRODUCTION_PLANER,
           Role.ROLE_WAREHOUSE_PLANER,
-          Role.ROLE_FINANCE_PLANER
+          Role.ROLE_FINANCE_PLANER,
+          Role.ROLE_WORKSHOP_PLANER
         ]
       }
     ]
