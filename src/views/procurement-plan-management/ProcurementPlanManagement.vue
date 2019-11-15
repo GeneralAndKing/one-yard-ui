@@ -1,6 +1,6 @@
 <template lang="pug">
-  v-container.one-procurement-mangement
-    v-card
+  v-container.one-procurement-mangement()
+    v-card(v-if="see === 0")
       v-card-title 采购计划管理
       v-card-text
         v-container(grid-list-md)
@@ -30,7 +30,7 @@
             template(v-slot:item.action="{ item }")
               v-tooltip(top)
                 template(v-slot:activator="{ on }")
-                  v-btn.mr-2(outlined, rounded, x-small, fab, color="success", v-on="on")
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="success", v-on="on", @click="handleSee(item)")
                     v-icon remove_red_eye
                 span 查看
               v-tooltip(top, v-if="item.approvalStatus === '审批中' && item.planStatus === '提交审批'")
@@ -52,32 +52,26 @@
             v-row.justify-end
               v-btn.ma-3(color="error", text, @click="revokeSnackbar = false") 取消
               v-btn.ma-3(color="primary", text, @click="revokeOk") 确定
-
+    procurement-plan(v-else, :see-id="see")
+      v-btn(text, color='warning', @click="handleBack") 返回
 </template>
 
 <script>
 import * as restAPI from '_api/rest'
+import ProcurementPlan from '_c/procurement-plan'
+import { planStatus, approvalStatus } from '_u/status'
+
 export default {
   name: 'ProcurementPlanManagement',
+  components: {
+    ProcurementPlan
+  },
   data: () => ({
-    planStatus: [
-      { name: '', value: '' },
-      { name: '自由', value: 'FREE' },
-      { name: '提交审批', value: 'APPROVAL' },
-      { name: '提交至汇总', value: 'SUMMARY' },
-      { name: '已删除', value: 'DELETED' },
-      { name: '采购主管审批通过', value: 'PROCUREMENT_OK' },
-      { name: '已终止', value: 'FINALLY' }
-    ],
+    see: 0,
+    planStatus: planStatus,
+    approvalStatus: approvalStatus,
     revokeSnackbar: false,
     dayMenu: false,
-    approvalStatus: [
-      { name: '', value: '' },
-      { name: '未提交', value: 'NO_SUBMIT' },
-      { name: '审批中', value: 'APPROVAL_ING' },
-      { name: '审批通过', value: 'APPROVAL_OK' },
-      { name: '审批退回', value: 'APPROVAL_NO' }
-    ],
     loading: false,
     search: {
       name: '',
@@ -140,6 +134,12 @@ export default {
     },
     formatApprovalStatus (approvalStatus) {
       return this._.find(this.approvalStatus, { value: approvalStatus })
+    },
+    handleSee (item) {
+      this.see = item.id
+    },
+    handleBack () {
+      this.see = 0
     }
   }
 }

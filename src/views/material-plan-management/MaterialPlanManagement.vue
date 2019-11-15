@@ -87,6 +87,7 @@ import * as restAPI from '_api/rest'
 import * as materialPlanAPI from '_api/materialPlan'
 import MaterialPlan from '_c/material-plan'
 import { Role } from '_u/role'
+import { planStatus, approvalStatus, planTypes } from '_u/status'
 
 export default {
   name: 'MaterialPlanManagement',
@@ -107,23 +108,9 @@ export default {
       approvalStatus: '',
       createTime: ''
     },
-    planTypes: [ '', '订单型需求计划', '年度计划', '月度计划', '紧急计划' ],
-    planStatus: [
-      { name: '', value: '' },
-      { name: '自由', value: 'FREE' },
-      { name: '提交审批', value: 'APPROVAL' },
-      { name: '提交至汇总', value: 'SUMMARY' },
-      { name: '已删除', value: 'DELETED' },
-      { name: '采购主管审批通过', value: 'PROCUREMENT_OK' },
-      { name: '已终止', value: 'FINALLY' }
-    ],
-    approvalStatus: [
-      { name: '', value: '' },
-      { name: '未提交', value: 'NO_SUBMIT' },
-      { name: '审批中', value: 'APPROVAL_ING' },
-      { name: '审批通过', value: 'APPROVAL_OK' },
-      { name: '审批退回', value: 'APPROVAL_NO' }
-    ],
+    planTypes: planTypes,
+    planStatus: planStatus,
+    approvalStatus: approvalStatus,
     loading: false,
     rules: {
       required: requiredRules,

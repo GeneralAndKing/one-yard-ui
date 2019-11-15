@@ -187,6 +187,7 @@
 
 <script>
 import { requiredRules, unionRules, requiredMessageRules } from '_u/rule'
+import { planTypesSelect } from '_u/status'
 import * as materialPlanAPI from '_api/materialPlan'
 import * as restAPI from '_api/rest'
 
@@ -194,7 +195,7 @@ const uuidv4 = require('uuid/v4')
 export default {
   name: 'MaterialPlan',
   data: () => ({
-    tab: 1,
+    tab: 0,
     loading: false,
     approvalLoading: false,
     selected: [],
@@ -216,7 +217,7 @@ export default {
     },
     date: new Date().toISOString().substr(0, 7),
     needDate: new Date().toISOString().substr(0, 10),
-    planTypes: [ '订单型需求计划', '年度计划', '月度计划', '紧急计划' ],
+    planTypes: planTypesSelect,
     departments: [],
     editedItem: {},
     materialPlan: {
