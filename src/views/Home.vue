@@ -16,7 +16,7 @@
         template(v-slot:activator="{ on }")
           v-btn(icon, v-on="on", large)
             v-icon.white--text mdi-dots-vertical
-        v-list(two-line, subheader, dense)
+        v-list(two-line, subheader, dense, flat)
           v-list-item(link)
             v-list-item-avatar
               v-img(:src="me.icon", alt="avatar")
@@ -25,11 +25,15 @@
               v-list-item-subtitle {{me.email}}
           v-divider
           v-list-item-group
-            v-list-item(:to="{ name: 'userSetting' }", link)
+            v-list-item(:to="{ name: 'userSetting' }")
               v-list-item-avatar
                 v-icon mdi-clock
               v-list-item-content 个人设置
-            v-list-item(@click="() => {$store.dispatch('auth/logout')}", link)
+            v-list-item(@click="handleRefresh")
+              v-list-item-avatar
+                v-icon mdi-clock
+              v-list-item-content 刷新用户信息
+            v-list-item(@click="() => {$store.dispatch('auth/logout')}")
               v-list-item-avatar
                 v-icon mdi-flag
               v-list-item-content 退出
@@ -163,6 +167,13 @@ export default {
           this.messages[1].items.splice(this.messages[1].items.indexOf(message), 1)
           this.messages[0].items.unshift(message)
         }
+      })
+    },
+    handleRefresh () {
+      this.$store.dispatch('auth/refreshToken')
+      this.$message({
+        content: '刷新成功',
+        y: 'bottom'
       })
     }
   }

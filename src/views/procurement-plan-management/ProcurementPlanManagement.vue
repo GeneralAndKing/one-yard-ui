@@ -9,7 +9,7 @@
               v-flex(sm12, md6, lg4)
                 v-text-field(v-model="search.name", label="采购计划名称")
               v-flex(sm12, md6, lg4)
-                v-select(v-model="search.planStatus", :items="planStatus", item-value='value', item-text='name', label="计划状态")
+                v-select(v-model="search.planStatus", :items="planStatus", item-value='value', item-text='name', label="需求计划状态")
               v-flex(sm12, md6, lg4)
                 v-select(v-model="search.approvalStatus", :items="approvalStatus", item-value='value', item-text='name', label="审批状态")
               v-flex(xs12, md6, lg4)
@@ -38,11 +38,20 @@
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="primary", v-on="on")
                     v-icon mdi-book-open-variant
                 span 审批
+              v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
+                template(v-slot:activator="{ on }")
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="warning", @click="handleRevoke(item)", v-on="on")
+                    v-icon mdi-backup-restore
+                span 撤回
               v-tooltip(top)
                 template(v-slot:activator="{ on }")
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="error", v-on="on" , @click="handleDelete(item)")
                     v-icon mdi-delete
                 span 删除
+          v-snackbar(v-model="revokeSnackbar", vertical, :timeout="0") 您确定撤回吗？
+            v-row.justify-end
+              v-btn.ma-3(color="error", text, @click="revokeSnackbar = false") 取消
+              v-btn.ma-3(color="primary", text, @click="revokeOk") 确定
 
 </template>
 
@@ -59,6 +68,7 @@ export default {
       { name: '已删除', value: 'DELETED' },
       { name: '已终止', value: 'FINALLY' }
     ],
+    revokeSnackbar: false,
     dayMenu: false,
     approvalStatus: [
       { name: '', value: '' },
@@ -108,6 +118,13 @@ export default {
       //   this.$message('采购计划删除成功', 'success')
       //   item.planStatus = 'DELETED'
       // })
+    },
+    handleRevoke (item) {
+      this.revokeSnackbar = true
+    },
+    revokeOk () {
+      // TODO: 点击确定撤回后的事件
+      this.revokeSnackbar = false
     },
     filterSearch (value, search, item) {
       const condition = search.split('&')
