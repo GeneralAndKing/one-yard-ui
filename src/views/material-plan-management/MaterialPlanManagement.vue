@@ -86,6 +86,7 @@ import { requiredRules, unionRules, requiredMessageRules } from '_u/rule'
 import * as restAPI from '_api/rest'
 import * as materialPlanAPI from '_api/materialPlan'
 import MaterialPlan from '_c/material-plan'
+import { Role } from '_u/role'
 
 export default {
   name: 'MaterialPlanManagement',
@@ -155,7 +156,15 @@ export default {
   methods: {
     initData () {
       let _this = this
-      restAPI.getAll('materialDemandPlan')
+      let role = _this.$store.getters['auth/role']
+      let requestLink = null
+      if (Role.isPlaner(role)) {
+        requestLink = `materialDemandPlan/search/byCreateUser?createUser=${this.$store.getters['auth/username']}`
+      }
+      if (Role.isSupervisor(role)) {
+        requestLink = `materialDemandPlan/search/byDepartmentIds?departmentIds=${Role.supervisorList(role)}`
+      }
+      restAPI.getRestLink(requestLink)
         .then(res => {
           res.data.content.forEach(p => {
             p.createTime = _this.dateFormat(p.createTime)
