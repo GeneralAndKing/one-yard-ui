@@ -30,7 +30,7 @@
               v-dialog(v-model="dialog" max-width="800px")
                 template(v-slot:activator="{ on }")
                   v-btn.mb-2.ml-3(color="primary", v-on="on") 添加
-                v-card
+                v-card(:loading="submitLoading")
                   v-card-title
                     span.headline {{ formTitle }}
                   v-card-text
@@ -38,7 +38,14 @@
                       v-container(grid-list-md)
                         v-layout(wrap)
                           v-flex(xs12, sm12)
-                            v-img(:src="editedItem.icon", :width="64", :height="64" )
+                            v-hover
+                              template( v-slot:default="{ hover }")
+                                v-avatar(size="64px")
+                                  v-img(:src="editedItem.icon", :width="64", :height="64" )
+                                  v-fade-transition
+                                    v-overlay(v-if="hover", absolute)
+                                      v-btn(test, x-small, @click="handleUpload") 上传头像
+                            v-file-input.d-none(accept="image/*", label="上传头像", prepend-icon="", ref="icon", @change="uploadAvatar")
                           v-flex(xs12, sm6, md4)
                             v-text-field(v-model="editedItem.username", counter="18", label="用户名", validate-on-blur,
                               :rules="rules.union(rules.required('用户名'))", ref="username", @blur="handleExist('username')")
@@ -53,16 +60,13 @@
                               template(v-slot:append)
                                 v-progress-circular(v-if="load.email", size="24", color="info", indeterminate)
                           v-flex(xs12, sm6, md4)
-                            v-file-input(accept="image/*", label="上传头像", small-chips, prepend-icon="", validate-on-blur,
-                              :rules="rules.union(rules.image('头像', 2000000))", ref="icon")
-                              template(v-slot:append)
-                                v-progress-circular(v-if="load.phone", size="24", color="info", indeterminate)
-                          v-flex(xs12, sm6, md4)
                             v-text-field(type="email", v-model="editedItem.email", counter="30", hint="可能用于找回密码", validate-on-blur,
                               label="电子邮箱" :rules="rules.email", ref="email", @blur="handleExist('email')")
                           v-flex(xs12, sm6, md4)
                             v-text-field(type="phone", v-model="editedItem.phone", counter="11", hint="长度为11位的手机号", validate-on-blur,
                               label="手机号", :rules="rules.phone", @blur="handleExist('phone')", ref="phone")
+                              template(v-slot:append)
+                                v-progress-circular(v-if="load.phone", size="24", color="info", indeterminate)
                           v-flex(xs12, sm6, md4)
                             v-text-field(type="number", v-model="editedItem.sort", label="排序", :rules="rules.union(rules.required('排序'))")
                           v-flex(xs12, sm12)
@@ -80,6 +84,7 @@ import TableCardSheet from '_c/table-card-sheet'
 import { emailRules, passwordRules, requiredRules, unionRules, phoneRules, imageRequiredRules } from '_u/rule'
 import * as restAPI from '_api/rest'
 import * as oauthAPI from '_api/oauth'
+import * as sysUserAPI from '_api/sysUser'
 
 export default {
   name: 'SysUser',
@@ -89,6 +94,7 @@ export default {
   data: () => ({
     loading: false,
     isActive: false,
+    submitLoading: false,
     search: '',
     load: {
       username: false,
@@ -208,6 +214,7 @@ export default {
     save () {
       let _this = this
       if (this.$refs['editedItem'].validate(true)) {
+        this.submitLoading = true
         if (this.editedIndex > -1) {
           const data = this.editedItem.password === 'xxxxxxxxxxxxxxxxxx'
             ? this._.omit(this.editedItem, 'password')
@@ -218,7 +225,8 @@ export default {
             .then(() => {
               Object.assign(this.desserts[this.editedIndex], this.editedItem)
               this.close()
-            })
+              this.submitLoading = true
+            }).catch(() => { this.submitLoading = true })
         } else {
           const data = this._.cloneDeep(this.editedItem)
           data.roles = []
@@ -226,7 +234,8 @@ export default {
           restAPI.addOne('sysUser', data).then(() => {
             this.desserts.push(this.editedItem)
             this.close()
-          })
+            this.submitLoading = true
+          }).catch(() => { this.submitLoading = true })
         }
       }
     },
@@ -241,6 +250,18 @@ export default {
       }).then(res => {
         if (res.data) this.$refs[action].errorBucket = ['账户已存在，请重新输入']
       }).finally(() => { this.load[action] = false })
+    },
+    handleUpload () {
+      this.$refs.icon.$refs.input.click()
+    },
+    uploadAvatar (file) {
+      sysUserAPI.uploadAvatar(file).then(res => {
+        this.editedItem.icon = res.data.icon
+        this.defaultItem.icon = res.data.icon
+        let user = this.desserts.find(d => d.id === res.data.id)
+        user.icon = res.data.icon
+        this.$message('头像更新成功！由于使用免费图床，头像更新具有一定延迟，请稍后查看。')
+      })
     }
   }
 }
