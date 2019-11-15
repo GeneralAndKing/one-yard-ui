@@ -30,21 +30,13 @@ export const getProcurementPlan = (id) => {
   })
 }
 
-export const materialPlanById = (id) => {
-  return axios.request({
-    url: `/materialDemandPlan/materialPlan`,
-    method: 'get',
-    params: { id }
-  })
-}
-
 /**
  * 审批采购计划
  * @param procurementPlan
  * @param approval
  * @returns {*}
  */
-export const approvalMaterialPlan = (procurementPlan, approval) => {
+export const approvalProcurementPlan = (procurementPlan, approval) => {
   return axios.request({
     url: `/procurementPlan/approvalProcurementPlan`,
     method: 'post',
