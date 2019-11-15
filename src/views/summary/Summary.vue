@@ -111,6 +111,7 @@ export default {
       { text: '物料名称', value: 'materialName', align: 'center' },
       { text: '物料分类编码', value: 'materialTypeCode', align: 'center' },
       { text: '物料分类名称', value: 'materialTypeName', align: 'center' },
+      { text: '需求部门', value: 'departmentName', align: 'center' },
       { text: '需求数量', value: 'number', align: 'center' },
       { text: '需求日期', value: 'date', align: 'center' },
       { text: '货源是否确定', value: 'isSourceGoods', align: 'center' },

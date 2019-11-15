@@ -48,6 +48,7 @@ export default {
       { text: '物料名称', value: 'materialName', align: 'center' },
       { text: '物料分类编码', value: 'materialTypeCode', align: 'center' },
       { text: '物料分类名称', value: 'materialTypeName', align: 'center' },
+      { text: '需求部门', value: 'departmentName', align: 'center' },
       { text: '采购数量', value: 'supplyNumber', align: 'center' },
       { text: '需求日期', value: 'date', align: 'center' },
       { text: '采购日期', value: 'purchaseDate', align: 'center' },

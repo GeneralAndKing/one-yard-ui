@@ -35,7 +35,7 @@
                 span 查看
               v-tooltip(top, v-if="item.approvalStatus === '审批中' && item.planStatus === '提交审批'")
                 template(v-slot:activator="{ on }")
-                  v-btn.mr-2(outlined, rounded, x-small, fab, color="primary", v-on="on")
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="primary", v-on="on", @click="handleApproval(item)")
                     v-icon mdi-book-open-variant
                 span 审批
               v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
@@ -47,6 +47,20 @@
             v-row.justify-end
               v-btn.ma-3(color="error", text, @click="revokeSnackbar = false") 取消
               v-btn.ma-3(color="primary", text, @click="revokeOk") 确定
+          v-dialog(v-model="approval.show", max-width="350px")
+            v-card
+              v-card-title.headline
+                span.title 计划审批
+                v-spacer
+                v-btn(text, color="error", icon, @click="initApproval")
+                  v-icon mdi-close
+              v-card-text
+                v-textarea(v-model="approval.description", label="审批意见", hint="请输入您的审批意见", :rules="rules.union(rules.required('审批意见'))",
+                  rows="5", ref='description', auto-grow, counter)
+              v-card-actions
+                v-spacer
+                v-btn(text, color="error", @click="handlePlanApproval('FREE', 'APPROVAL_NO', '审批退回')") 需求退回
+                v-btn(text, color="success", @click="handlePlanApproval('SUMMARY', 'APPROVAL_ING', '审批通过')") 需求通过
     procurement-plan(v-else, :see-id="see")
       v-btn(text, color='warning', @click="handleBack") 返回
 </template>
@@ -56,6 +70,7 @@ import * as restAPI from '_api/rest'
 import * as procurementPlan from '_api/procurementPlan'
 import ProcurementPlan from '_c/procurement-plan'
 import { planStatus, approvalStatus } from '_u/status'
+import { requiredRules, unionRules, requiredMessageRules } from '_u/rule'
 
 export default {
   name: 'ProcurementPlanManagement',
@@ -69,6 +84,12 @@ export default {
     revokeSnackbar: false,
     dayMenu: false,
     loading: false,
+    approval: {},
+    rules: {
+      required: requiredRules,
+      requiredMessage: requiredMessageRules,
+      union: unionRules
+    },
     search: {
       name: '',
       planStatus: '',
@@ -86,6 +107,7 @@ export default {
   }),
   created () {
     this.loading = true
+    this.initApproval()
     restAPI.getAll('procurementPlan').then(res => {
       this.desserts = res.data.content
       this.loading = false
@@ -93,7 +115,6 @@ export default {
   },
   computed: {
     searchValue () {
-      console.log(`${this.search.name}&${this.search.planStatus}&${this.search.approvalStatus}&${this.search.createTime}`)
       return `${this.search.name}&${this.search.planStatus}&${this.search.approvalStatus}&${this.search.createTime}`
     }
   },
@@ -101,6 +122,17 @@ export default {
     handleRevoke (item) {
       this.revoke = item
       this.revokeSnackbar = true
+    },
+    initApproval () {
+      // TODO: 点击审批按钮，初始化基本对象，show字段必须存在，其他字段和表对应
+      this.approval = {
+        show: false,
+        description: '',
+        plan: null,
+        result: null,
+        approvalType: 'MATERIAL_APPROVAL',
+        planId: -1
+      }
     },
     revokeOk () {
       let role = ''
@@ -139,6 +171,19 @@ export default {
     },
     handleBack () {
       this.see = 0
+    },
+    handleApproval (item) {
+      this.approval.show = true
+      this.approval.description = null
+      this.approval.plan = this._.cloneDeep(item)
+      if (this.$refs['description']) this.$refs['description'].reset()
+    },
+    /**
+     * 审批方法
+     */
+    handlePlanApproval (planStatus, approvalStatus, result) {
+      // TODO: 审批通过和审批不通过按钮的的点击事件，传递 this.approval 作为参数
+      // if (!this.$refs['description'].validate(true)) return
     }
   }
 }
