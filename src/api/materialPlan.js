@@ -40,3 +40,10 @@ export const approvalMaterialPlan = (materialPlan, approval) => {
     data: { materialPlan, approval }
   })
 }
+
+export const withdrawApproval = (id) => {
+  return axios.request({
+    url: `/materialDemandPlan/withdrawApproval/${id}`,
+    method: 'patch'
+  })
+}

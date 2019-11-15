@@ -43,11 +43,6 @@
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="warning", @click="handleRevoke(item)", v-on="on")
                     v-icon mdi-backup-restore
                 span 撤回
-              v-tooltip(top)
-                template(v-slot:activator="{ on }")
-                  v-btn.mr-2(outlined, rounded, x-small, fab, color="error", v-on="on" , @click="handleDelete(item)")
-                    v-icon mdi-delete
-                span 删除
           v-snackbar(v-model="revokeSnackbar", vertical, :timeout="0") 您确定撤回吗？
             v-row.justify-end
               v-btn.ma-3(color="error", text, @click="revokeSnackbar = false") 取消
@@ -58,6 +53,7 @@
 
 <script>
 import * as restAPI from '_api/rest'
+import * as procurementPlan from '_api/procurementPlan'
 import ProcurementPlan from '_c/procurement-plan'
 import { planStatus, approvalStatus } from '_u/status'
 
@@ -102,24 +98,27 @@ export default {
     }
   },
   methods: {
-    /**
-     * 删除
-     **/
-    handleDelete (item) {
-      // TODO：删除采购计划
-      // restAPI.patchOne('procurementPlan', item.id, {
-      //   planStatus: 'DELETED'
-      // }).then(() => {
-      //   this.$message('采购计划删除成功', 'success')
-      //   item.planStatus = 'DELETED'
-      // })
-    },
     handleRevoke (item) {
+      this.revoke = item
       this.revokeSnackbar = true
     },
     revokeOk () {
-      // TODO: 点击确定撤回后的事件
-      this.revokeSnackbar = false
+      let role = ''
+      if (this.revoke.approvalStatus === 'APPROVAL_ING' && this.revoke.planStatus === 'APPROVAL') {
+        role = 'PLANER'
+      } else if (this.revoke.approvalStatus === 'APPROVAL_ING' && this.revoke.planStatus === 'PROCUREMENT_OK') {
+        role = 'SUPERVISOR'
+      } else {
+        this.$message('撤回失败，当前采购计划状态异常，请刷新后再试！', 'error')
+        return
+      }
+      procurementPlan.withdrawApproval(this.revoke, role)
+        .then(() => {
+          this.revokeSnackbar = false
+          this.initData()
+          this.revokeSnackbar = false
+          this.$message('撤回成功！', 'success')
+        })
     },
     filterSearch (value, search, item) {
       const condition = search.split('&')
