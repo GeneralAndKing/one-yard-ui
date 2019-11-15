@@ -4,7 +4,7 @@
       v-flex.pa-2(xs12, md8)
         v-card.mt-5.mb-3
           v-card-text
-            table-card-sheet(title="个人设置", description="您可以在这里设置或更改您的个人信息",
+            table-card-sheet(title="个人设置", description="您可以在这里设置或更改您的个人信息，并通过右上角刷新按钮实时更新您的数据。",
               :color="$store.getters['sundry/theme'] ? 'orange' : 'green'")
             v-form(ref="user").pt-6
               v-container(grid-list-md)
@@ -33,7 +33,10 @@
         v-card.mt-5.mb-3
           .one-avatar.text-center
             v-avatar.mx-auto.one-avatar-img.elevation-18(height="130px", width="130px")
-              img(src="https://demos.creative-tim.com/vue-material-dashboard/img/marc.aba54d65.jpg")
+              v-img(:src="me.icon")
+          v-flex.text-center(xs12, sm12)
+            v-btn(color="light-blue", dark, @click="handleUpload") 上传头像
+            v-file-input.d-none(accept="image/*", label="上传头像", prepend-icon="", ref="icon", @change="uploadAvatar")
           v-card-text
             v-form(ref="password")
                 v-container(grid-list-md)
@@ -59,6 +62,7 @@ import * as oauthAPI from '_api/oauth'
 import * as restAPI from '_api/rest'
 import { emailRules, passwordRules, requiredRules, unionRules, phoneRules, imageRequiredRules } from '_u/rule'
 import * as utils from '_u/util'
+import * as sysUserAPI from '_api/sysUser'
 export default {
   name: 'UserSetting',
   components: {
@@ -153,6 +157,16 @@ export default {
     initModifyPassword () {
       this.editPassword = !this.editPassword
       this.$refs['password'].reset()
+    },
+    handleUpload () {
+      this.$refs.icon.$refs.input.click()
+    },
+    uploadAvatar (file) {
+      sysUserAPI.uploadAvatarMe(file).then(res => {
+        this.me.icon = res.data.icon
+        this.$message('头像更新成功！由于使用免费图床，头像更新具有一定延迟，请稍后查看。')
+        this.$store.dispatch('auth/checkToken')
+      })
     }
   }
 }
@@ -163,11 +177,10 @@ export default {
   top -54px
   position relative
 .one-avatar-img
-  img
-    transition transform 1s ease-in
-    &:hover
-      -moz-transform rotate(360deg)
-      -o-transform rotate(360deg)
-      -webkit-transform rotate(360deg)
-      transform rotate(360deg)
+  transition transform 1s ease-in
+  &:hover
+    -moz-transform rotate(360deg)
+    -o-transform rotate(360deg)
+    -webkit-transform rotate(360deg)
+    transform rotate(360deg)
 </style>

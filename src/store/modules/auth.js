@@ -48,6 +48,7 @@ const mutations = {
   },
   SET_AUTH (state, auth) {
     state.auth = auth
+    state.role = []
     auth.authorities.forEach((item) => {
       if (Role.hasOwnProperty(item)) {
         console.log(Role[item])
@@ -102,7 +103,8 @@ const actions = {
     return new Promise(async (resolve, reject) => {
       const res = await oauthAPI.refreshToken(state.token.refresh_token)
       if (res === null) return reject(new Error('请求失败'))
-      commit('SET_AUTH', res.data)
+      commit('SET_TOKEN', res.data)
+      dispatch('checkToken')
       resolve(res.data) // 接口请求完成
     })
   },

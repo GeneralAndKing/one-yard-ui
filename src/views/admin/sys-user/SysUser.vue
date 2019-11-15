@@ -27,7 +27,7 @@
                 single-line,
                 hide-details
               )
-              v-dialog(v-model="dialog" max-width="800px")
+              v-dialog(v-model="dialog", max-width="800px", persistent)
                 template(v-slot:activator="{ on }")
                   v-btn.mb-2.ml-3(color="primary", v-on="on") 添加
                 v-card(:loading="submitLoading")
@@ -103,7 +103,7 @@ export default {
     },
     editedIndex: -1,
     editedItem: {
-      icon: '',
+      icon: 'https://picsum.photos/id/11/10/6',
       username: '',
       password: '',
       name: '',
@@ -121,7 +121,7 @@ export default {
     },
     roles: [],
     defaultItem: {
-      icon: '',
+      icon: 'https://picsum.photos/id/11/10/6',
       password: '',
       username: '',
       name: '',
@@ -206,6 +206,7 @@ export default {
     },
     close () {
       this.dialog = false
+      this.$refs.editedItem.resetValidation()
       setTimeout(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
@@ -225,8 +226,7 @@ export default {
             .then(() => {
               Object.assign(this.desserts[this.editedIndex], this.editedItem)
               this.close()
-              this.submitLoading = true
-            }).catch(() => { this.submitLoading = true })
+            }).finally(() => { this.submitLoading = false })
         } else {
           const data = this._.cloneDeep(this.editedItem)
           data.roles = []
@@ -235,7 +235,7 @@ export default {
             this.desserts.push(this.editedItem)
             this.close()
             this.submitLoading = true
-          }).catch(() => { this.submitLoading = true })
+          }).finally(() => { this.submitLoading = false })
         }
       }
     },
@@ -255,7 +255,7 @@ export default {
       this.$refs.icon.$refs.input.click()
     },
     uploadAvatar (file) {
-      sysUserAPI.uploadAvatar(file).then(res => {
+      sysUserAPI.uploadAvatar(file, this.editedItem.username).then(res => {
         this.editedItem.icon = res.data.icon
         this.defaultItem.icon = res.data.icon
         let user = this.desserts.find(d => d.id === res.data.id)
