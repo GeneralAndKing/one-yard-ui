@@ -150,6 +150,16 @@ export const routes = [
           ]
         },
         component: () => import(/* webpackChunkName: "sys-department" */ '_v/summary')
+      }, {
+        path: 'supplier',
+        name: 'supplier',
+        meta: {
+          meta: '供应商管理',
+          auth: [
+            Role.ROLE_ADMIN
+          ]
+        },
+        component: () => import(/* webpackChunkName: "sys-department" */ '_v/base/supplier')
       },
       {
         path: 'print',
