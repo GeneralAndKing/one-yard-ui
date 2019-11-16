@@ -39,6 +39,18 @@ export const MENUS = [
         to: { name: 'supplier' },
         icon: 'location_city',
         auth: [ Role.ROLE_ADMIN ]
+      },
+      {
+        text: '仓库组织管理',
+        to: { name: 'inventory' },
+        icon: 'location_city',
+        auth: [ Role.ROLE_ADMIN ]
+      },
+      {
+        text: '物料类别管理',
+        to: { name: 'materialType' },
+        icon: 'location_city',
+        auth: [ Role.ROLE_ADMIN ]
       }
     ]
   }, {
