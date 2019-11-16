@@ -5,7 +5,7 @@
         v-responsive
           v-layout(wrap)
             v-flex.text-right(sm12)
-              span.body-2.font-weight-thin 需求计划编码：{{materialPlan.id}}
+              .body-2.font-weight-thin 需求计划编码：{{materialPlan.id}}
             v-flex.text-center(sm12)
               .display-1 {{materialPlan.name}}
             v-divider
@@ -81,3 +81,8 @@ export default {
   }
 }
 </script>
+
+<style scoped lang="stylus">
+.full-width
+  width 100%
+</style>
