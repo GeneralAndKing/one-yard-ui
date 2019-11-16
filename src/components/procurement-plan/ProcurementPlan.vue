@@ -20,7 +20,7 @@
               v-text-field(v-model="procurementPlan.createTime", label="创建时间", disabled)
             v-flex(sm12, md6, lg4)
               v-text-field(v-model="procurementPlan.modifyTime", label="创建用户", disabled)
-      v-data-table(:headers="headers", :items="planMaterials", :loading="load.table", loading-text="加载中......", show-select,
+      v-data-table(:headers="headers", :items="desserts", :loading="load.table", loading-text="加载中......", show-select,
         style="width:100%", item-key="id", :mobile-breakpoint="1200", no-data-text="暂无数据", no-results-text="暂无数据")
         template(v-slot:top)
           v-toolbar(flat)
@@ -157,6 +157,7 @@
 <script>
 import { requiredRules, unionRules, requiredMessageRules } from '_u/rule'
 import * as restAPI from '_api/rest'
+import * as procurementPlanAPI from '_api/procurementPlan'
 import { planStatusSelect, approvalStatusSelect } from '_u/status'
 const uuidv4 = require('uuid/v4')
 
@@ -183,7 +184,7 @@ export default {
       table: false
     },
     procurementPlan: {},
-    planMaterials: [],
+    desserts: [],
     planStatus: planStatusSelect,
     approvalStatus: approvalStatusSelect,
     needDate: new Date().toISOString().substr(0, 10),
@@ -232,8 +233,8 @@ export default {
       })
     restAPI.getRestLink(`procurementPlanInfo/search/infoById?id=${this.seeId}`)
       .then(res => {
-        this.planMaterials = res.data.content.filter(d => !d.hasOwnProperty('relTargetType'))
-        this.planMaterials.forEach(pm => {
+        this.desserts = res.data.content.filter(d => !d.hasOwnProperty('relTargetType'))
+        this.desserts.forEach(pm => {
           if (pm.departmentName === null) pm.departmentName = '采购部门'
         })
       }).finally(() => { this.load.table = false })
@@ -283,9 +284,12 @@ export default {
         // 此时为编辑
         this.see = !this.see
       } else {
-        // 此时为保存
-        // TODO: 采购计划保存
-        this.see = !this.see
+        procurementPlanAPI.saveOrUpdate(this.procurementPlan, this.desserts)
+          .then(res => {
+            console.log(res)
+            this.$message('操作成功！', 'success')
+            this.see = !this.see
+          })
       }
     },
     materialTypeSelect (item) {
@@ -316,22 +320,22 @@ export default {
       if (!this.$refs.edit.validate(true)) return
       if (this.editIndex === -1) {
         this.editedItem.new = true
-        this.planMaterials.unshift(this._.cloneDeep(this.editedItem))
-      } else this.planMaterials.splice(this.editIndex, 1, this._.cloneDeepWith(this.editedItem))
+        this.desserts.unshift(this._.cloneDeep(this.editedItem))
+      } else this.desserts.splice(this.editIndex, 1, this._.cloneDeepWith(this.editedItem))
       this.initEdit()
       this.dialog = false
       this.seeOne = true
       this.$refs.edit.resetValidation()
     },
     handleEdit (item) {
-      this.editIndex = this._.indexOf(this.planMaterials, item)
+      this.editIndex = this._.indexOf(this.desserts, item)
       this.editedItem = this._.cloneDeepWith(item)
       this.dialog = true
       this.seeOne = false
     },
     handleReset () {
       if (this.editIndex < 0) this.initEdit()
-      else this.handleEdit(this.planMaterials[this.editIndex])
+      else this.handleEdit(this.desserts[this.editIndex])
       this.$refs.edit.resetValidation()
     },
     handleClose () {
@@ -342,7 +346,7 @@ export default {
       this.$refs.edit.resetValidation()
     },
     handleDelete (item) {
-      if (item.new) this.planMaterials.splice(this._.indexOf(this.planMaterials, item), 1)
+      if (item.new) this.desserts.splice(this._.indexOf(this.desserts, item), 1)
       else item.status = 'BACK'
     },
     handleCloseReturn () {
@@ -372,7 +376,7 @@ export default {
       // 校验输入框
       if (!this.$refs.description.validate(true)) return
       // 删除那一行数据
-      this.planMaterials.splice(this._.indexOf(this.planMaterials, this.returnItem), 1)
+      this.desserts.splice(this._.indexOf(this.desserts, this.returnItem), 1)
       // 关闭并重置
       this.handleCloseReturn()
     }

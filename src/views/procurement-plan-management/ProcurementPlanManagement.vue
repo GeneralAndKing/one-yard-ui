@@ -108,10 +108,7 @@ export default {
   created () {
     this.loading = true
     this.initApproval()
-    restAPI.getAll('procurementPlan').then(res => {
-      this.desserts = res.data.content
-      this.loading = false
-    })
+    this.initTable()
   },
   computed: {
     searchValue () {
@@ -119,6 +116,12 @@ export default {
     }
   },
   methods: {
+    initTable () {
+      restAPI.getAll('procurementPlan').then(res => {
+        this.desserts = res.data.content
+        this.loading = false
+      })
+    },
     handleRevoke (item) {
       this.revoke = item
       this.revokeSnackbar = true
@@ -170,6 +173,7 @@ export default {
     },
     handleBack () {
       this.see = 0
+      this.initTable()
     },
     handleApproval (item) {
       this.approval.show = true
