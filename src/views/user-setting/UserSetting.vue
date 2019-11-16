@@ -13,7 +13,7 @@
                     v-text-field(type="email", v-model="me.email", counter="30", hint="可能用于找回密码", validate-on-blur,
                       label="电子邮箱" :rules="rules.email", ref="email",  disabled)
                   v-flex(xs12, sm6, md6)
-                    v-text-field(v-model="me.username", counter="18", label="用户名", validate-on-blur,  :disabled='!edit'
+                    v-text-field(v-model="me.username", counter="18", label="用户名", validate-on-blur,  disabled,
                       :rules="rules.union(rules.required('用户名'))", ref="username", @blur="handleExist('username')")
                       template(v-slot:append)
                         v-progress-circular(v-if="load.username", size="24", color="info", indeterminate)

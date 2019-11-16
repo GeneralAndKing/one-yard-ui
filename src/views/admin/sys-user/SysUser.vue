@@ -71,7 +71,7 @@
                             v-text-field(type="number", v-model="editedItem.sort", label="排序", :rules="rules.union(rules.required('排序'))")
                           v-flex(xs12, sm12)
                             v-select(v-model="editedItem.roles", label="角色", :items="roles", item-text="description", return-object, chips, multiple,
-                              :rules="rules.union(rules.required('角色'))")
+                              :rules="rules.union(rules.required('角色'))", deletable-chips)
                           v-flex(xs12, sm12)
                             v-textarea(label="备注", v-model="editedItem.remark", counter="250")
                   v-card-actions.text-right.justify-end
@@ -175,19 +175,18 @@ export default {
     try {
       let role = this.$store.getters['auth/role']
       let resourcesLink
-      console.log('123')
-      if (Role.isSupervisor(role)) {
-        // TODO: 啊啊啊啊
-        resourcesLink = `sysUser/search/byDepartments?ids=${Role.supervisorList(role)}`
-      }
+      let roles = await restAPI.getAll('sysRole')
+      this.roles = roles.data.content.filter(r => r.name !== 'ROLE_PUBLIC' && r.name !== 'ROLE_LOGIN')
       if (Role.isAdmin(role)) {
         resourcesLink = 'sysUser/all'
+      } else if (Role.isSupervisor(role)) {
+        resourcesLink = `sysUser/byDepartments/${Role.supervisorList(role)}`
+        const selectRoles = await restAPI.getRestLink(`sysRole/search/byDepartments?ids=${Role.supervisorList(role)}`)
+        const selectIds = selectRoles.data.content.map(s => s.id)
+        this.roles.forEach(r => { if (!selectIds.includes(r.id)) r.disabled = true })
       }
-      let users = await restAPI.getRestLink(resourcesLink)
-      console.log(users)
-      let roles = await restAPI.getAll('sysRole')
-      this.roles = roles.data.content
-      users.data.content.forEach(user => {
+      let users = await restAPI.getLink(resourcesLink)
+      users.data.forEach(user => {
         user.model = false
         user.loading = false
         user.disabled = false
@@ -219,10 +218,8 @@ export default {
     close () {
       this.dialog = false
       this.$refs.editedItem.resetValidation()
-      setTimeout(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      }, 300)
+      this.editedItem = Object.assign({}, this.defaultItem)
+      this.editedIndex = -1
     },
     save () {
       let _this = this
@@ -238,6 +235,7 @@ export default {
             .then(() => {
               Object.assign(this.desserts[this.editedIndex], this.editedItem)
               this.close()
+              this.$message('修改成功！修改角色需要重新登录哦～！', 'success')
             }).finally(() => { this.submitLoading = false })
         } else {
           const data = this._.cloneDeep(this.editedItem)
@@ -246,7 +244,7 @@ export default {
           restAPI.addOne('sysUser', data).then(() => {
             this.desserts.push(this.editedItem)
             this.close()
-            this.submitLoading = true
+            this.$message('添加成功！', 'success')
           }).finally(() => { this.submitLoading = false })
         }
       }
