@@ -1,5 +1,8 @@
 <template lang="pug">
-    div printMaterialPlan
+  v-container
+    v-card
+      v-card-title
+      v-card-text
 </template>
 
 <script>

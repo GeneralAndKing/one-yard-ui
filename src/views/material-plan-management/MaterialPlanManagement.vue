@@ -169,9 +169,6 @@ export default {
       }
       restAPI.getRestLink(resourcesLink)
         .then(res => {
-          res.data.content.forEach(p => {
-            p.createTime = _this.dateFormat(p.createTime)
-          })
           _this.materialPlan = res.data.content
         })
         .finally(() => { this.loading = false })
