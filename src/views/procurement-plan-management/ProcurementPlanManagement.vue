@@ -62,7 +62,7 @@
                 v-btn(text, color="error", @click="handlePlanApproval('审批退回')") 需求退回
                 v-btn(text, color="success", @click="handlePlanApproval('审批通过')") 需求通过
     procurement-plan(v-else, :see-id="see")
-      v-btn(text, color='warning', @click="handleBack") 返回
+      v-btn(text, color='warning', @click="handleBack", outlined) 返回
 </template>
 
 <script>

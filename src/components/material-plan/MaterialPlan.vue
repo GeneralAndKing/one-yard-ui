@@ -148,9 +148,9 @@
                                     v-flex(xs12, md6, md4)
                                       v-select(v-model="editedItem.inventory", label="需求库存组织", :items="inventory", item-text="name", item-value="name")
                                     v-flex(xs12, md6, md4)
-                                      v-text-field(:value="editedItem.materialTrackingCode", label="物料追踪码", readonly, hint="此项为随机生成，请勿修改")
+                                      v-text-field(:value="editedItem.materialTrackingCode", label="物料追踪码", readonly, hint="此项为随机生成，请勿修改", persistent-hint)
                                     v-flex(xs12, md6, md4)
-                                      v-switch(v-model="editedItem.isSourceGoods", :label="`货源是否确定:${editedItem.isSourceGoods ? '是': '否'}`")
+                                      v-switch(v-model="editedItem.isSourceGoods", :label="`货源是否, 确定:${editedItem.isSourceGoods ? '是': '否'}`")
                             v-card-actions
                               v-spacer
                               v-btn(text, color="error", @click="handleReset") 重置
@@ -322,7 +322,8 @@ export default {
         inventory: null,
         materialTrackingCode: uuidv4(),
         isEnable: true,
-        status: 'INIT'
+        status: 'INIT',
+        planSource: '物资需求'
       }
     },
     handleAdd () {
@@ -395,6 +396,10 @@ export default {
     materialTypeSelect (item) {
       this.editedItem.material = null
       this.materials = this.materialItems.filter(material => { return material.typeId === item.id })
+      this.editedItem.specifications = null
+      this.editedItem.size = null
+      this.editedItem.unit = null
+      this.$refs.add.resetValidation()
     },
     materialSelect (item) {
       this.editedItem.specifications = item.specifications

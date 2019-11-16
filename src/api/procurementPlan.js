@@ -24,9 +24,8 @@ export const saveOrUpdate = (procurementPlan, desserts) => {
  */
 export const getProcurementPlan = (id) => {
   return axios.request({
-    url: `/procurementPlan/getProcurementPlan`,
-    method: 'get',
-    params: { id }
+    url: `/procurementPlan/all/${id}`,
+    method: 'get'
   })
 }
 

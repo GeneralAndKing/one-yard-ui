@@ -7,7 +7,8 @@
           loading-text="正在加载数据", :search="search")
           template(v-slot:item.icon="{ item }")
             v-avatar(size="36px")
-              v-img(:src="item.icon", :alt="item.name", lazy-src="https://picsum.photos/id/11/10/6")
+              v-img(:src="item.icon", :alt="item.name",
+                lazy-src="http://q0zlaui5t.bkt.clouddn.com/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195")
           template(v-slot:item.roles="{ item }")
             v-chip.mr-1(v-for="role in item.roles", :key="role.name") {{role.description}}
           template(v-slot:item.status="{ item }")
@@ -41,7 +42,8 @@
                             v-hover
                               template( v-slot:default="{ hover }")
                                 v-avatar(size="64px")
-                                  v-img(:src="editedItem.icon", :width="64", :height="64" )
+                                  v-img(:src="editedItem.icon", :width="64", :height="64",
+                                    lazy-src="http://q0zlaui5t.bkt.clouddn.com/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195")
                                   v-fade-transition
                                     v-overlay(v-if="hover", absolute)
                                       v-btn(test, x-small, @click="handleUpload", :loading="load.upload") 上传头像
