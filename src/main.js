@@ -5,6 +5,7 @@ import store from '_store'
 import vuetify from '_plugins/vuetify'
 import Message from '_plugins/global-message'
 import Print from '_plugins/print'
+import '_plugins/permissions'
 import _ from 'lodash'
 Vue.use(Print) // 注册
 Vue.prototype.$message = Message.install
