@@ -158,6 +158,7 @@
 import { requiredRules, unionRules, requiredMessageRules } from '_u/rule'
 import * as restAPI from '_api/rest'
 import * as procurementPlanAPI from '_api/procurementPlan'
+import * as planMaterialAPI from '_api/planMaterial'
 import { planStatusSelect, approvalStatusSelect } from '_u/status'
 const uuidv4 = require('uuid/v4')
 
@@ -193,6 +194,7 @@ export default {
     seeOne: true,
     materialTypes: [],
     suppliers: [],
+    approval: {},
     rules: {
       required: requiredRules,
       requiredMessage: requiredMessageRules,
@@ -367,18 +369,32 @@ export default {
       this.editedItem.material = this._.find(this.materials, { code: item.materialCode })
       this.materialSelect(this.editedItem.material)
     },
+    initApproval () {
+      this.approval = {
+        description: '',
+        plan: null,
+        result: null,
+        approvalType: '',
+        planId: -1
+      }
+    },
     handleReturnSubmit () {
-      // TODO： 点击确认退回后的事件
       // this.returnItem 是退回的那一行数据
       // this.returnMethod 是退回的方法，true：整个计划，false：当前物资
       // this.returnDescription 是审批意见
       // this.returnDialog 是提示框，true 为显示，false 是不显示
       // 校验输入框
       if (!this.$refs.description.validate(true)) return
-      // 删除那一行数据
-      this.desserts.splice(this._.indexOf(this.desserts, this.returnItem), 1)
-      // 关闭并重置
-      this.handleCloseReturn()
+      this.approval.description = this.returnDescription
+      planMaterialAPI.backPlanOrMaterial(this.returnItem, this.approval, this.returnMethod)
+        .then(() => {
+          // 删除那一行数据
+          this.desserts.splice(this._.indexOf(this.desserts, this.returnItem), 1)
+          // 关闭并重置
+          this.handleCloseReturn()
+          this.$message('退回成功！', 'success')
+        }
+        )
     }
   }
 }
