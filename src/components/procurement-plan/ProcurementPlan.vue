@@ -9,12 +9,12 @@
               v-text-field(v-model="procurementPlan.name", label="采购计划名称", :disabled="see")
             v-flex(sm12, md6, lg4)
               v-select(v-model="procurementPlan.planStatus", :items="planStatus", item-value='value',
-                item-text='name', label="需求计划状态", :disabled="see")
+                item-text='name', label="计划状态", disabled)
             v-flex(sm12, md6, lg4)
               v-select(v-model="procurementPlan.approvalStatus", :items="approvalStatus", item-value='value',
-                item-text='name', label="审批状态", :disabled="see")
+                item-text='name', label="审批状态", disabled)
             v-flex(sm12, md6, lg4)
-              v-text-field(v-model="procurementPlan.planType", label="需求计划类型", disabled,
+              v-text-field(v-model="procurementPlan.planType", label="计划类型", disabled,
                 persistent-hint, hint="此字段为自动生成")
             v-flex(sm12, md6, lg4)
               v-text-field(v-model="procurementPlan.createTime", label="创建时间", disabled)
@@ -144,7 +144,7 @@
                     v-text-field(:value="editedItem.materialTrackingCode", label="物料追踪码", readonly,
                       hint="此项为随机生成，请勿修改", persistent-hint, :disabled="seeOne")
                   v-flex(xs12, md6, md4)
-                    v-switch(v-model="editedItem.isSourceGoods", :label="`货源是否确定:${editedItem.isSourceGoods ? '是': '否'}`")
+                    v-switch(v-model="editedItem.isSourceGoods", :disabled="seeOne", :label="`货源是否确定:${editedItem.isSourceGoods ? '是': '否'}`")
           v-card-actions(v-if="!seeOne")
             v-spacer
             v-btn(text, color="error", @click="handleReset") 重置
@@ -152,7 +152,8 @@
     v-card-actions
       slot
       v-spacer
-      v-btn(text, color="primary", @click="handleSave", outlined) {{ see ? '编辑' : '保存' }}
+      v-btn(text, color='primary', v-if="procurementPlan.planStatus === 'FREE' && !see", @click="handleSave(true)", outlined) 保存并提交审批
+      v-btn(text, color="primary", v-if="procurementPlan.planStatus === 'FREE'", @click="handleSave(false)", outlined) {{ see ? '编辑' : '保存' }}
 </template>
 
 <script>
@@ -179,7 +180,7 @@ export default {
     returnItem: {},
     dialog: false,
     returnDialog: false,
-    supplyMode: ['库存供应', '采购'],
+    supplyMode: ['采购'],
     editedItem: {},
     editIndex: -1,
     load: {
@@ -282,11 +283,16 @@ export default {
         planSource: '自己定制'
       }
     },
-    handleSave () {
+    handleSave (status) {
       if (this.see) {
         // 此时为编辑
         this.see = !this.see
       } else {
+        // 此时为保存并提交
+        if (status) {
+          this.procurementPlan.planStatus = 'APPROVAL'
+          this.procurementPlan.approvalStatus = 'APPROVAL_ING'
+        }
         procurementPlanAPI.saveOrUpdate(this.procurementPlan, this.desserts)
           .then(res => {
             console.log(res)

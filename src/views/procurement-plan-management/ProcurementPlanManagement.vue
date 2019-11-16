@@ -33,14 +33,28 @@
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="success", v-on="on", @click="handleSee(item)")
                     v-icon remove_red_eye
                 span 查看
-              v-tooltip(top, v-if="item.approvalStatus === '审批中' && item.planStatus === '提交审批'")
+              v-tooltip(top, v-if="item.planStatus === 'FREE'")
                 template(v-slot:activator="{ on }")
-                  v-btn.mr-2(outlined, rounded, x-small, fab, color="primary", v-on="on", @click="handleApproval(item)")
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="teal darken-1", v-on="on",
+                    v-per="Role.ROLE_PROCUREMENT_PLANER", @click="handleSubmit(item)")
+                    v-icon mdi-format-wrap-inline
+                span 提交审批
+              v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
+                template(v-slot:activator="{ on }")
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="primary", v-on="on",
+                    v-per="Role.ROLE_PROCUREMENT_SUPERVISOR", @click="handleApproval(item)")
+                    v-icon mdi-book-open-variant
+                span 审批
+              v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'PROCUREMENT_OK'")
+                template(v-slot:activator="{ on }")
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="primary", v-on="on",
+                    v-per="Role.ROLE_FINANCE", @click="handleApproval(item)")
                     v-icon mdi-book-open-variant
                 span 审批
               v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
                 template(v-slot:activator="{ on }")
-                  v-btn.mr-2(outlined, rounded, x-small, fab, color="warning", @click="handleRevoke(item)", v-on="on")
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="warning",
+                    v-per="Role.ROLE_PROCUREMENT_PLANER", @click="handleRevoke(item)", v-on="on")
                     v-icon mdi-backup-restore
                 span 撤回
           v-snackbar(v-model="revokeSnackbar", vertical, :timeout="0") 您确定撤回吗？
@@ -71,6 +85,7 @@ import * as procurementPlanAPI from '_api/procurementPlan'
 import ProcurementPlan from '_c/procurement-plan'
 import { planStatus, approvalStatus } from '_u/status'
 import { requiredRules, unionRules, requiredMessageRules } from '_u/rule'
+import { Role } from '_u/role'
 
 export default {
   name: 'ProcurementPlanManagement',
@@ -113,18 +128,46 @@ export default {
   computed: {
     searchValue () {
       return `${this.search.name}&${this.search.planStatus}&${this.search.approvalStatus}&${this.search.createTime}`
+    },
+    Role () {
+      return Role
     }
   },
   methods: {
     initTable () {
-      restAPI.getAll('procurementPlan').then(res => {
-        this.desserts = res.data.content
-        this.loading = false
-      })
+      let _this = this
+      let role = _this.$store.getters['auth/role']
+      let resourcesLink = null
+      if (role.includes(Role.ROLE_PROCUREMENT_PLANER)) {
+        resourcesLink = `procurementPlan/search/byCreateUser?createUser=${this.$store.getters['auth/username']}`
+      }
+      if (role.includes(Role.ROLE_PROCUREMENT_SUPERVISOR)) {
+        resourcesLink = `procurementPlan/search/byStatus?planStatus=APPROVAL&approvalStatus=APPROVAL_ING`
+      }
+      if (role.includes(Role.ROLE_FINANCE) || role.includes(Role.ROLE_FINANCE_PLANER) || role.includes(Role.ROLE_FINANCE_SUPERVISOR)) {
+        resourcesLink = `procurementPlan/search/byStatus?planStatus=PROCUREMENT_OK&approvalStatus=APPROVAL_ING`
+      }
+      restAPI.getRestLink(resourcesLink)
+        .then(res => {
+          this.desserts = res.data.content.filter(d => !d.hasOwnProperty('relTargetType'))
+        })
+        .finally(() => { this.loading = false })
     },
     handleRevoke (item) {
       this.revoke = item
       this.revokeSnackbar = true
+    },
+    handleSubmit (item) {
+      restAPI.patchOne('procurementPlan', item.id, {
+        planStatus: 'APPROVAL',
+        approvalStatus: 'APPROVAL_ING'
+      })
+        .then(() => {
+          this.$message('提交审批成功！', 'success')
+          this.loading = true
+          this.initApproval()
+          this.initTable()
+        })
     },
     initApproval () {
       this.approval = {
@@ -149,9 +192,9 @@ export default {
       procurementPlanAPI.withdrawApproval(this.revoke, role)
         .then(() => {
           this.revokeSnackbar = false
-          this.initData()
-          this.revokeSnackbar = false
           this.$message('撤回成功！', 'success')
+          this.loading = true
+          this.initTable()
         })
     },
     filterSearch (value, search, item) {
@@ -209,9 +252,9 @@ export default {
       this.approval.planId = this.approval.plan.id
       procurementPlanAPI.approvalProcurementPlan(this.approval.plan, this.approval)
         .then(() => {
-          this.initData()
           this.approval.show = false
           this.$message('审批成功！', 'success')
+          this.initTable()
         })
     }
   }

@@ -45,22 +45,30 @@
                 span 查看
               v-tooltip(top, v-if="item.approvalStatus === 'NO_SUBMIT' && item.planStatus === 'FREE'")
                 template(v-slot:activator="{ on }")
-                  v-btn.mr-2(outlined, rounded, x-small, fab, color="success", @click="handleSubmit(item)", v-on="on")
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="success",
+                    v-per="[Role.ROLE_PRODUCTION_PLANER,ROLE_WORKSHOP_PLANER,ROLE_WAREHOUSE_PLANER,ROLE_FINANCE_PLANER]",
+                    @click="handleSubmit(item)", v-on="on")
                     v-icon mdi-chevron-double-up
                 span 提交审批
               v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
                 template(v-slot:activator="{ on }")
-                  v-btn.mr-2(outlined, rounded, x-small, fab, color="primary", @click="handleApproval(item)", v-on="on")
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="primary",
+                    v-per="[Role.ROLE_PRODUCTION_SUPERVISOR,ROLE_WORKSHOP_SUPERVISOR,ROLE_WAREHOUSE_SUPERVISOR,ROLE_FINANCE_SUPERVISOR]",
+                    @click="handleApproval(item)", v-on="on")
                     v-icon mdi-book-open-variant
                 span 审批
               v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
                 template(v-slot:activator="{ on }")
-                  v-btn.mr-2(outlined, rounded, x-small, fab, color="warning", @click="handleRevoke(item)", v-on="on")
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="warning",
+                    v-per="[Role.ROLE_PRODUCTION_PLANER,ROLE_WORKSHOP_PLANER,ROLE_WAREHOUSE_PLANER,ROLE_FINANCE_PLANER]",
+                    @click="handleRevoke(item)", v-on="on")
                     v-icon mdi-backup-restore
                 span 撤回
-              v-tooltip(top)
+              v-tooltip(top, v-if="item.planStatus === 'FREE'")
                 template(v-slot:activator="{ on }")
-                  v-btn.mr-2(outlined, rounded, x-small, fab, color="error", @click="handleDelete(item)", v-on="on")
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="error",
+                    v-per="[Role.ROLE_PRODUCTION_PLANER,ROLE_WORKSHOP_PLANER,ROLE_WAREHOUSE_PLANER,ROLE_FINANCE_PLANER]",
+                    @click="handleDelete(item)", v-on="on")
                     v-icon mdi-delete
                 span 删除
           v-snackbar(v-model="revokeSnackbar", vertical, :timeout="0") 您确定撤回吗？
@@ -137,6 +145,9 @@ export default {
   computed: {
     searchValue () {
       return `${this.search.name}&${this.search.planType}&${this.search.needPeople}&${this.search.planStatus}&${this.search.approvalStatus}&${this.search.createTime}`
+    },
+    Role () {
+      return Role
     }
   },
   created () {

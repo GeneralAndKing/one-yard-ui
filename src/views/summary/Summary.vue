@@ -76,17 +76,24 @@
                       v-flex(xs12, md6, md4)
                         v-text-field(v-model="editedItem.material.unit", label="单位", disabled)
                       v-flex(xs12, md6, md4)
-                        v-text-field(v-model="editedItem.supplyMode", label="供应方式", disabled)
-                      v-flex(xs12, md6, md4)
-                        v-text-field(v-model="editedItem.supplyNumber", label="供应数量", disabled)
-                      v-flex(xs12, md6, md4)
-                        v-text-field(v-model="editedItem.purchaseDate", label="采购日期", disabled)
+                        v-select(v-model="editedItem.supplyMode", label="供应方式", :rules="rules.union(rules.requiredMessage('供应方式'))",
+                          hint="供应方式", :items="supplyMode", )
+                    v-flex(xs12, md6, md4, v-if="editedItem.supplyMode === '采购'")
+                    v-text-field(v-model="editedItem.supplyNumber", label="采购数量", type="number", :rules="rules.union(rules.requiredMessage('采购数量'))",
+                      hint="当前物料采购数量", )
+                  v-flex(xs12, md6, md4, v-if="editedItem.supplyMode === '采购'")
+                    v-menu(v-model="purchaseMenu", :close-on-content-click="false", transition="scale-transition",
+                      offset-y, max-width="290px", min-width="290px")
+                      template(v-slot:activator="{ on }")
+                        v-text-field(v-model="editedItem.purchaseDate", v-on="on", label="采购日期", readonly,
+                          :rules="rules.union(rules.required('需求日期'))", )
+                      v-date-picker(v-model="purchaseDate", no-title, @input="purchaseMenu = false", locale="zh-cn")
 
 </template>
 
 <script>
 import * as restAPI from '_api/rest'
-import { requiredRules, unionRules } from '_u/rule'
+import { requiredRules, unionRules, requiredMessageRules } from '_u/rule'
 
 export default {
   name: 'Summary',
@@ -105,6 +112,8 @@ export default {
     editedIndex: -1,
     editedItem: {},
     desserts: [],
+    seeOne: true,
+    supplyMode: ['库存供应', '采购'],
     summary: [],
     headers: [
       { text: '物料编码', value: 'materialCode', align: 'center' },
@@ -121,7 +130,8 @@ export default {
     ],
     rules: {
       union: unionRules,
-      required: requiredRules
+      required: requiredRules,
+      requiredMessage: requiredMessageRules
     }
   }),
   created () {
