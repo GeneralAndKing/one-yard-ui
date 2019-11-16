@@ -185,7 +185,6 @@ export default {
      * 审批方法
      */
     handlePlanApproval (result) {
-      // TODO: 审批通过和审批不通过按钮的的点击事件，传递 this.approval 作为参数
       if (!this.$refs['description'].validate(true)) return
       if (this.approval.plan.planStatus === 'APPROVAL' && this.approval.plan.approvalStatus === 'APPROVAL_ING') {
         this.approval.approvalType = 'PROCUREMENT_APPROVAL_ONE'
