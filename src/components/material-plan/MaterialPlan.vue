@@ -6,8 +6,8 @@
         v-btn(v-model="fab", color="blue darken-2", fab, dark)
           v-icon(v-if="fab") mdi-close
           v-icon(v-else) mdi-account-circle
-      v-btn(fab, small, color="green", dark @click="print")
-        v-icon mdi-pencil
+      v-btn(fab, small, color="green", dark, @click="print")
+        v-icon mdi-printer-settings
       v-btn(fab, small, color="indigo", dark)
         v-icon mdi-plus
       v-btn(fab, small, color="red", dark)
@@ -32,16 +32,16 @@
                   :rules="rules.union(rules.required('需求人员'))")
               v-flex(xs12, md6, lg4, v-if="materialPlan.planType === '月度计划' || materialPlan.planType === '订单型需求计划'")
                 v-menu(ref="month", :close-on-content-click="false", :return-value.sync="date", transition="scale-transition",
-                  v-model="menu", max-width="290px", min-width="290px", :disabled="see")
+                  v-model="menu", max-width="290px", min-width="290px",)
                   template(v-slot:activator="{ on }")
-                    v-text-field(v-model="materialPlan.month", label="需求月份", disabled, v-on="on",
+                    v-text-field(v-model="materialPlan.month", label="需求月份", :disabled="see", v-on="on",
                       :rules="rules.union(rules.required('需求月份'))")
                   v-date-picker(v-model="date", type="month", no-title, scrollable, locale="zh-cn")
                     v-spacer
                     v-btn(text, color="primary",  @click="menu = false") 取消
                     v-btn(text, color="primary",  @click="$refs.month.save(date)") 选择
               v-flex(xs12, md6, lg4, v-if="materialPlan.planType === '年度计划'")
-                v-select(v-model="materialPlan.month", :items="years", ref="month", :readonly='see',
+                v-select(v-model="materialPlan.month", :items="years", ref="month", :readonly='see', :disabled="see",
                   label="需求年份" :rules="rules.union(rules.required('需求年份'))")
               v-flex(sm12, md6, lg4)
                 v-text-field(v-model="materialPlan.remark", label="备注", :disabled='see')
