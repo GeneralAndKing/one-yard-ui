@@ -90,7 +90,8 @@ export default {
       this.editedIndex = -1
       this.editedItem = {
         name: '',
-        sort: '1'
+        sort: '1',
+        code: ''
       }
     },
     formatDate (date) {
