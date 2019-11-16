@@ -150,6 +150,24 @@ export const routes = [
           ]
         },
         component: () => import(/* webpackChunkName: "sys-department" */ '_v/summary')
+      },
+      {
+        path: 'print',
+        name: 'print',
+        meta: {
+          meta: '数据打印',
+          auth: [
+            Role.ROLE_PRODUCTION_PLANER,
+            Role.ROLE_WAREHOUSE_PLANER,
+            Role.ROLE_FINANCE_PLANER,
+            Role.ROLE_WORKSHOP_PLANER,
+            Role.ROLE_WORKSHOP_SUPERVISOR,
+            Role.ROLE_FINANCE_SUPERVISOR,
+            Role.ROLE_WAREHOUSE_SUPERVISOR,
+            Role.ROLE_PRODUCTION_SUPERVISOR
+          ]
+        },
+        component: () => import(/* webpackChunkName: "sys-department" */ '_v/print')
       }
 
     ]

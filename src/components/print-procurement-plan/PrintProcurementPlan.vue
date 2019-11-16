@@ -1,13 +1,13 @@
 <template lang="pug">
-    div PrintMaterialPlan
+    div printMaterialPlan
 </template>
 
 <script>
 
 export default {
-  name: 'PrintMaterialPlan',
+  name: 'PrintProcurementPlan',
   props: {
-    materialPlan: Object
+    procurementPlan: Object
   }
 }
 </script>

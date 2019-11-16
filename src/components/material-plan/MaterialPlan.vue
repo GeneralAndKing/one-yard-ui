@@ -6,7 +6,7 @@
         v-btn(v-model="fab", color="blue darken-2", fab, dark)
           v-icon(v-if="fab") mdi-close
           v-icon(v-else) mdi-account-circle
-      v-btn(fab, small, color="green", dark)
+      v-btn(fab, small, color="green", dark @click="print")
         v-icon mdi-pencil
       v-btn(fab, small, color="indigo", dark)
         v-icon mdi-plus
@@ -326,6 +326,10 @@ export default {
         planSource: '物资需求'
       }
     },
+    print () {
+      this.$router.push({ name: 'print', params: { model: this.materialPlan, flag: 'materialPlan' } })
+    },
+
     handleAdd () {
       if (!this.$refs.add.validate(true)) return
       this.editedItem.materialTypeId = this.editedItem.materialType.id
