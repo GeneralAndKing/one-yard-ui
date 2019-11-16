@@ -1,7 +1,7 @@
 <template lang="pug">
   v-container#one-supplier
     v-card
-      v-card-title 供应商管理
+      v-card-title 仓库组织管理
       v-card-text
         v-data-table(:headers="headers", :items="supplier", item-key="id", :loading="loading", :sort-by="['sort']"
           loading-text="正在加载数据", no-data-text="暂无数据", no-results-text="没有匹配的数据", :search="search")
@@ -37,7 +37,7 @@
             v-form(ref="form")
               v-layout(wrap, style="width:100%")
                 v-flex(sm12)
-                  v-text-field(v-model="editedItem.name", label="需求计划名称" :rules="rules.unionRules(rules.requiredRules('需求计划名称'),rules.maxLengthRules(18))")
+                  v-text-field(v-model="editedItem.name", label="仓库组织名称" :rules="rules.unionRules(rules.requiredRules('仓库组织名称'),rules.maxLengthRules(18))")
                 v-flex(sm12)
                   v-text-field(v-model="editedItem.sort", label="排序", type="number" :rules="rules.unionRules(rules.requiredRules('排序'))")
         v-card-actions.justify-end
@@ -48,9 +48,9 @@
 <script>
 import * as restAPI from '_api/rest'
 import * as RuleAPI from '_u/rule'
-const SUPPLIER = 'supplier'
+const SUPPLIER = 'inventory'
 export default {
-  name: 'Supplier',
+  name: 'Inventory',
   computed: {
     rules () {
       return RuleAPI
@@ -65,7 +65,7 @@ export default {
     search: '',
     loading: false,
     headers: [
-      { text: '供应商名称', value: 'name', align: 'left' },
+      { text: '仓库组织名称', value: 'name', align: 'left' },
       { text: '排序', value: 'sort' },
       { text: '创建时间', value: 'createTime' },
       { text: '创建用户', value: 'createUser' },

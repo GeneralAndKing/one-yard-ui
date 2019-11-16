@@ -162,6 +162,28 @@ export const routes = [
         component: () => import(/* webpackChunkName: "sys-department" */ '_v/base/supplier')
       },
       {
+        path: 'inventory',
+        name: 'inventory',
+        meta: {
+          meta: '仓库组织管理',
+          auth: [
+            Role.ROLE_ADMIN
+          ]
+        },
+        component: () => import(/* webpackChunkName: "sys-department" */ '_v/base/inventory')
+      },
+      {
+        path: 'materialType',
+        name: 'materialType',
+        meta: {
+          meta: '物料类别管理',
+          auth: [
+            Role.ROLE_ADMIN
+          ]
+        },
+        component: () => import(/* webpackChunkName: "sys-department" */ '_v/base/materialType')
+      },
+      {
         path: 'print',
         name: 'print',
         meta: {
