@@ -29,10 +29,6 @@
               v-list-item-avatar
                 v-icon mdi-clock
               v-list-item-content 个人设置
-            v-list-item(@click="handleRefresh")
-              v-list-item-avatar
-                v-icon mdi-clock
-              v-list-item-content 刷新用户信息
             v-list-item(@click="() => {$store.dispatch('auth/logout')}")
               v-list-item-avatar
                 v-icon mdi-flag
@@ -170,13 +166,6 @@ export default {
           this.messages[1].items.splice(this.messages[1].items.indexOf(message), 1)
           this.messages[0].items.unshift(message)
         }
-      })
-    },
-    handleRefresh () {
-      this.$store.dispatch('auth/refreshToken')
-      this.$message({
-        content: '刷新成功',
-        y: 'bottom'
       })
     }
   }
