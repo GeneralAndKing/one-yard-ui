@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-container.one-procurement-mangement()
+  v-container.one-procurement-mangement
     v-card(v-if="see === 0")
       v-card-title 采购计划管理
       v-card-text

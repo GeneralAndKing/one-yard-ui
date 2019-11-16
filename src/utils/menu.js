@@ -32,6 +32,16 @@ export const MENUS = [
     icon: 'how_to_vote',
     auth: [Role.ROLE_ADMIN]
   }, {
+    name: '基础数据管理',
+    children: [
+      {
+        text: '供应商管理',
+        to: { name: 'supplier' },
+        icon: 'location_city',
+        auth: [ Role.ROLE_ADMIN ]
+      }
+    ]
+  }, {
     name: '物料需求计划',
     children: [
       {

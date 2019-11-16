@@ -76,6 +76,7 @@
                     strong.primary--text 当前需求物资
             v-textarea(v-model="returnDescription", label="审批意见", hint="请输入您的审批意见", :rules="rules.union(rules.required('审批意见'))",
               rows="5", ref='description', auto-grow, counter)
+            br
             strong 注意：此操作会立即生效且不可逆，请谨慎操作！
           v-card-actions
             v-spacer

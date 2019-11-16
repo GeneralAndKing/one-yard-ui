@@ -22,6 +22,10 @@
                   template(v-slot:activator="{ on }")
                     v-text-field(v-model="search.createTime", v-on="on", label="需求日期", readonly)
                   v-date-picker(v-model="search.createTime", no-title, @input="dayMenu = false", locale="zh-cn")
+              v-flex.text-right(xs12)
+                v-btn.mr-4(outlined, color="light-blue", @click="seeApproval") 查看审批中计划
+                v-btn.mr-4(outlined, color="light-blue", @click="seeNotApproval") 查看未提交计划
+                v-btn(outlined, color="light-blue", @click="seeReset") 重置条件
           v-data-table(:headers="headers", :items="materialPlan", :loading="loading", loading-text="加载中......",
             item-key="id", :mobile-breakpoint="900",  :custom-filter="filterSearch", :search="searchValue",
             no-data-text="暂无数据", no-results-text="暂无数据")
@@ -268,6 +272,24 @@ export default {
           this.approval.show = false
           this.$message('审批成功！', 'success')
         })
+    },
+    seeApproval () {
+      this.search.planStatus = 'APPROVAL'
+      this.search.approvalStatus = 'APPROVAL_ING'
+    },
+    seeNotApproval () {
+      this.search.planStatus = 'FREE'
+      this.search.approvalStatus = 'NO_SUBMIT'
+    },
+    seeReset () {
+      this.search = {
+        name: '',
+        planType: '',
+        needPeople: '',
+        planStatus: '',
+        approvalStatus: '',
+        createTime: ''
+      }
     }
   }
 }
