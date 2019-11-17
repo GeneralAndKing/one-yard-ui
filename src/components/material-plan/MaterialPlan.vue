@@ -1,11 +1,6 @@
 <template lang="pug">
   v-container#one-plan-create
-    v-speed-dial(v-model="fab", top, right, absolute, direction='bottom', v-if="seeId > 0"
-      transition='slide-y-reverse-transition')
-      template(v-slot:activator)
-        v-btn(v-model="fab", color="blue darken-2", fab, dark)
-          v-icon(v-if="fab") mdi-close
-          v-icon(v-else) mdi-account-circle
+    more-btn(v-if="seeId > 0")
       v-btn(fab, small, color="green", dark, @click="print")
         v-icon mdi-printer-settings
     v-card
@@ -183,6 +178,7 @@
 
 <script>
 import { requiredRules, unionRules, requiredMessageRules } from '_u/rule'
+import MoreBtn from '_c/more-btn/MoreBtn'
 import { planTypesSelect } from '_u/status'
 import * as materialPlanAPI from '_api/materialPlan'
 import * as restAPI from '_api/rest'
@@ -190,6 +186,9 @@ import * as restAPI from '_api/rest'
 const uuidv4 = require('uuid/v4')
 export default {
   name: 'MaterialPlan',
+  components: {
+    MoreBtn
+  },
   data: () => ({
     tab: 0,
     loading: false,
@@ -197,7 +196,6 @@ export default {
     selected: [],
     menu: false,
     dayMenu: false,
-    fab: false,
     dialog: false,
     materialTypes: [],
     materials: [],

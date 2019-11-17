@@ -11,17 +11,20 @@
             style="position: absolute; right: 0;") 打印
       v-card-text(ref="print")
         print-material-plan(:materialPlan="model", v-if="flag==='materialPlan'")
-        print-procurement-plan(:procurementPlan="model", :desserts="desserts", v-else-if="flag==='procurementPlan'")
+        print-procurement-plan(:procurementPlan="model", :desserts="desserts", v-if="flag==='procurementPlan'")
+        print-summary(:info="model", :desserts="desserts", v-if="flag==='summary'")
 </template>
 
 <script>
 import PrintMaterialPlan from '_c/print-material-plan'
 import PrintProcurementPlan from '_c/print-procurement-plan'
+import PrintSummary from '_c/print-summary/PrintSummary'
 export default {
   name: 'Print',
   components: {
     PrintMaterialPlan,
-    PrintProcurementPlan
+    PrintProcurementPlan,
+    PrintSummary
   },
   data () {
     return {

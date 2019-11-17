@@ -1,11 +1,6 @@
 <template lang="pug">
   v-card.one-procurement
-    v-speed-dial(v-model="fab", top, right, absolute, direction='bottom'
-      transition='slide-y-reverse-transition')
-      template(v-slot:activator)
-        v-btn(v-model="fab", color="blue darken-2", fab, dark)
-          v-icon(v-if="fab") mdi-close
-          v-icon(v-else) mdi-account-circle
+    more-btn
       v-btn(fab, small, color="green", dark, @click="print")
         v-icon mdi-printer-settings
     v-card-title {{see ? '查看' : '编辑'}}
@@ -166,6 +161,7 @@
 
 <script>
 import { requiredRules, unionRules, requiredMessageRules } from '_u/rule'
+import MoreBtn from '_c/more-btn/MoreBtn'
 import * as restAPI from '_api/rest'
 import * as procurementPlanAPI from '_api/procurementPlan'
 import * as planMaterialAPI from '_api/planMaterial'
@@ -174,6 +170,9 @@ const uuidv4 = require('uuid/v4')
 
 export default {
   name: 'ProcurementPlan',
+  components: {
+    MoreBtn
+  },
   props: {
     seeId: {
       type: Number,
@@ -181,7 +180,6 @@ export default {
     }
   },
   data: () => ({
-    fab: false,
     dayMenu: false,
     returnDescription: '',
     purchaseMenu: false,

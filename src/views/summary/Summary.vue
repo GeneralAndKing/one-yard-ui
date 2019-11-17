@@ -1,5 +1,8 @@
 <template lang="pug">
   v-container.one-summary
+    more-btn
+      v-btn(fab, small, color="green", dark, @click="print")
+        v-icon mdi-printer-settings
     v-card
       v-card-title 物资供应方案
         v-container.mb-3(grid-list-md)
@@ -93,10 +96,14 @@
 
 <script>
 import * as restAPI from '_api/rest'
+import MoreBtn from '_c/more-btn/MoreBtn'
 import { requiredRules, unionRules, requiredMessageRules } from '_u/rule'
 
 export default {
   name: 'Summary',
+  components: {
+    MoreBtn
+  },
   data: () => ({
     dialog: false,
     search: {
@@ -212,6 +219,20 @@ export default {
     },
     handleClose () {
       this.dialog = false
+    },
+    print () {
+      if (this.desserts.length < 1) {
+        this.$message('没有数据可以打印哦～')
+        return
+      }
+      this.$router.push({
+        name: 'print',
+        params: {
+          model: this.searchValue,
+          desserts: this.desserts,
+          flag: 'summary'
+        }
+      })
     }
   }
 }
