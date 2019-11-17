@@ -46,28 +46,28 @@
               v-tooltip(top, v-if="item.approvalStatus === 'NO_SUBMIT' && item.planStatus === 'FREE'")
                 template(v-slot:activator="{ on }")
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="success",
-                    v-per="[Role.ROLE_PRODUCTION_PLANER,ROLE_WORKSHOP_PLANER,ROLE_WAREHOUSE_PLANER,ROLE_FINANCE_PLANER]",
+                    v-per="[Role.ROLE_PRODUCTION_PLANER,Role.ROLE_WORKSHOP_PLANER,Role.ROLE_WAREHOUSE_PLANER,Role.ROLE_FINANCE_PLANER]",
                     @click="handleSubmit(item)", v-on="on")
                     v-icon mdi-chevron-double-up
                 span 提交审批
               v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
                 template(v-slot:activator="{ on }")
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="primary",
-                    v-per="[Role.ROLE_PRODUCTION_SUPERVISOR,ROLE_WORKSHOP_SUPERVISOR,ROLE_WAREHOUSE_SUPERVISOR,ROLE_FINANCE_SUPERVISOR]",
+                    v-per="[Role.ROLE_PRODUCTION_SUPERVISOR,Role.ROLE_WORKSHOP_SUPERVISOR,Role.ROLE_WAREHOUSE_SUPERVISOR,Role.ROLE_FINANCE_SUPERVISOR]",
                     @click="handleApproval(item)", v-on="on")
                     v-icon mdi-book-open-variant
                 span 审批
               v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
                 template(v-slot:activator="{ on }")
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="warning",
-                    v-per="[Role.ROLE_PRODUCTION_PLANER,ROLE_WORKSHOP_PLANER,ROLE_WAREHOUSE_PLANER,ROLE_FINANCE_PLANER]",
+                    v-per="[Role.ROLE_PRODUCTION_PLANER,Role.ROLE_WORKSHOP_PLANER,Role.ROLE_WAREHOUSE_PLANER,Role.ROLE_FINANCE_PLANER]",
                     @click="handleRevoke(item)", v-on="on")
                     v-icon mdi-backup-restore
                 span 撤回
               v-tooltip(top, v-if="item.planStatus === 'FREE'")
                 template(v-slot:activator="{ on }")
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="error",
-                    v-per="[Role.ROLE_PRODUCTION_PLANER,ROLE_WORKSHOP_PLANER,ROLE_WAREHOUSE_PLANER,ROLE_FINANCE_PLANER]",
+                    v-per="[Role.ROLE_PRODUCTION_PLANER,Role.ROLE_WORKSHOP_PLANER,Role.ROLE_WAREHOUSE_PLANER,Role.ROLE_FINANCE_PLANER]",
                     @click="handleDelete(item)", v-on="on")
                     v-icon mdi-delete
                 span 删除
