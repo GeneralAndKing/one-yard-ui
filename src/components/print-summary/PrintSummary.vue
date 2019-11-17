@@ -11,6 +11,12 @@
         span {{item.materialType.code}}
       template(v-slot:item.materialTypeName="{ item }")
         span {{item.materialType.name}}
+      template(v-slot:item.materialSpecifications="{ item }")
+        span {{item.material.specifications}}
+      template(v-slot:item.materialSize="{ item }")
+        span {{item.material.size}}
+      template(v-slot:item.materialUnit="{ item }")
+        span {{item.material.unit}}
       template(v-slot:item.isSourceGoods="{ item }")
         span {{item.isSourceGoods?'是':'否'}}
 </template>
@@ -30,6 +36,13 @@ export default {
       { text: '物料名称', value: 'materialName', align: 'start' },
       { text: '物料分类编码', value: 'materialTypeCode', align: 'start' },
       { text: '物料分类名称', value: 'materialTypeName', align: 'start' },
+      { text: '规格', value: 'materialSpecifications', align: 'start' },
+      { text: '型号', value: 'materialSize', align: 'start', width: '20px' },
+      { text: '计量单位', value: 'materialUnit', align: 'start' },
+      { text: '供应方式', value: 'supplyMode', align: 'start' },
+      { text: '采购数量', value: 'supplyNumber', align: 'start' },
+      { text: '采购日期', value: 'purchaseDate', align: 'start' },
+      { text: '计划来源', value: 'planSource', align: 'start' },
       { text: '需求部门', value: 'departmentName', align: 'start' },
       { text: '需求数量', value: 'number', align: 'start' },
       { text: '需求日期', value: 'date', align: 'start' },
@@ -52,6 +65,7 @@ export default {
       d.id = id
       id += 1
     })
+    console.log(this.list)
   }
 }
 </script>

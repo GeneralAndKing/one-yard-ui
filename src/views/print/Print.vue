@@ -3,7 +3,9 @@
     v-card
       v-card-title
         v-alert(type="info", dense, outlined, width="100%") 建议使用
-          strong 横向
+          strong.error--text &nbsp;横向&nbsp;
+          | 打印哦～字段过多建议
+          strong.warning--text &nbsp;缩放&nbsp;
           | 打印哦～
           v-btn(outlined, @click="()=>{this.$router.back()}", color="warning",
             style="position: absolute; right: 100px;") 返回
