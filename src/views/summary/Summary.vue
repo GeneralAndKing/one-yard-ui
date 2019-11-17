@@ -200,6 +200,7 @@ import * as restAPI from '_api/rest'
 import * as procurementPlan from '_api/procurementPlan'
 import MoreBtn from '_c/more-btn/MoreBtn'
 import { requiredRules, unionRules, requiredMessageRules } from '_u/rule'
+import { mergeMaterialPlan } from '_api/planMaterial'
 const uuidv4 = require('uuid/v4')
 
 export default {
@@ -422,7 +423,45 @@ export default {
     },
     handleAnd () {
       // TODO：合并数据
-      console.log(this.selected)
+      if (this.selected.length < 2) {
+        this.$message('数据少于2条,不能合并', 'error')
+        return
+      }
+      let item = this._.cloneDeep(this.selected[0])
+      let ids = [item['id']]
+      item['id'] = null
+      item['createTime'] = null
+      item['createUser'] = null
+      if (item['remark'] === null) {
+        item['remark'] = ''
+      }
+      for (let i = 1; i < this.selected.length; i++) {
+        if (item['materialId'] !== this.selected[i]['materialId']) {
+          this.$message('物料不同，不能合并')
+          return
+        }
+        if (item['supplyMode'] !== this.selected[i]['supplyMode']) {
+          this.$message('供应方式不同,不能合并')
+          return
+        }
+        item['number'] += this.selected[i]['number']
+        item['remark'] += this.selected[i]['departmentName'] + ','
+        ids.push(this.selected[i]['id'])
+        if (item['supplyNumber'] !== null) {
+          if (this.selected[i]['supplyNumber'] !== null) {
+            item['supplyNumber'] += this.selected[i]['supplyNumber']
+          } else {
+            item['supplyNumber'] = null
+          }
+        }
+        mergeMaterialPlan(item, ids).then(res => {
+          for (let item in this.selected) {
+            this.desserts.splice(this.desserts.indexOf(item), 1)
+          }
+          this.desserts.unshift(res.data)
+          this.$message('合并成功')
+        })
+      }
     },
     print () {
       if (this.desserts.length < 1) {

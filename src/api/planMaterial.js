@@ -17,3 +17,11 @@ export const backPlanOrMaterial = (planMaterial, approve, flag) => {
     data: { planMaterial, approve, flag }
   })
 }
+
+export const mergeMaterialPlan = (planMaterial, ids) => {
+  return axios.request({
+    url: `/${PLAN_MATERIAL}/mergeMaterialPlan`,
+    method: 'post',
+    data: { planMaterial, ids }
+  })
+}
