@@ -115,6 +115,12 @@
                     v-text-field(v-model="editedItem.unit", label="计量单位", :rules="rules.union(rules.required('计量单位'))",
                       readonly, hint="当前物料计量单位", :disabled="seeOne")
                   v-flex(xs12, md6, md4)
+                    v-text-field(v-model="editedItem.inTransitNum", label="在途数量", readonly, hint="当前物料在途数量", v-if="seeOne", disabled)
+                  v-flex(xs12, md6, md4)
+                    v-text-field(v-model="editedItem.availableNum", label="可用库存", readonly, hint="当前物料可用库存", v-if="seeOne", disabled)
+                  v-flex(xs12, md6, md4)
+                    v-text-field(v-model="editedItem.occupiedNum", label="已占库存", readonly, hint="当前物料已占库存", v-if="seeOne", disabled)
+                  v-flex(xs12, md6, md4)
                     v-text-field(v-model="editedItem.number", label="需求数量", type="number", :rules="rules.union(rules.requiredMessage('需求数量'))",
                       hint="当前物料所需数量", :disabled="seeOne")
                   v-flex(xs12, md6, md4)
@@ -290,6 +296,9 @@ export default {
         inventory: null,
         materialTrackingCode: uuidv4(),
         isEnable: true,
+        occupiedNum: 0,
+        availableNum: 0,
+        inTransitNum: 0,
         status: 'INIT',
         planSource: '自制计划'
       }

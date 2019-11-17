@@ -267,7 +267,9 @@ export default {
   created () {
     this.initEdit()
     restAPI.getRestLink(`sysDepartment/search/byRoles?ids=${this.$store.getters['auth/role'].join(',')}`)
-      .then(res => { this.departments = res.data.content })
+      .then(res => {
+        this.departments = res.data.content.filter(d => d.name !== '暂无' && d.name !== '采购部')
+      })
     restAPI.getAll('materialType').then(res => { this.materialTypes = res.data.content })
     restAPI.getAll('supplier').then(res => { this.suppliers = res.data.content })
     restAPI.getAll('inventory').then(res => { this.inventory = res.data.content })

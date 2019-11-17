@@ -67,26 +67,6 @@
                     v-flex(xs12, md6, md4)
                       v-text-field(v-model="editedItem.materialType.name", label="物料分类名称", disabled)
                     v-flex(xs12, md6, md4)
-                      v-text-field(v-model="editedItem.material.lowNumber", label="最低库存", disabled)
-                    v-flex(xs12, md6, md4)
-                      v-text-field(v-model="editedItem.material.specifications", label="规格", disabled)
-                    v-flex(xs12, md6, md4)
-                      v-text-field(v-model="editedItem.material.size", label="型号", disabled)
-                    v-flex(xs12, md6, md4)
-                      v-text-field(v-model="editedItem.material.unit", label="单位", disabled)
-                    v-flex(xs12, md6, md4)
-                      v-text-field(v-model="editedItem.number", label="需求数量", disabled)
-                    v-flex(xs12, md6, md4)
-                      v-text-field(v-model="editedItem.date", label="需求日期", disabled)
-                    v-flex(xs12, md6, md4)
-                      v-text-field(:value="editedItem.isSourceGoods? '是': '否'", label="货源是否确定", disabled)
-                    v-flex(xs12, md6, md4)
-                      v-text-field(v-model="editedItem.expectationSupplier", label="期望供应商", disabled)
-                    v-flex(xs12, md6, md4)
-                      v-text-field(v-model="editedItem.fixedSupplier", label="固定供应商", disabled)
-                    v-flex(xs12, md6, md4)
-                      v-text-field(v-model="editedItem.inventory", label="需求库存组织", disabled)
-                    v-flex(xs12, md6, md4)
                       v-select(v-model="editedItem.supplyMode", label="供应方式", :rules="rules.union(rules.requiredMessage('供应方式'))",
                         hint="供应方式", :items="supplyMode", )
                     v-flex(xs12, md6, md4, v-if="editedItem.supplyMode === '采购'")
@@ -99,6 +79,34 @@
                           v-text-field(v-model="editedItem.purchaseDate", v-on="on", label="采购日期", readonly,
                             :rules="rules.union(rules.required('采购日期'))", )
                         v-date-picker(v-model="purchaseDate", no-title, @input="purchaseMenu = false", locale="zh-cn")
+                    v-flex(xs12, md6, md4)
+                      v-text-field(v-model="editedItem.material.lowNumber", label="最低库存", disabled)
+                    v-flex(xs12, md6, md4)
+                      v-text-field(v-model="editedItem.material.specifications", label="规格", disabled)
+                    v-flex(xs12, md6, md4)
+                      v-text-field(v-model="editedItem.material.size", label="型号", disabled)
+                    v-flex(xs12, md6, md4)
+                      v-text-field(v-model="editedItem.material.unit", label="单位", disabled)
+                    v-flex(xs12, md6, md4)
+                      v-text-field(v-model="editedItem.material.lowNumber", label="最低库存", disabled)
+                    v-flex(xs12, md6, md4)
+                      v-text-field(v-model="editedItem.number", label="需求数量", disabled)
+                    v-flex(xs12, md6, md4)
+                      v-text-field(v-model="editedItem.inTransitNum", label="在途数量", readonly, disabled)
+                    v-flex(xs12, md6, md4)
+                      v-text-field(v-model="editedItem.availableNum", label="可用库存", readonly, disabled)
+                    v-flex(xs12, md6, md4)
+                      v-text-field(v-model="editedItem.occupiedNum", label="已占库存", readonly, disabled)
+                    v-flex(xs12, md6, md4)
+                      v-text-field(v-model="editedItem.date", label="需求日期", disabled)
+                    v-flex(xs12, md6, md4)
+                      v-text-field(:value="editedItem.isSourceGoods? '是': '否'", label="货源是否确定", disabled)
+                    v-flex(xs12, md6, md4)
+                      v-text-field(v-model="editedItem.expectationSupplier", label="期望供应商", disabled)
+                    v-flex(xs12, md6, md4)
+                      v-text-field(v-model="editedItem.fixedSupplier", label="固定供应商", disabled)
+                    v-flex(xs12, md6, md4)
+                      v-text-field(v-model="editedItem.inventory", label="需求库存组织", disabled)
                   v-layout(wrap, v-if="!edit")
                     v-flex(xs12, md6, md4)
                       v-select(v-model="editedItem.materialType", label="物料分类", :items="materialTypes", @change="materialTypeSelect",
@@ -106,27 +114,6 @@
                     v-flex(xs12, md6, md4)
                       v-select(v-model="editedItem.material", label="物料", :items="materials", item-text="name",
                         return-object, :rules="rules.union(rules.required('物料'))", no-data-text="未选择物料分类或当前分类下无物料信息")
-                    v-flex(xs12, md6, md4)
-                      v-text-field(v-model="editedItem.material.lowNumber", label="最低库存", :rules="rules.union(rules.required('最低库存'))", readonly)
-                    v-flex(xs12, md6, md4)
-                      v-text-field(v-model="editedItem.material.specifications", label="规格", :rules="rules.union(rules.required('规格'))",
-                        readonly, hint="当前物料规格")
-                    v-flex(xs12, md6, md4)
-                      v-text-field(v-model="editedItem.material.size", label="型号", :rules="rules.union(rules.required('型号'))",
-                        readonly, hint="当前物料型号")
-                    v-flex(xs12, md6, md4)
-                      v-text-field(v-model="editedItem.material.unit", label="计量单位", :rules="rules.union(rules.required('计量单位'))",
-                        readonly, hint="当前物料计量单位")
-                    v-flex(xs12, md6, md4)
-                      v-text-field(v-model="editedItem.material.number", label="需求数量", type="number", :rules="rules.union(rules.requiredMessage('需求数量'))",
-                        hint="当前物料所需数量")
-                    v-flex(xs12, md6, md4)
-                      v-menu(v-model="dayMenu", :close-on-content-click="false", transition="scale-transition",
-                        offset-y, max-width="290px", min-width="290px")
-                        template(v-slot:activator="{ on }")
-                          v-text-field(v-model="editedItem.date", v-on="on", label="需求日期", readonly,
-                            :rules="rules.union(rules.required('需求日期'))")
-                        v-date-picker(v-model="needDate", no-title, @input="dayMenu = false", locale="zh-cn")
                     v-flex(xs12, md6, md4)
                       v-select(v-model="editedItem.supplyMode", label="供应方式", :rules="rules.union(rules.requiredMessage('供应方式'))",
                         hint="供应方式", :items="supplyMode")
@@ -140,6 +127,29 @@
                           v-text-field(v-model="editedItem.purchaseDate", v-on="on", label="采购日期", readonly,
                             :rules="rules.union(rules.required('采购日期'))")
                         v-date-picker(v-model="purchaseDate", no-title, @input="purchaseMenu = false", locale="zh-cn")
+                    v-flex(xs12, md6, md4)
+                      v-text-field(v-model="editedItem.material.lowNumber", label="最低库存", :rules="rules.union(rules.required('最低库存'))", readonly)
+                    v-flex(xs12, md6, md4)
+                      v-text-field(v-model="editedItem.material.specifications", label="规格", :rules="rules.union(rules.required('规格'))",
+                        readonly, hint="当前物料规格")
+                    v-flex(xs12, md6, md4)
+                      v-text-field(v-model="editedItem.material.size", label="型号", :rules="rules.union(rules.required('型号'))",
+                        readonly, hint="当前物料型号")
+                    v-flex(xs12, md6, md4)
+                      v-text-field(v-model="editedItem.material.unit", label="计量单位", :rules="rules.union(rules.required('计量单位'))",
+                        readonly, hint="当前物料计量单位")
+                    v-flex(xs12, md6, md4)
+                      v-text-field(v-model="editedItem.material.lowNumber", label="最低库存")
+                    v-flex(xs12, md6, md4)
+                      v-text-field(v-model="editedItem.material.number", label="需求数量", type="number", :rules="rules.union(rules.requiredMessage('需求数量'))",
+                        hint="当前物料所需数量")
+                    v-flex(xs12, md6, md4)
+                      v-menu(v-model="dayMenu", :close-on-content-click="false", transition="scale-transition",
+                        offset-y, max-width="290px", min-width="290px")
+                        template(v-slot:activator="{ on }")
+                          v-text-field(v-model="editedItem.date", v-on="on", label="需求日期", readonly,
+                            :rules="rules.union(rules.required('需求日期'))")
+                        v-date-picker(v-model="needDate", no-title, @input="dayMenu = false", locale="zh-cn")
                     v-flex(xs12, md6, md4)
                       v-select(v-model="editedItem.expectationSupplier", label="期望供应商", :items="suppliers",
                         item-text="name", item-value="name")
@@ -316,6 +326,7 @@ export default {
       restAPI.getLink(`materialPlanSummary/getMaterialPlanSummary/${result.id}`)
         .then(res => {
           this.desserts = res.data.planMaterials
+          console.log(this.desserts)
         })
         .finally(() => { this.loading = false })
     },
