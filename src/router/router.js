@@ -184,6 +184,17 @@ export const routes = [
         component: () => import(/* webpackChunkName: "sys-department" */ '_v/base/materialType')
       },
       {
+        path: 'material',
+        name: 'material',
+        meta: {
+          meta: '物料管理',
+          auth: [
+            Role.ROLE_ADMIN
+          ]
+        },
+        component: () => import(/* webpackChunkName: "sys-department" */ '_v/base/material')
+      },
+      {
         path: 'print',
         name: 'print',
         meta: {

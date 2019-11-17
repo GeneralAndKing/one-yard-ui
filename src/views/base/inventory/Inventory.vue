@@ -1,9 +1,9 @@
 <template lang="pug">
-  v-container#one-supplier
+  v-container#one-inventory
     v-card
       v-card-title 仓库组织管理
       v-card-text
-        v-data-table(:headers="headers", :items="supplier", item-key="id", :loading="loading", :sort-by="['sort']"
+        v-data-table(:headers="headers", :items="inventory", item-key="id", :loading="loading", :sort-by="['sort']"
           loading-text="正在加载数据", no-data-text="暂无数据", no-results-text="没有匹配的数据", :search="search")
           template(v-slot:item.createTime="{ item }")
             span {{formatDate(item.createTime)}}
@@ -48,7 +48,7 @@
 <script>
 import * as restAPI from '_api/rest'
 import * as RuleAPI from '_u/rule'
-const SUPPLIER = 'inventory'
+const inventory = 'inventory'
 export default {
   name: 'Inventory',
   computed: {
@@ -57,7 +57,7 @@ export default {
     }
   },
   data: () => ({
-    supplier: [],
+    inventory: [],
     submitLoading: false,
     dialog: false,
     editedItem: {},
@@ -77,8 +77,8 @@ export default {
   created () {
     this.loading = true
     this.initEdit()
-    restAPI.getAll(SUPPLIER).then(res => {
-      this.supplier = res.data.content.filter(d => !d.hasOwnProperty('relTargetType'))
+    restAPI.getAll(inventory).then(res => {
+      this.inventory = res.data.content.filter(d => !d.hasOwnProperty('relTargetType'))
       this.loading = false
     })
   },
@@ -100,14 +100,14 @@ export default {
     },
     handleEdit (item) {
       this.editedItem = this._.cloneDeep(item)
-      this.editedIndex = this._.indexOf(this.supplier, item)
+      this.editedIndex = this._.indexOf(this.inventory, item)
       this.dialog = true
     },
     handleDelete (item) {
       this.loading = true
-      restAPI.patchOne(SUPPLIER, item.id, { isEnable: false })
+      restAPI.patchOne(inventory, item.id, { isEnable: false })
         .then(() => {
-          this.supplier.splice(this.editedIndex, 1)
+          this.inventory.splice(this.editedIndex, 1)
           this.$message('操作成功！', 'success')
         }).finally(() => { this.loading = false })
     },
@@ -116,7 +116,7 @@ export default {
       this.dialog = false
     },
     handleReset () {
-      this.editedItem = this._.cloneDeep(this.supplier[this.editedIndex])
+      this.editedItem = this._.cloneDeep(this.inventory[this.editedIndex])
     },
     handleSubmit () {
       if (!this.$refs.form.validate(true)) {
@@ -124,20 +124,20 @@ export default {
       }
       this.submitLoading = true
       if (this.editedIndex === -1) {
-        restAPI.addOne(SUPPLIER, this.editedItem)
+        restAPI.addOne(inventory, this.editedItem)
           .then(res => {
             this.initEdit()
-            this.supplier.unshift(res.data)
+            this.inventory.unshift(res.data)
             this.dialog = false
             this.$message('添加成功！', 'success')
           }).finally(() => { this.submitLoading = false })
       } else {
-        restAPI.patchOne(SUPPLIER, this.editedItem.id, {
+        restAPI.patchOne(inventory, this.editedItem.id, {
           name: this.editedItem.name,
           sort: this.editedItem.sort
         }).then(res => {
           this.initEdit()
-          this.supplier.splice(this.editedIndex, 1, res.data)
+          this.inventory.splice(this.editedIndex, 1, res.data)
           this.dialog = false
           this.$message('更新成功！', 'success')
         }).finally(() => { this.submitLoading = false })
