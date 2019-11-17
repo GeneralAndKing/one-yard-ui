@@ -125,14 +125,14 @@
                     v-select(v-model="editedItem.supplyMode", label="供应方式", :rules="rules.union(rules.requiredMessage('供应方式'))",
                       hint="供应方式", :items="supplyMode", :disabled="seeOne")
                   v-flex(xs12, md6, md4, v-if="editedItem.supplyMode === '采购'")
-                    v-text-field(v-model="editedItem.supplyNumber", label="采购数量", type="number", :rules="rules.union(rules.requiredMessage('采购数量'))",
-                      hint="当前物料采购数量", :disabled="seeOne")
+                    v-text-field(v-model="editedItem.supplyNumber", label="供应数量", type="number", :rules="rules.union(rules.requiredMessage('供应数量'))",
+                      hint="当前物料供应数量", :disabled="seeOne")
                   v-flex(xs12, md6, md4, v-if="editedItem.supplyMode === '采购'")
                     v-menu(v-model="purchaseMenu", :close-on-content-click="false", transition="scale-transition",
                       offset-y, max-width="290px", min-width="290px")
                       template(v-slot:activator="{ on }")
                         v-text-field(v-model="editedItem.purchaseDate", v-on="on", label="采购日期", readonly,
-                          :rules="rules.union(rules.required('需求日期'))", :disabled="seeOne")
+                          :rules="rules.union(rules.required('采购日期'))", :disabled="seeOne")
                       v-date-picker(v-model="purchaseDate", no-title, @input="purchaseMenu = false", locale="zh-cn")
                   v-flex(xs12, md6, md4)
                     v-select(v-model="editedItem.expectationSupplier", label="期望供应商", :items="suppliers",
@@ -220,7 +220,7 @@ export default {
       { text: '需求部门', value: 'departmentName', align: 'start' },
       { text: '需求日期', value: 'date', align: 'start' },
       { text: '供应方式', value: 'supplyMode', align: 'start' },
-      { text: '采购数量', value: 'supplyNumber', align: 'start' },
+      { text: '供应数量', value: 'supplyNumber', align: 'start' },
       { text: '采购日期', value: 'purchaseDate', align: 'start' },
       { text: '计划来源', value: 'planSource', align: 'start' },
       { text: '货源是否确定', value: 'isSourceGoods', align: 'start' },

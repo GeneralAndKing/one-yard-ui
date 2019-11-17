@@ -26,7 +26,7 @@ export default {
       { text: '计量单位', value: 'materialUnit', align: 'start' },
       { text: '需求日期', value: 'date', align: 'start' },
       { text: '采购方式', value: 'supplyMode', align: 'start' },
-      { text: '采购数量', value: 'supplyNumber', align: 'start' },
+      { text: '供应数量', value: 'supplyNumber', align: 'start' },
       { text: '采购日期', value: 'purchaseDate', align: 'start' },
       { text: '计划来源', value: 'planSource', align: 'start' }
     ]
