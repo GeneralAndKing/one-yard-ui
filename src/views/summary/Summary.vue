@@ -15,8 +15,9 @@
                   persistent-hint, :rules="rules.union(rules.required('月度'))")
               v-flex.my-4.text-right(sm12)
                 v-btn.mr-4(color="blue", outlined, @click="handleSelect") 查询
-                v-btn(color="success", outlined, @click="handleAdd", :disabled="desserts.length === 0") 添加
-        v-data-table(:headers="headers", :items="desserts", :loading="loading", loading-text="加载中......", style="width:100%",
+                v-btn.mr-4(color="success", outlined, @click="handleAdd", :disabled="desserts.length === 0") 添加
+                v-btn.mr-4(color="orange", outlined, @click="handleAnd", :disabled="selected.length === 0") 合并所选
+        v-data-table(v-model="selected", :headers="headers", :items="desserts", :loading="loading", loading-text="加载中......", style="width:100%",
           item-key="id", :mobile-breakpoint="800", no-data-text="暂无数据", no-results-text="暂无数据", show-select)
           template(v-slot:top)
             v-toolbar(flat)
@@ -207,6 +208,7 @@ export default {
     MoreBtn
   },
   data: () => ({
+    selected: [],
     submitLoading: false,
     purchaseName: '',
     revokeSnackbar: false,
@@ -417,6 +419,10 @@ export default {
           this.submitDialog = false
           this.$router.push({ name: 'procurementPlanManagement' })
         }).finally(() => { this.submitLoading = true })
+    },
+    handleAnd () {
+      // TODO：合并数据
+      console.log(this.selected)
     },
     print () {
       if (this.desserts.length < 1) {
