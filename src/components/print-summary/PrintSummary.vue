@@ -1,7 +1,7 @@
 <template lang="pug">
   v-container
-    h1.text-center.mt-12.one-title {{`${info}汇总表`}}
-    v-data-table.mt-5(:headers="headers", :items="desserts", disable-pagination, no-data-text="暂无数据",
+    h1.text-center.mt-12.one-title {{`${title}汇总表`}}
+    v-data-table.mt-5(:headers="headers", :items="list", disable-pagination, no-data-text="暂无数据",
       disable-sort, hide-default-footer)
       template(v-slot:item.materialCode="{ item }")
         span {{item.material.code}}
@@ -36,16 +36,19 @@ export default {
       { text: '货源是否确定', value: 'isSourceGoods', align: 'start' },
       { text: '期望供应商', value: 'expectationSupplier', align: 'start' },
       { text: '固定供应商', value: 'fixedSupplier', align: 'start' }
-    ]
+    ],
+    title: '',
+    list: ''
   }),
   created () {
     if (this._.endsWith(this.info, '00')) {
-      this.info = this.info.replace('00', ' 年度')
+      this.title = this.info.replace('00', ' 年度')
     } else {
-      this.info = this.info + ' 月度'
+      this.title = this.info + ' 月度'
     }
     let id = 1
-    this.desserts.forEach(d => {
+    this.list = this._.cloneDeep(this.desserts)
+    this.list.forEach(d => {
       d.id = id
       id += 1
     })
