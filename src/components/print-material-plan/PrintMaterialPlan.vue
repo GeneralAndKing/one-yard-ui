@@ -1,38 +1,29 @@
 <template lang="pug">
   v-container
-    v-card
-      v-card-title
-        v-responsive
-          v-layout(wrap)
-            v-flex.text-right(sm12)
-              .body-2.font-weight-thin 需求计划编码：{{materialPlan.id}}
-            v-flex.text-center(sm12)
-              .display-1 {{materialPlan.name}}
-            v-divider
-            v-flex.body-2.font-weight-thin.mt-8.pr-12.text-right(xs12, sm6)
-              span 需求部门：{{department.name}}
-            v-flex.body-2.font-weight-thin.mt-8.pl-8.text-left(xs12, sm6)
-              span 需求计划类型：{{materialPlan.planType}}
-            v-flex.body-2.mt-5.font-weight-thin.text-right 制单人：{{materialPlan.createUser}}
-      v-card-text
-        v-data-table(:headers="headers", :items="desserts", disable-pagination, no-data-text="暂无数据",
-          disable-sort, hide-default-footer)
-          template(v-slot:item.materialCode="{ item }")
-            span {{item.material.code}}
-          template(v-slot:item.materialName="{ item }")
-            span {{item.material.name}}
-          template(v-slot:item.materialTypeCode="{ item }")
-            span {{item.materialType.code}}
-          template(v-slot:item.materialTypeName="{ item }")
-            span {{item.materialType.name}}
-          template(v-slot:item.specifications="{ item }")
-            span {{item.material.specifications}}
-          template(v-slot:item.size="{ item }")
-            span {{item.material.size}}
-          template(v-slot:item.unit="{ item }")
-            span {{item.material.unit}}
-          template(v-slot:item.isSourceGoods="{ item }")
-            span {{item.isSourceGoods?'是':'否'}}
+    p.code 需求计划编码：{{materialPlan.id}}
+    h1.text-center.mt-12.one-title {{materialPlan.name}}
+    .mt-12.one-flex.one-flex-space-between
+      span.one-col-5.full-width.text-right(style="padding-right: 36px") 需求部门：{{department.name}}
+      span.one-col-5.full-width.text-left(style="padding-left: 36px") 需求计划类型：{{materialPlan.planType}}
+    .code.mt-5.text-right 制单人：{{materialPlan.createUser}}
+    v-data-table.mt-5(:headers="headers", :items="desserts", disable-pagination, no-data-text="暂无数据",
+      disable-sort, hide-default-footer)
+      template(v-slot:item.materialCode="{ item }")
+        span {{item.material.code}}
+      template(v-slot:item.materialName="{ item }")
+        span {{item.material.name}}
+      template(v-slot:item.materialTypeCode="{ item }")
+        span {{item.materialType.code}}
+      template(v-slot:item.materialTypeName="{ item }")
+        span {{item.materialType.name}}
+      template(v-slot:item.specifications="{ item }")
+        span {{item.material.specifications}}
+      template(v-slot:item.size="{ item }")
+        span {{item.material.size}}
+      template(v-slot:item.unit="{ item }")
+        span {{item.material.unit}}
+      template(v-slot:item.isSourceGoods="{ item }")
+        span {{item.isSourceGoods?'是':'否'}}
 </template>
 
 <script>
@@ -64,8 +55,6 @@ export default {
     ]
   }),
   created () {
-    console.log(this.materialPlan)
-    console.log(this.materialPlan.departmentId !== null)
     if (this.materialPlan.departmentId !== null) {
       restAPI.getOne('sysDepartment', this.materialPlan.departmentId)
         .then(res => {
@@ -85,4 +74,23 @@ export default {
 <style scoped lang="stylus">
 .full-width
   width 100%
+.code
+  text-align right
+  font-weight 300
+.text-center
+  text-align center
+.text-right
+  text-align right
+.text-left
+  text-align left
+.mt-12
+  margin-top 36px
+.mt-5
+  margin-top 10px
+.one-title
+  font-size 36px
+.one-flex
+  display flex
+.one-flex-space-between
+  justify-content space-between
 </style>

@@ -65,7 +65,7 @@ export default {
     search: '',
     loading: false,
     headers: [
-      { text: '仓库组织名称', value: 'name', align: 'left' },
+      { text: '仓库组织名称', value: 'name', align: 'start' },
       { text: '排序', value: 'sort' },
       { text: '创建时间', value: 'createTime' },
       { text: '创建用户', value: 'createUser' },

@@ -1,5 +1,13 @@
 <template lang="pug">
   v-card.one-procurement
+    v-speed-dial(v-model="fab", top, right, absolute, direction='bottom'
+      transition='slide-y-reverse-transition')
+      template(v-slot:activator)
+        v-btn(v-model="fab", color="blue darken-2", fab, dark)
+          v-icon(v-if="fab") mdi-close
+          v-icon(v-else) mdi-account-circle
+      v-btn(fab, small, color="green", dark, @click="print")
+        v-icon mdi-printer-settings
     v-card-title {{see ? '查看' : '编辑'}}
     v-card-text
       v-container.mb-4(grid-list-md)
@@ -173,6 +181,7 @@ export default {
     }
   },
   data: () => ({
+    fab: false,
     dayMenu: false,
     returnDescription: '',
     purchaseMenu: false,
@@ -402,6 +411,16 @@ export default {
           this.$message('退回成功！', 'success')
         }
         )
+    },
+    print () {
+      this.$router.push({
+        name: 'print',
+        params: {
+          model: this.procurementPlan,
+          flag: 'procurementPlan',
+          desserts: this.desserts
+        }
+      })
     }
   }
 }

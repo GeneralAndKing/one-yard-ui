@@ -169,7 +169,7 @@ export default {
       }
       restAPI.getRestLink(resourcesLink)
         .then(res => {
-          _this.materialPlan = res.data.content
+          _this.materialPlan = res.data.content.filter(d => !d.hasOwnProperty('relTargetType'))
         })
         .finally(() => { this.loading = false })
     },
@@ -250,6 +250,7 @@ export default {
      * 搜索过滤
      **/
     filterSearch (value, search, item) {
+      console.log(item.createTime)
       const condition = search.split('&')
       const createDate = item.createTime.split('&nbsp;&nbsp;')[0]
       if (condition[5] === '') condition[5] = new Date()

@@ -2,12 +2,16 @@
   v-container.one-print
     v-card
       v-card-title
-        v-spacer
-        v-btn.mr-3(outlined, @click="()=>{this.$router.back()}", color="warning") 返回
-        v-btn(outlined, @click="()=>{this.$print(this.$refs.print)}", color="success") 打印
+        v-alert(type="info", dense, outlined, width="100%") 建议使用
+          strong 横向
+          | 打印哦～
+          v-btn(outlined, @click="()=>{this.$router.back()}", color="warning",
+            style="position: absolute; right: 100px;") 返回
+          v-btn.mr-3(outlined, @click="()=>{this.$print(this.$refs.print)}", color="success",
+            style="position: absolute; right: 0;") 打印
       v-card-text(ref="print")
         print-material-plan(:materialPlan="model", v-if="flag==='materialPlan'")
-        print-procurement-plan(v-else-if="flag==='procurementPlan'")
+        print-procurement-plan(:procurementPlan="model", :desserts="desserts", v-else-if="flag==='procurementPlan'")
 </template>
 
 <script>
@@ -30,13 +34,6 @@ export default {
     this.model = this.$route.params.model
     this.desserts = this.$route.params.desserts
     this.flag = this.$route.params.flag
-    if (this.model === undefined || this.flag === undefined) {
-      this.$router.back()
-    } else {
-      // this.$nextTick(() => [
-      //   this.$print(this.$refs.print)
-      // ])
-    }
   }
 }
 </script>

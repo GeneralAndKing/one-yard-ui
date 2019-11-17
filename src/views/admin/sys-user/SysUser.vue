@@ -143,8 +143,8 @@ export default {
     dialog: false,
     headers: [
       { text: '头像', value: 'icon', sortable: false },
-      { text: '姓名', value: 'name', align: 'left' },
-      { text: '用户名', value: 'username', align: 'left' },
+      { text: '姓名', value: 'name', align: 'start' },
+      { text: '用户名', value: 'username', align: 'start' },
       { text: '邮箱', value: 'email' },
       { text: '手机号', value: 'phone' },
       { text: '排序', value: 'sort' },

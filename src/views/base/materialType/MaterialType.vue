@@ -67,8 +67,8 @@ export default {
     search: '',
     loading: false,
     headers: [
-      { text: '物料类别名称', value: 'name', align: 'left' },
-      { text: '物料类别编码', value: 'code', align: 'left' },
+      { text: '物料类别名称', value: 'name', align: 'start' },
+      { text: '物料类别编码', value: 'code', align: 'start' },
       { text: '排序', value: 'sort' },
       { text: '创建时间', value: 'createTime' },
       { text: '创建用户', value: 'createUser' },

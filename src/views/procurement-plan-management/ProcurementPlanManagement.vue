@@ -121,7 +121,6 @@ export default {
     ]
   }),
   created () {
-    this.loading = true
     this.initApproval()
     this.initTable()
   },
@@ -135,6 +134,7 @@ export default {
   },
   methods: {
     initTable () {
+      this.loading = true
       let _this = this
       let role = _this.$store.getters['auth/role']
       let resourcesLink = null
@@ -193,7 +193,7 @@ export default {
         .then(() => {
           this.revokeSnackbar = false
           this.$message('撤回成功！', 'success')
-          this.loading = true
+          this.desserts = []
           this.initTable()
         })
     },

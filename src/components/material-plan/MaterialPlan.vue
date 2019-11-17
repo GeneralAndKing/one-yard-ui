@@ -1,6 +1,6 @@
 <template lang="pug">
   v-container#one-plan-create
-    v-speed-dial(v-model="fab", top, right, absolute, direction='bottom',
+    v-speed-dial(v-model="fab", top, right, absolute, direction='bottom', v-if="seeId > 0"
       transition='slide-y-reverse-transition')
       template(v-slot:activator)
         v-btn(v-model="fab", color="blue darken-2", fab, dark)
@@ -8,10 +8,6 @@
           v-icon(v-else) mdi-account-circle
       v-btn(fab, small, color="green", dark, @click="print")
         v-icon mdi-printer-settings
-      v-btn(fab, small, color="indigo", dark)
-        v-icon mdi-plus
-      v-btn(fab, small, color="red", dark)
-        v-icon mdi-delete
     v-card
       v-card-title {{see?'计划表编辑':'计划表创建'}}
       v-card-text
