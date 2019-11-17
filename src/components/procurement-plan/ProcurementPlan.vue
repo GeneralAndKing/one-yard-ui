@@ -242,11 +242,12 @@ export default {
         this.procurementPlan.createTime = res.data.createTime.replace('T', ' ')
         this.procurementPlan.modifyTime = res.data.modifyTime.replace('T', ' ')
       })
-    restAPI.getRestLink(`procurementPlanInfo/search/infoById?id=${this.seeId}`)
+    procurementPlanAPI.getProcurementPlan(this.seeId)
       .then(res => {
-        this.desserts = res.data.content.filter(d => !d.hasOwnProperty('relTargetType'))
+        console.log(res)
+        this.desserts = res.data
         this.desserts.forEach(pm => {
-          if (pm.departmentName === null) pm.departmentName = '采购部门'
+          if (pm.departmentName === null) pm.departmentName = '采购部'
         })
       }).finally(() => { this.load.table = false })
   },
@@ -287,7 +288,7 @@ export default {
         materialTrackingCode: uuidv4(),
         isEnable: true,
         status: 'INIT',
-        planSource: '自己定制'
+        planSource: '自制计划'
       }
     },
     handleSave (status) {
