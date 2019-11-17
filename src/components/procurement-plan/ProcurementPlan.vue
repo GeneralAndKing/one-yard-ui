@@ -256,7 +256,8 @@ export default {
         console.log(res)
         this.desserts = res.data
         this.desserts.forEach(pm => {
-          if (pm.departmentName === null) pm.departmentName = '采购部'
+          if (pm.departmentName === null && pm.remark === null) pm.departmentName = '采购部'
+          if (pm.departmentName === null && pm.remark != null) pm.departmentName = pm.remark
         })
       }).finally(() => { this.load.table = false })
   },
