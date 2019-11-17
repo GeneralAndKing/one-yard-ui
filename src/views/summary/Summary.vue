@@ -67,6 +67,8 @@
                     v-flex(xs12, md6, md4)
                       v-text-field(v-model="editedItem.materialType.name", label="物料分类名称", disabled)
                     v-flex(xs12, md6, md4)
+                      v-text-field(v-model="editedItem.material.lowNumber", label="最低库存", disabled)
+                    v-flex(xs12, md6, md4)
                       v-text-field(v-model="editedItem.material.specifications", label="规格", disabled)
                     v-flex(xs12, md6, md4)
                       v-text-field(v-model="editedItem.material.size", label="型号", disabled)
@@ -104,6 +106,8 @@
                     v-flex(xs12, md6, md4)
                       v-select(v-model="editedItem.material", label="物料", :items="materials", item-text="name",
                         return-object, :rules="rules.union(rules.required('物料'))", no-data-text="未选择物料分类或当前分类下无物料信息")
+                    v-flex(xs12, md6, md4)
+                      v-text-field(v-model="editedItem.material.lowNumber", label="最低库存", :rules="rules.union(rules.required('最低库存'))", readonly)
                     v-flex(xs12, md6, md4)
                       v-text-field(v-model="editedItem.material.specifications", label="规格", :rules="rules.union(rules.required('规格'))",
                         readonly, hint="当前物料规格")

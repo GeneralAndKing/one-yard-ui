@@ -62,6 +62,9 @@
                     v-text-field(v-model="editedItem.number", label="库存数量", hint="当前物料库存数量", type="number",
                       :rules="rules.unionRules(rules.requiredRules('库存数量'))")
                   v-flex(sm12, md6)
+                    v-text-field(v-model="editedItem.lowNumber", label="最低库存", hint="当前物料最低库存", type="number",
+                      :rules="rules.unionRules(rules.requiredRules('最低库存'))")
+                  v-flex(sm12, md6)
                     v-text-field(v-model="editedItem.procurementLeadTime", label="物料采购提前期", hint="单位：天", type="number",
                       :rules="rules.unionRules(rules.requiredRules('物料采购提前期'))")
                   v-flex(sm12, md6)
@@ -99,6 +102,7 @@ export default {
       { text: '物料分类编码', value: 'materialTypeCode', align: 'start' },
       { text: '物料分类名称', value: 'materialTypeName', align: 'start' },
       { text: '规格', value: 'specifications', align: 'start' },
+      { text: '最低库存', value: 'lowNumber', align: 'start' },
       { text: '型号', value: 'size', align: 'start' },
       { text: '计量单位', value: 'unit', align: 'start' },
       { text: '库存数量', value: 'number', align: 'start' },
@@ -124,6 +128,7 @@ export default {
           }
         }
       })
+      console.log(this.material)
     } catch (e) {
       this.$message('数据初始化失败', 'error')
     } finally {
@@ -142,7 +147,8 @@ export default {
         procurementLeadTime: 1,
         size: '',
         number: 1,
-        unit: ''
+        unit: '',
+        lowNumber: 1
       }
     },
     formatDate (date) {
