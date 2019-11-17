@@ -184,6 +184,10 @@
             v-card-actions
               v-spacer
               v-btn(color="success", outlined, @click="handleSubmitOk") 生成
+      v-snackbar(v-model="revokeSnackbar", vertical, :timeout="0") 您确定退回此需求吗？
+        v-row.justify-end
+          v-btn.ma-3(color="error", text, @click="revokeSnackbar = false") 取消
+          v-btn.ma-3(color="primary", text, @click="revokeOk") 确定
       v-card-actions
         v-spacer
         v-btn(outlined, color="success", @click="handleSubmit", :disabled="desserts.length === 0") 保存并生成采购计划
@@ -205,6 +209,8 @@ export default {
   data: () => ({
     submitLoading: false,
     purchaseName: '',
+    revokeSnackbar: false,
+    revokeItem: {},
     submitDialog: false,
     purchaseMenu: false,
     needDate: new Date().toISOString().substr(0, 10),
@@ -340,7 +346,13 @@ export default {
       this.dialog = true
     },
     handleBack (item) {
-      //
+      this.revokeItem = this._.cloneDeep(item)
+      this.revokeSnackbar = true
+    },
+    revokeOk () {
+      // TODO: 退回
+      // this.revokeItem 退原数据
+      // revokeSnackbar 退回提示框显示
     },
     materialTypeSelect (item) {
       this.editedItem.material = {}
