@@ -103,6 +103,9 @@
                     v-select(v-model="editedItem.material", label="物料", :items="materials", @change="materialSelect", item-text="name",
                       return-object, :rules="rules.union(rules.required('物料'))", no-data-text="未选择物料分类或当前分类下无物料信息", :disabled="seeOne")
                   v-flex(xs12, md6, md4)
+                    v-text-field(v-model="editedItem.lowNumber", label="最低库存", :rules="rules.union(rules.required('最低库存'))",
+                      readonly, hint="当前物料最低库存", :disabled="seeOne")
+                  v-flex(xs12, md6, md4)
                     v-text-field(v-model="editedItem.specifications", label="规格", :rules="rules.union(rules.required('规格'))",
                       readonly, hint="当前物料规格", :disabled="seeOne")
                   v-flex(xs12, md6, md4)
@@ -317,6 +320,7 @@ export default {
       this.editedItem.specifications = null
       this.editedItem.size = null
       this.editedItem.unit = null
+      this.editedItem.lowNumber = null
       if (!this.seeOne) this.$refs.edit.resetValidation()
     },
     materialSelect (item) {
@@ -325,6 +329,7 @@ export default {
       this.editedItem.unit = item.unit
       this.editedItem.materialId = item.id
       this.editedItem.materialName = item.name
+      this.editedItem.lowNumber = item.lowNumber
       this.editedItem.materialCode = item.code
     },
     handleAdd () {
