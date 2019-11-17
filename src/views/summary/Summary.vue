@@ -185,10 +185,33 @@
             v-card-actions
               v-spacer
               v-btn(color="success", outlined, @click="handleSubmitOk") 生成
-      v-snackbar(v-model="revokeSnackbar", vertical, :timeout="0") 您确定退回此需求吗？
-        v-row.justify-end
-          v-btn.ma-3(color="error", text, @click="revokeSnackbar = false") 取消
-          v-btn.ma-3(color="primary", text, @click="revokeOk") 确定
+      v-dialog(v-model="returnDialog", max-width="500px", persistent)
+        v-card(tile)
+          v-card-title.pa-0
+            v-toolbar(flat, dark, color="primary")
+              v-toolbar-title 需求退回
+              v-spacer
+              v-btn(icon, dark, @click="handleCloseReturn")
+                v-icon mdi-close
+          v-card-text
+            v-radio-group(v-model="returnMethod")
+              template(v-slot:label)
+                div 请选择您的需求退回方式：
+              v-radio(:value="true")
+                template(v-slot:label)
+                  div 退回
+                    strong.success--text 物资所在需求计划
+              v-radio(:value="false")
+                template(v-slot:label)
+                  div 退回
+                    strong.primary--text 当前需求物资
+            v-textarea(v-model="returnDescription", label="审批意见", hint="请输入您的审批意见", :rules="rules.union(rules.required('审批意见'))",
+              rows="5", ref='description', auto-grow, counter)
+            br
+            strong 注意：此操作会立即生效且不可逆，请谨慎操作！
+          v-card-actions
+            v-spacer
+            v-btn(text, color="success", @click="revokeOk") 确认退回
       v-card-actions
         v-spacer
         v-btn(outlined, color="success", @click="handleSubmit", :disabled="desserts.length === 0") 保存并生成采购计划
@@ -198,9 +221,9 @@
 <script>
 import * as restAPI from '_api/rest'
 import * as procurementPlan from '_api/procurementPlan'
+import * as planMaterialAPI from '_api/planMaterial'
 import MoreBtn from '_c/more-btn/MoreBtn'
 import { requiredRules, unionRules, requiredMessageRules } from '_u/rule'
-import { mergeMaterialPlan } from '_api/planMaterial'
 const uuidv4 = require('uuid/v4')
 
 export default {
@@ -215,6 +238,11 @@ export default {
     revokeSnackbar: false,
     revokeItem: {},
     submitDialog: false,
+    returnDialog: false,
+    returnMethod: true,
+    returnDescription: '',
+    returnItem: {},
+    approval: {},
     purchaseMenu: false,
     needDate: new Date().toISOString().substr(0, 10),
     purchaseDate: new Date().toISOString().substr(0, 10),
@@ -271,6 +299,7 @@ export default {
       this.summary = res.data.content
     })
     this.initEditedItem()
+    this.initApproval()
   },
   computed: {
     searchValue () {
@@ -321,6 +350,14 @@ export default {
         supplyNumber: null
       }
     },
+    initApproval () {
+      this.approval = {
+        description: '',
+        result: null,
+        approvalType: '',
+        planId: -1
+      }
+    },
     handleSelect () {
       if (!this.$refs.select.validate()) return
       const result = this.summary.find(s => this.searchValue.includes(s.sort))
@@ -349,13 +386,34 @@ export default {
       this.dialog = true
     },
     handleBack (item) {
-      this.revokeItem = this._.cloneDeep(item)
-      this.revokeSnackbar = true
+      this.returnDialog = true
+      this.returnItem = this._.cloneDeep(item)
+    },
+    handleCloseReturn () {
+      this.returnDialog = false
+      this.returnItem = {}
+      this.returnDescription = ''
     },
     revokeOk () {
       // TODO: 退回
-      // this.revokeItem 退原数据
-      // revokeSnackbar 退回提示框显示
+      // this.returnItem 是退回的那一行数据
+      // this.returnMethod 是退回的方法，true：整个计划，false：当前物资
+      // this.returnDescription 是审批意见
+      // this.returnDialog 是提示框，true 为显示，false 是不显示
+      // 校验输入框
+      if (!this.$refs.description.validate(true)) return
+      this.approval.description = this.returnDescription
+      console.log(this.returnItem)
+      planMaterialAPI.backPlanOrMaterial(this.returnItem, this.approval, this.returnMethod)
+        .then(() => {
+          // 删除那一行数据
+          this.desserts.splice(this._.indexOf(this.desserts, this.returnItem), 1)
+          // 关闭并重置
+          this.handleCloseReturn()
+          this.$message('退回成功！', 'success')
+          this.initApproval()
+        }
+        )
     },
     materialTypeSelect (item) {
       this.editedItem.material = {}
@@ -422,7 +480,7 @@ export default {
         }).finally(() => { this.submitLoading = true })
     },
     handleAnd () {
-      // TODO：合并数据
+      // 合并数据
       if (this.selected.length < 2) {
         this.$message('数据少于2条,不能合并', 'error')
         return
@@ -433,7 +491,7 @@ export default {
       item['createTime'] = null
       item['createUser'] = null
       if (item['remark'] === null) {
-        item['remark'] = ''
+        item['remark'] = item['departmentName']
       }
       for (let i = 1; i < this.selected.length; i++) {
         if (item['materialId'] !== this.selected[i]['materialId']) {
@@ -445,7 +503,9 @@ export default {
           return
         }
         item['number'] += this.selected[i]['number']
-        item['remark'] += this.selected[i]['departmentName'] + ','
+        if (item['remark'].search(this.selected[i]['departmentName']) === -1) {
+          item['remark'] += ',' + this.selected[i]['departmentName']
+        }
         ids.push(this.selected[i]['id'])
         if (item['supplyNumber'] !== null) {
           if (this.selected[i]['supplyNumber'] !== null) {
@@ -454,7 +514,7 @@ export default {
             item['supplyNumber'] = null
           }
         }
-        mergeMaterialPlan(item, ids).then(res => {
+        planMaterialAPI.mergeMaterialPlan(item, ids).then(res => {
           for (let item in this.selected) {
             this.desserts.splice(this.desserts.indexOf(item), 1)
           }
