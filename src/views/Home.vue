@@ -46,10 +46,10 @@
                 :class="message.status === 'READ'? 'one-read' : 'one-un-read'")
                 v-list-item-content
                   v-list-item-title {{message.name}}
-                  v-list-item-subtitle {{message.message}}
+                  v-list-item-subtitle(v-html="message.message")
                   v-list-item-icon.ma-0.justify-end
-                    v-btn(text, small, color="primary", @click="handleInfo(message)") 详情
-                    v-btn(text, small, :color="message.status === 'READ'? 'error' : 'success'", @click="handleChange(message)") {{message.status === 'READ' ? '标为未读' : '标为已读'}}
+                    v-btn(outlined, small, color="primary", @click="handleInfo(message)") 详情
+                    v-btn(outlined, small, :color="message.status === 'READ'? 'error' : 'success'", @click="handleChange(message)") {{message.status === 'READ' ? '标为未读' : '标为已读'}}
                   span.overline.font-weight-thin.text-right {{message.createTime.replace('T', ' ')}}
               v-list-item(v-if="item.items.length === 0")
                 v-list-item-subtitle.text-center.body-1.font-weight-light 暂无通知信息
@@ -57,10 +57,10 @@
       v-card
         v-card-title.headline {{showMessage.name}}
         v-card-text
-          p {{showMessage.message}}
+          p(v-html="showMessage.message")
         v-card-actions
           v-spacer
-          v-btn(text, color="primary", @click="handleRead") 已读
+          v-btn(outlined, color="primary", @click="handleRead") 已读
     v-content
       v-scroll-y-transition(hide-on-leave, mode="out-in")
         router-view
