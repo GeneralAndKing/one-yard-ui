@@ -33,25 +33,25 @@
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="success", v-on="on", @click="handleSee(item)")
                     v-icon remove_red_eye
                 span 查看
-              v-tooltip(top, v-show="item.planStatus === 'FREE'")
+              v-tooltip(top, v-if="item.planStatus === 'FREE'")
                 template(v-slot:activator="{ on }")
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="teal darken-1", v-on="on",
                     v-per="Role.ROLE_PROCUREMENT_PLANER", @click="handleSubmit(item)")
                     v-icon mdi-format-wrap-inline
                 span 提交审批
-              v-tooltip(top, v-show="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
+              v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
                 template(v-slot:activator="{ on }")
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="primary", v-on="on",
                     v-per="Role.ROLE_PROCUREMENT_SUPERVISOR", @click="handleApproval(item)")
                     v-icon mdi-book-open-variant
                 span 审批
-              v-tooltip(top, v-show="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'PROCUREMENT_OK'")
+              v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'PROCUREMENT_OK'")
                 template(v-slot:activator="{ on }")
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="primary", v-on="on",
                     v-per="Role.ROLE_FINANCE", @click="handleApproval(item)")
                     v-icon mdi-book-open-variant
                 span 审批
-              v-tooltip(top, v-show="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
+              v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
                 template(v-slot:activator="{ on }")
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="warning",
                     v-per="Role.ROLE_PROCUREMENT_PLANER", @click="handleRevoke(item)", v-on="on")
@@ -166,6 +166,7 @@ export default {
           this.$message('提交审批成功！', 'success')
           this.loading = true
           this.initApproval()
+          this.desserts = []
           this.initTable()
         })
     },
@@ -254,6 +255,7 @@ export default {
         .then(() => {
           this.approval.show = false
           this.$message('审批成功！', 'success')
+          this.desserts = []
           this.initTable()
         })
     }

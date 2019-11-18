@@ -43,28 +43,28 @@
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="success", @click="handleSee(item)", v-on="on")
                     v-icon remove_red_eye
                 span 查看
-              v-tooltip(top, v-show="item.planStatus === 'FREE'")
+              v-tooltip(top, v-if="item.planStatus === 'FREE'")
                 template(v-slot:activator="{ on }")
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="success",
                     v-per="[Role.ROLE_PRODUCTION_PLANER,Role.ROLE_WORKSHOP_PLANER,Role.ROLE_WAREHOUSE_PLANER,Role.ROLE_FINANCE_PLANER]",
                     @click="handleSubmit(item)", v-on="on")
                     v-icon mdi-chevron-double-up
                 span 提交审批
-              v-tooltip(top, v-show="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
+              v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
                 template(v-slot:activator="{ on }")
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="primary",
                     v-per="[Role.ROLE_PRODUCTION_SUPERVISOR,Role.ROLE_WORKSHOP_SUPERVISOR,Role.ROLE_WAREHOUSE_SUPERVISOR,Role.ROLE_FINANCE_SUPERVISOR]",
                     @click="handleApproval(item)", v-on="on")
                     v-icon mdi-book-open-variant
                 span 审批
-              v-tooltip(top, v-show="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
+              v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
                 template(v-slot:activator="{ on }")
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="warning",
                     v-per="[Role.ROLE_PRODUCTION_PLANER,Role.ROLE_WORKSHOP_PLANER,Role.ROLE_WAREHOUSE_PLANER,Role.ROLE_FINANCE_PLANER]",
                     @click="handleRevoke(item)", v-on="on")
                     v-icon mdi-backup-restore
                 span 撤回
-              v-tooltip(top, v-show="item.planStatus === 'FREE'")
+              v-tooltip(top, v-if="item.planStatus === 'FREE'")
                 template(v-slot:activator="{ on }")
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="error",
                     v-per="[Role.ROLE_PRODUCTION_PLANER,Role.ROLE_WORKSHOP_PLANER,Role.ROLE_WAREHOUSE_PLANER,Role.ROLE_FINANCE_PLANER]",
@@ -205,6 +205,8 @@ export default {
         item.approvalStatus = 'APPROVAL_ING'
         item.planStatus = 'APPROVAL'
         this.$message('操作成功！', 'success')
+        this.materialPlan = []
+        this.initData()
       })
     },
     /**
@@ -225,6 +227,8 @@ export default {
       }).then(() => {
         this.$message('需求计划删除成功', 'success')
         item.planStatus = '已删除'
+        this.materialPlan = []
+        this.initData()
       })
     },
     handleRevoke (item) {
@@ -234,6 +238,7 @@ export default {
     revokeOk () {
       materialPlanAPI.withdrawApproval(this.revoke.id)
         .then(() => {
+          this.materialPlan = []
           this.initData()
           this.revokeSnackbar = false
           this.$message('撤回成功！', 'success')
@@ -244,6 +249,7 @@ export default {
      **/
     handleBack () {
       this.see = 0
+      this.materialPlan = []
       this.initData()
     },
     /**
@@ -279,6 +285,8 @@ export default {
           this.initData()
           this.approval.show = false
           this.$message('审批成功！', 'success')
+          this.materialPlan = []
+          this.initData()
         })
     },
     seeApproval () {
