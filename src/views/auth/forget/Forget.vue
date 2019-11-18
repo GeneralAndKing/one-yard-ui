@@ -130,14 +130,17 @@ export default {
         this.load = true
         oauthAPI.authForgetValidate({ email: this.email, code: this.code })
           .then(() => { _this.window += 1 })
-          .catch(error => { this.$refs.email.errorBucket = error.data.hasOwnProperty('error_description') ? [error.data.error_description] : ['验证失败'] })
+          .catch(error => { this.$refs.code.errorBucket = (error.response.data !== undefined && error.response.data.hasOwnProperty('error_description')) ? [error.response.data.error_description] : ['验证失败'] })
           .finally(() => { _this.load = false })
       } else if (this.window === 2 && this.$refs.form.validate(true)) {
         this.load = true
         oauthAPI.authForget({ email: this.email, code: this.code, password: this.password, rePassword: this.rePassword })
           .then(() => { this.$router.push({ name: 'home' }) })
-          .catch(error => { this.$refs.email.errorBucket = error.data.hasOwnProperty('error_description') ? [error.data.error_description] : ['修改失败'] })
-          .finally(() => { _this.load = false })
+          .catch(error => { this.$refs.password.errorBucket = (error.response.data !== undefined && error.response.data.hasOwnProperty('error_description')) ? [error.response.data.error_description] : ['修改失败'] })
+          .finally(() => {
+            _this.load = false
+            _this.$message('密码修改成功', 'success')
+          })
       }
     },
     previous () {

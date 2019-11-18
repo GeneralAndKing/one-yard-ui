@@ -29,6 +29,7 @@
 import CenterCard from '_c/center-card/CenterCard'
 import { emailRules, passwordRules } from '_u/rule'
 import * as oauthAPI from '_api/oauth'
+import { to } from '_u/util'
 
 export default {
   name: 'Login',
@@ -106,16 +107,11 @@ export default {
       } else {
         if (this.$refs['email'].validate(true)) {
           this.load = true
-          try {
-            let res = await oauthAPI.authExistEmail(_this.user)
-            if (res.data) _this.window += 1
-            else this.$refs['email'].errorBucket = ['账户不存在，请重新输入']
-          } catch (e) {
-            console.log(e)
-            _this.$refs['email'].errorBucket = e.data.hasOwnProperty('error_description') ? [e.data.error_description] : ['验证失败']
-          } finally {
-            _this.load = false
-          }
+          let res, err
+          [err, res] = await to(oauthAPI.authExistEmail(_this.user))
+          if (res !== null && res.data && err === null) _this.window += 1
+          else this.$refs['email'].errorBucket = ['账户不存在，请重新输入']
+          _this.load = false
         }
       }
     },

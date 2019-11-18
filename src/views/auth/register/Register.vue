@@ -10,8 +10,8 @@
         v-window-item(:key="0")
           v-card-text.px-0
             v-form(ref="account")
-                v-text-field(label="用户名", ref="username", type="text", outlined, counter="15", dense, validate-on-blur,
-                  :rules="rules.union(rules.required('用户名'))" v-model="account.username", @blur="handleExist('username')", autofocus)
+                v-text-field(label="用户名", ref="username", type="text", outlined, counter="18", dense, validate-on-blur,
+                  :rules="rules.union(rules.required('用户名'),rules.maxLength(18))" v-model="account.username", @blur="handleExist('username')", autofocus)
                   template(v-slot:append)
                     v-progress-circular(v-if="load.username", size="24", color="info", indeterminate)
                 v-text-field(label="电子邮件地址", ref="email", type="email", outlined, counter="25", validate-on-blur,
@@ -39,7 +39,7 @@
 <script>
 import * as oauthAPI from '_api/oauth'
 import CenterCard from '_c/center-card/CenterCard'
-import { emailRules, passwordRules, requiredRules, phoneRules, codeRules, unionRules } from '_u/rule'
+import { emailRules, passwordRules, requiredRules, phoneRules, codeRules, unionRules, maxLengthRules } from '_u/rule'
 export default {
   name: 'Register',
   components: {
@@ -90,7 +90,8 @@ export default {
             return '两次密码不相同'
           }
           return true
-        }
+        },
+        maxLength: maxLengthRules
       }
     }
   },
