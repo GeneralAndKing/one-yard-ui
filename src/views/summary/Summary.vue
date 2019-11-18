@@ -614,6 +614,7 @@ export default {
       let item = this._.cloneDeep(this.selected[0])
       let ids = [item['id']]
       item['id'] = null
+      item['planId'] = null
       item['createTime'] = null
       item['createUser'] = null
       if (item['remark'] === null) {
