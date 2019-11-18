@@ -64,6 +64,8 @@
               v-form(ref="edit")
                 v-container(grid-list-md)
                   v-layout(wrap, v-if="edit")
+                    v-flex(xs12, md6, lg3, v-if="editedItem.planId")
+                      v-text-field(v-model="editedItem.planId", label="计划编号", disabled)
                     v-flex(xs12, md6, lg3)
                       v-text-field(v-model="editedItem.material.code", label="物料编码", disabled)
                     v-flex(xs12, md6, lg3)
@@ -72,19 +74,6 @@
                       v-text-field(v-model="editedItem.materialType.code", label="物料分类编码", disabled)
                     v-flex(xs12, md6, lg3)
                       v-text-field(v-model="editedItem.materialType.name", label="物料分类名称", disabled)
-                    v-flex(xs12, md6, lg3)
-                      v-select(v-model="editedItem.supplyMode", label="供应方式", :rules="rules.union(rules.requiredMessage('供应方式'))",
-                        hint="供应方式", :items="supplyMode", )
-                    v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '采购'")
-                      v-text-field(v-model="editedItem.supplyNumber", label="供应数量", type="number", :rules="rules.union(rules.requiredMessage('供应数量'))",
-                        hint="当前物料供应数量", )
-                    v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '采购'")
-                      v-menu(v-model="purchaseMenu", :close-on-content-click="false", transition="scale-transition",
-                        offset-y, max-width="290px", min-width="290px")
-                        template(v-slot:activator="{ on }")
-                          v-text-field(v-model="editedItem.purchaseDate", v-on="on", label="采购日期", readonly,
-                            :rules="rules.union(rules.required('采购日期'))", )
-                        v-date-picker(v-model="purchaseDate", no-title, @input="purchaseMenu = false", locale="zh-cn")
                     v-flex(xs12, md6, lg3)
                       v-text-field(v-model="editedItem.material.lowNumber", label="最低库存", disabled)
                     v-flex(xs12, md6, lg3)
@@ -113,6 +102,19 @@
                       v-text-field(v-model="editedItem.fixedSupplier", label="固定供应商", disabled)
                     v-flex(xs12, md6, lg3)
                       v-text-field(v-model="editedItem.inventory", label="需求库存组织", disabled)
+                    v-flex(xs12, md6, lg3)
+                      v-select(v-model="editedItem.supplyMode", label="供应方式", :rules="rules.union(rules.requiredMessage('供应方式'))",
+                        hint="供应方式", :items="supplyMode", )
+                    v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '采购'")
+                      v-text-field(v-model="editedItem.supplyNumber", label="供应数量", type="number", :rules="rules.union(rules.requiredMessage('供应数量'))",
+                        hint="当前物料供应数量", )
+                    v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '采购'")
+                      v-menu(v-model="purchaseMenu", :close-on-content-click="false", transition="scale-transition",
+                        offset-y, max-width="290px", min-width="290px")
+                        template(v-slot:activator="{ on }")
+                          v-text-field(v-model="editedItem.purchaseDate", v-on="on", label="采购日期", readonly,
+                            :rules="rules.union(rules.required('采购日期'))", )
+                        v-date-picker(v-model="purchaseDate", no-title, @input="purchaseMenu = false", locale="zh-cn")
                   v-layout(wrap, v-if="!edit")
                     v-flex(xs12, md6, lg3)
                       v-select(v-model="editedItem.materialType", label="物料分类", :items="materialTypes", @change="materialTypeSelect",
@@ -120,19 +122,6 @@
                     v-flex(xs12, md6, lg3)
                       v-select(v-model="editedItem.material", label="物料", :items="materials", item-text="name",
                         return-object, :rules="rules.union(rules.required('物料'))", no-data-text="未选择物料分类或当前分类下无物料信息")
-                    v-flex(xs12, md6, lg3)
-                      v-select(v-model="editedItem.supplyMode", label="供应方式", :rules="rules.union(rules.requiredMessage('供应方式'))",
-                        hint="供应方式", :items="supplyMode")
-                    v-flex(xs12, md6, lg3)
-                      v-text-field(v-model="editedItem.number", label="供应数量", type="number", :rules="rules.union(rules.requiredMessage('供应数量'))",
-                        hint="值为需求数量，不可修改", readonly)
-                    v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '采购'")
-                      v-menu(v-model="purchaseMenu", :close-on-content-click="false", transition="scale-transition",
-                        offset-y, max-width="290px", min-width="290px")
-                        template(v-slot:activator="{ on }")
-                          v-text-field(v-model="editedItem.purchaseDate", v-on="on", label="采购日期", readonly,
-                            :rules="rules.union(rules.required('采购日期'))")
-                        v-date-picker(v-model="purchaseDate", no-title, @input="purchaseMenu = false", locale="zh-cn")
                     v-flex(xs12, md6, lg3)
                       v-text-field(v-model="editedItem.material.lowNumber", label="最低库存", :rules="rules.union(rules.required('最低库存'))", readonly)
                     v-flex(xs12, md6, lg3)
@@ -166,6 +155,19 @@
                     v-flex(xs12, md6, lg3)
                       v-text-field(:value="editedItem.materialTrackingCode", label="物料追踪码", readonly,
                         hint="此项为随机生成，请勿修改", persistent-hint)
+                    v-flex(xs12, md6, lg3)
+                      v-select(v-model="editedItem.supplyMode", label="供应方式", :rules="rules.union(rules.requiredMessage('供应方式'))",
+                        hint="供应方式", :items="supplyMode")
+                    v-flex(xs12, md6, lg3)
+                      v-text-field(v-model="editedItem.number", label="供应数量", type="number", :rules="rules.union(rules.requiredMessage('供应数量'))",
+                        hint="值为需求数量，不可修改", readonly)
+                    v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '采购'")
+                      v-menu(v-model="purchaseMenu", :close-on-content-click="false", transition="scale-transition",
+                        offset-y, max-width="290px", min-width="290px")
+                        template(v-slot:activator="{ on }")
+                          v-text-field(v-model="editedItem.purchaseDate", v-on="on", label="采购日期", readonly,
+                            :rules="rules.union(rules.required('采购日期'))")
+                        v-date-picker(v-model="purchaseDate", no-title, @input="purchaseMenu = false", locale="zh-cn")
                     v-flex(xs12, md6, lg3)
                       v-switch(v-model="editedItem.isSourceGoods", :label="`货源是否确定:${editedItem.isSourceGoods ? '是': '否'}`")
             v-card-actions
