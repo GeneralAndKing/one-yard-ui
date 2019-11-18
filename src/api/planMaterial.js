@@ -25,3 +25,11 @@ export const mergeMaterialPlan = (planMaterial, ids) => {
     data: { planMaterial, ids }
   })
 }
+
+export const splitMaterialPlan = (planMaterial, newPlanMaterials) => {
+  return axios.request({
+    url: `/${PLAN_MATERIAL}/splitMaterialPlan`,
+    method: 'post',
+    data: { planMaterial, newPlanMaterials }
+  })
+}
