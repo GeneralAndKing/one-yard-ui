@@ -158,7 +158,12 @@ export default {
           return
         }
         this.loading.right = true
-        await utils.to(oauthAPI.modifyPassword(this.passwords))
+        let err
+        [err] = await utils.to(oauthAPI.modifyPassword(this.passwords))
+        if (err) {
+          this.loading.right = false
+          return
+        }
         this.$message('密码修改成功', 'success')
         this.loading.right = false
       }
