@@ -37,9 +37,13 @@
               v-form(ref="form")
                 v-layout(wrap, style="width:100%")
                   v-flex(sm12)
-                    v-text-field(v-model="editedItem.name", label="物料类别名称" :rules="rules.unionRules(rules.requiredRules('物料类别名称'),rules.maxLengthRules(18))")
+                    v-text-field(v-model="editedItem.name", label="物料类别名称",
+                      :rules="rules.unionRules(rules.requiredRules('物料类别名称'),rules.maxLengthRules(18))")
+                      template(v-slot:append)
+                        v-progress-circular(v-if="loadCode", size="24", color="info", indeterminate)
                   v-flex(sm12)
-                    v-text-field(v-model="editedItem.code", label="物料类别编码" :rules="rules.unionRules(rules.requiredRules('物料类别编码'),rules.maxLengthRules(18))")
+                    v-text-field(v-model="editedItem.code", label="物料类别编码", @blur="handleExistCode", ref="code",
+                      :rules="rules.unionRules(rules.requiredRules('物料类别编码'),rules.maxLengthRules(18))")
                   v-flex(sm12)
                     v-text-field(v-model="editedItem.sort", label="排序", type="number" :rules="rules.unionRules(rules.requiredRules('排序'))")
           v-card-actions.justify-end
@@ -65,6 +69,7 @@ export default {
     editedItem: {},
     editedIndex: -1,
     search: '',
+    loadCode: false,
     loading: false,
     headers: [
       { text: '物料类别名称', value: 'name', align: 'start' },
@@ -146,6 +151,12 @@ export default {
           this.initEdit()
         }).finally(() => { this.submitLoading = false })
       }
+    },
+    handleExistCode () {
+      restAPI.getRestLink(`materialType/search/existsByCode?code=${this.editedItem.code}`)
+        .then(res => {
+          if (res.data) this.$refs.code.errorBucket = ['物料分类编码已存在，请重新输入']
+        }).finally(() => { this.loadCode = false })
     }
   }
 }

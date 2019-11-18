@@ -26,7 +26,7 @@
                 v-btn.mr-4(outlined, color="light-blue", @click="seeApproval") 查看审批中计划
                 v-btn.mr-4(outlined, color="light-blue", @click="seeNotApproval") 查看未提交计划
                 v-btn(outlined, color="light-blue", @click="seeReset") 重置条件
-          v-data-table(:headers="headers", :items="materialPlan", :loading="loading", loading-text="加载中......",
+          v-data-table.mt-8(:headers="headers", :items="materialPlan", :loading="loading", loading-text="加载中......",
             item-key="id", :mobile-breakpoint="900",  :custom-filter="filterSearch", :search="searchValue",
             no-data-text="暂无数据", no-results-text="暂无数据")
             template(v-slot:item.planStatus="{ item }")
@@ -250,7 +250,6 @@ export default {
      * 搜索过滤
      **/
     filterSearch (value, search, item) {
-      console.log(item.createTime)
       const condition = search.split('&')
       const createDate = item.createTime.split('&nbsp;&nbsp;')[0]
       if (condition[5] === '') condition[5] = new Date()
