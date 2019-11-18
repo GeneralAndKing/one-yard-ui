@@ -43,12 +43,12 @@
                 v-btn.mr-2(outlined, rounded, x-small, fab, color="warning", @click="handleBack(item)", v-on="on")
                   v-icon mdi-arrow-collapse-left
               span 需求退回
-            v-tooltip(top, v-if="!item.id")
+            v-tooltip(top, v-show="!item.id")
               template(v-slot:activator="{ on }")
                 v-btn.mr-2(outlined, rounded, x-small, fab, color="error", @click="handleDelete(item)", v-on="on")
                   v-icon mdi-delete
               span 删除
-            v-tooltip(top, v-if="item.id")
+            v-tooltip(top, v-show="item.id")
               template(v-slot:activator="{ on }")
                 v-btn.mr-2(outlined, rounded, x-small, fab, color="error", @click="handleSplit(item)", v-on="on")
                   v-icon mdi-cash-multiple

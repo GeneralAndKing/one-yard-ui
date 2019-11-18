@@ -63,6 +63,17 @@ export const MENUS = [
     name: '物料需求计划',
     children: [
       {
+        text: '需求计划创建',
+        to: { name: 'materialPlanCreate' },
+        icon: 'location_city',
+        auth: [
+          Role.ROLE_PRODUCTION_PLANER,
+          Role.ROLE_WAREHOUSE_PLANER,
+          Role.ROLE_FINANCE_PLANER,
+          Role.ROLE_WORKSHOP_PLANER
+        ]
+      },
+      {
         text: '需求计划管理',
         to: { name: 'materialPlanManagement' },
         icon: 'location_city',
@@ -76,22 +87,19 @@ export const MENUS = [
           Role.ROLE_WAREHOUSE_SUPERVISOR,
           Role.ROLE_PRODUCTION_SUPERVISOR
         ]
-      },
-      {
-        text: '需求计划创建',
-        to: { name: 'materialPlanCreate' },
-        icon: 'location_city',
-        auth: [
-          Role.ROLE_PRODUCTION_PLANER,
-          Role.ROLE_WAREHOUSE_PLANER,
-          Role.ROLE_FINANCE_PLANER,
-          Role.ROLE_WORKSHOP_PLANER
-        ]
       }
     ]
   }, {
     name: '采购计划',
     children: [
+      {
+        text: '物资供应方案',
+        to: { name: 'summary' },
+        icon: 'location_city',
+        auth: [
+          Role.ROLE_PROCUREMENT_PLANER
+        ]
+      },
       {
         text: '采购计划管理',
         to: { name: 'procurementPlanManagement' },
@@ -102,13 +110,6 @@ export const MENUS = [
           Role.ROLE_FINANCE,
           Role.ROLE_FINANCE_PLANER,
           Role.ROLE_FINANCE_SUPERVISOR
-        ]
-      }, {
-        text: '物资供应方案',
-        to: { name: 'summary' },
-        icon: 'location_city',
-        auth: [
-          Role.ROLE_PROCUREMENT_PLANER
         ]
       }
     ]
