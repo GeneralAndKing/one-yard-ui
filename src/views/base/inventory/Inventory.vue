@@ -126,20 +126,20 @@ export default {
       if (this.editedIndex === -1) {
         restAPI.addOne(inventory, this.editedItem)
           .then(res => {
-            this.initEdit()
             this.inventory.unshift(res.data)
             this.dialog = false
             this.$message('添加成功！', 'success')
+            this.initEdit()
           }).finally(() => { this.submitLoading = false })
       } else {
         restAPI.patchOne(inventory, this.editedItem.id, {
           name: this.editedItem.name,
           sort: this.editedItem.sort
         }).then(res => {
-          this.initEdit()
           this.inventory.splice(this.editedIndex, 1, res.data)
           this.dialog = false
           this.$message('更新成功！', 'success')
+          this.initEdit()
         }).finally(() => { this.submitLoading = false })
       }
     }

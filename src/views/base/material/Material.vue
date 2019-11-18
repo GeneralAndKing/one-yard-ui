@@ -188,21 +188,20 @@ export default {
       if (this.editedIndex === -1) {
         restAPI.addOne(material, this.editedItem)
           .then(res => {
-            this.initEdit()
             res.data.materialType = this._.find(this.materialType, { id: res.data.typeId })
             this.material.unshift(res.data)
             this.dialog = false
             this.$message('添加成功！', 'success')
+            this.initEdit()
           }).finally(() => { this.submitLoading = false })
       } else {
         restAPI.patchOne(material, this.editedItem.id, this.editedItem)
           .then(res => {
-            this.initEdit()
             res.data.materialType = this._.find(this.materialType, { id: res.data.typeId })
-            console.log(res.data)
             this.material.splice(this.editedIndex, 1, res.data)
             this.dialog = false
             this.$message('更新成功！', 'success')
+            this.initEdit()
           }).finally(() => { this.submitLoading = false })
       }
     },
