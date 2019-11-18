@@ -111,6 +111,7 @@ export default {
   methods: {
     handleExist (action) {
       if (!this.me[action] || !this.edit || this.editUser[action] === this.me[action]) return
+      if (this.desserts[this.editedIndex][action] === this.editedItem[action]) return
       this.load[action] = true
       oauthAPI.authExist({
         username: this.me[action],
