@@ -23,7 +23,7 @@
                     v-text-field(v-model="search.createTime", v-on="on", label="需求日期", readonly)
                   v-date-picker(v-model="search.createTime", no-title, @input="dayMenu = false", locale="zh-cn")
               v-flex.text-right(xs12)
-              v-btn.mr-4(outlined, color="light-blue",
+                v-btn.mr-4(outlined, color="light-blue",
                 v-per="[Role.ROLE_PRODUCTION_SUPERVISOR,Role.ROLE_WORKSHOP_SUPERVISOR,Role.ROLE_WAREHOUSE_SUPERVISOR,Role.ROLE_FINANCE_SUPERVISOR]",
                 @click="seeApprovalIng" ) 查看待审批计划
                 v-btn.mr-4(outlined, color="light-blue",
@@ -175,7 +175,7 @@ export default {
         resourcesLink = `materialDemandPlan/search/byCreateUser?createUser=${this.$store.getters['auth/username']}`
       }
       if (Role.isSupervisor(role)) {
-        resourcesLink = `materialDemandPlan/search/byDepartmentIds?departmentIds=${Role.supervisorList(role)}&approvalStatus=APPROVAL_ING&planStatus=APPROVAL`
+        resourcesLink = `materialDemandPlan/search/byDepartmentIds?departmentIds=${Role.supervisorList(role)}&approvalStatus=1&planStatus=1`
       }
       restAPI.getRestLink(resourcesLink)
         .then(res => {
@@ -308,7 +308,7 @@ export default {
       this.loading = true
       let _this = this
       let role = _this.$store.getters['auth/role']
-      restAPI.getRestLink(`materialDemandPlan/search/byDepartmentIds?departmentIds=${Role.supervisorList(role)}&approvalStatus=APPROVAL_OK&planStatus=SUMMARY`)
+      restAPI.getRestLink(`materialDemandPlan/search/byDepartmentIds?departmentIds=${Role.supervisorList(role)}&approvalStatus=2&planStatus=2`)
         .then(res => {
           _this.materialPlan = res.data.content.filter(d => !d.hasOwnProperty('relTargetType'))
         })
