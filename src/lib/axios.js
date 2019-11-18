@@ -5,9 +5,13 @@ import { baseURL } from '_api/config'
 import router from '_router/index'
 
 const refresh = async function () {
-  await store.dispatch('auth/refreshToken')
-  await store.dispatch('auth/checkToken')
-  await store.dispatch('auth/getMe')
+  try {
+    await store.dispatch('auth/refreshToken')
+    await store.dispatch('auth/checkToken')
+    await store.dispatch('auth/getMe')
+  } catch (e) {
+    console.log(e)
+  }
 }
 
 class HttpRequest {
@@ -56,6 +60,7 @@ class HttpRequest {
         // iView.Spin.show()
       }
       this.queue[url] = true
+      console.log('123')
       // 如果有token 在header里加authorization
       if (store.getters['auth/isAuth']) {
         let token = store.getters['auth/token']
