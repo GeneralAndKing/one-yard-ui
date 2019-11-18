@@ -42,17 +42,17 @@
               v-btn.mr-2(outlined, rounded, x-small, fab, color="success", v-on="on", @click="handleSee(item)")
                 v-icon remove_red_eye
             span 查看
-          v-tooltip(top, v-show="item.new || item.departmentName === '采购部门'")
+          v-tooltip(top, v-if="item.new || item.departmentName === '采购部门'")
             template(v-slot:activator="{ on }")
               v-btn.mr-2(outlined, rounded, x-small, fab, color="success", @click="handleEdit(item)", v-on="on", :disabled="see")
                 v-icon mdi-pencil
             span 编辑
-          v-tooltip(top, v-show="item.new")
+          v-tooltip(top, v-if="item.new")
             template(v-slot:activator="{ on }")
               v-btn.mr-2(outlined, rounded, x-small, fab, color="warning", @click="handleDelete(item)", v-on="on", :disabled="see")
                 v-icon delete
             span 删除
-          v-tooltip(top, v-show="item.departmentName !== '采购部门'")
+          v-tooltip(top, v-if="item.departmentName !== '采购部门'")
             template(v-slot:activator="{ on }")
               v-btn.mr-2(outlined, rounded, x-small, fab, color="error", @click="handleReturn(item)", v-on="on", :disabled="see")
                 v-icon mdi-backburger

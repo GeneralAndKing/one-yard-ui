@@ -23,8 +23,18 @@
                     v-text-field(v-model="search.createTime", v-on="on", label="需求日期", readonly)
                   v-date-picker(v-model="search.createTime", no-title, @input="dayMenu = false", locale="zh-cn")
               v-flex.text-right(xs12)
-                v-btn.mr-4(outlined, color="light-blue", @click="seeApproval") 查看审批中计划
-                v-btn.mr-4(outlined, color="light-blue", @click="seeNotApproval") 查看未提交计划
+                v-btn.mr-4(outlined, color="light-blue",
+                v-per="[Role.ROLE_PRODUCTION_SUPERVISOR,Role.ROLE_WORKSHOP_SUPERVISOR,Role.ROLE_WAREHOUSE_SUPERVISOR,Role.ROLE_FINANCE_SUPERVISOR]",
+                @click="seeApprovalIng" ) 查看待审批计划
+                v-btn.mr-4(outlined, color="light-blue",
+                  v-per="[Role.ROLE_PRODUCTION_SUPERVISOR,Role.ROLE_WORKSHOP_SUPERVISOR,Role.ROLE_WAREHOUSE_SUPERVISOR,Role.ROLE_FINANCE_SUPERVISOR]",
+                  @click="seeApprovalEd" ) 查看已审批计划
+                v-btn.mr-4(outlined, color="light-blue",
+                  v-per="[Role.ROLE_PRODUCTION_PLANER,Role.ROLE_WORKSHOP_PLANER,Role.ROLE_WAREHOUSE_PLANER,Role.ROLE_FINANCE_PLANER]",
+                  @click="seeApproval") 查看审批中计划
+                v-btn.mr-4(outlined, color="light-blue",
+                  v-per="[Role.ROLE_PRODUCTION_PLANER,Role.ROLE_WORKSHOP_PLANER,Role.ROLE_WAREHOUSE_PLANER,Role.ROLE_FINANCE_PLANER]",
+                  @click="seeNotApproval") 查看未提交计划
                 v-btn(outlined, color="light-blue", @click="seeReset") 重置条件
           v-data-table.mt-8(:headers="headers", :items="materialPlan", :loading="loading", loading-text="加载中......",
             item-key="id", :mobile-breakpoint="900",  :custom-filter="filterSearch", :search="searchValue",
@@ -43,28 +53,28 @@
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="success", @click="handleSee(item)", v-on="on")
                     v-icon remove_red_eye
                 span 查看
-              v-tooltip(top, v-show="item.planStatus === 'FREE'")
+              v-tooltip(top, v-if="item.planStatus === 'FREE'")
                 template(v-slot:activator="{ on }")
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="success",
                     v-per="[Role.ROLE_PRODUCTION_PLANER,Role.ROLE_WORKSHOP_PLANER,Role.ROLE_WAREHOUSE_PLANER,Role.ROLE_FINANCE_PLANER]",
                     @click="handleSubmit(item)", v-on="on")
                     v-icon mdi-chevron-double-up
                 span 提交审批
-              v-tooltip(top, v-show="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
+              v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
                 template(v-slot:activator="{ on }")
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="primary",
                     v-per="[Role.ROLE_PRODUCTION_SUPERVISOR,Role.ROLE_WORKSHOP_SUPERVISOR,Role.ROLE_WAREHOUSE_SUPERVISOR,Role.ROLE_FINANCE_SUPERVISOR]",
                     @click="handleApproval(item)", v-on="on")
                     v-icon mdi-book-open-variant
                 span 审批
-              v-tooltip(top, v-show="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
+              v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
                 template(v-slot:activator="{ on }")
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="warning",
                     v-per="[Role.ROLE_PRODUCTION_PLANER,Role.ROLE_WORKSHOP_PLANER,Role.ROLE_WAREHOUSE_PLANER,Role.ROLE_FINANCE_PLANER]",
                     @click="handleRevoke(item)", v-on="on")
                     v-icon mdi-backup-restore
                 span 撤回
-              v-tooltip(top, v-show="item.planStatus === 'FREE'")
+              v-tooltip(top, v-if="item.planStatus === 'FREE'")
                 template(v-slot:activator="{ on }")
                   v-btn.mr-2(outlined, rounded, x-small, fab, color="error",
                     v-per="[Role.ROLE_PRODUCTION_PLANER,Role.ROLE_WORKSHOP_PLANER,Role.ROLE_WAREHOUSE_PLANER,Role.ROLE_FINANCE_PLANER]",
@@ -165,7 +175,7 @@ export default {
         resourcesLink = `materialDemandPlan/search/byCreateUser?createUser=${this.$store.getters['auth/username']}`
       }
       if (Role.isSupervisor(role)) {
-        resourcesLink = `materialDemandPlan/search/byDepartmentIds?departmentIds=${Role.supervisorList(role)}&approvalStatus=APPROVAL_ING&planStatus=APPROVAL`
+        resourcesLink = `materialDemandPlan/search/byDepartmentIds?departmentIds=${Role.supervisorList(role)}&approvalStatus=1&planStatus=1`
       }
       restAPI.getRestLink(resourcesLink)
         .then(res => {
@@ -205,6 +215,8 @@ export default {
         item.approvalStatus = 'APPROVAL_ING'
         item.planStatus = 'APPROVAL'
         this.$message('操作成功！', 'success')
+        this.materialPlan = []
+        this.initData()
       })
     },
     /**
@@ -225,6 +237,8 @@ export default {
       }).then(() => {
         this.$message('需求计划删除成功', 'success')
         item.planStatus = '已删除'
+        this.materialPlan = []
+        this.initData()
       })
     },
     handleRevoke (item) {
@@ -234,6 +248,7 @@ export default {
     revokeOk () {
       materialPlanAPI.withdrawApproval(this.revoke.id)
         .then(() => {
+          this.materialPlan = []
           this.initData()
           this.revokeSnackbar = false
           this.$message('撤回成功！', 'success')
@@ -244,6 +259,7 @@ export default {
      **/
     handleBack () {
       this.see = 0
+      this.materialPlan = []
       this.initData()
     },
     /**
@@ -271,7 +287,7 @@ export default {
       this.approval.planId = this.approval.plan.id
       this.approval.plan.createTime = this.approval.plan.createTime.replace('&nbsp;&nbsp;', 'T')
       this.approval.approvalType = 'MATERIAL_APPROVAL'
-      if (this.approval.plan.planType === '紧急计划' && result === '审批通过') {
+      if (this.approval.plan.planType === '紧急计划' && result === '部门主管审批通过') {
         this.approval.plan.planStatus = 'FINALLY'
       }
       materialPlanAPI.approvalMaterialPlan(this.approval.plan, this.approval)
@@ -279,7 +295,24 @@ export default {
           this.initData()
           this.approval.show = false
           this.$message('审批成功！', 'success')
+          this.materialPlan = []
+          this.initData()
         })
+    },
+    seeApprovalIng () {
+      this.materialPlan = []
+      this.initData()
+    },
+    seeApprovalEd () {
+      this.materialPlan = []
+      this.loading = true
+      let _this = this
+      let role = _this.$store.getters['auth/role']
+      restAPI.getRestLink(`materialDemandPlan/search/byDepartmentIds?departmentIds=${Role.supervisorList(role)}&approvalStatus=2&planStatus=2`)
+        .then(res => {
+          _this.materialPlan = res.data.content.filter(d => !d.hasOwnProperty('relTargetType'))
+        })
+        .finally(() => { this.loading = false })
     },
     seeApproval () {
       this.search.planStatus = 'APPROVAL'
@@ -287,7 +320,6 @@ export default {
     },
     seeNotApproval () {
       this.search.planStatus = 'FREE'
-      this.search.approvalStatus = 'NO_SUBMIT'
     },
     seeReset () {
       this.search = {
