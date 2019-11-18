@@ -47,8 +47,10 @@
                     v-text-field(v-model="editedItem.name", label="物料名称",
                       :rules="rules.unionRules(rules.requiredRules('物料名称'),rules.maxLengthRules(18))")
                   v-flex(sm12, md6)
-                    v-text-field(v-model="editedItem.code", label="物料编码",
+                    v-text-field(v-model="editedItem.code", label="物料编码", @blur="handleExistCode", ref="code",
                       :rules="rules.unionRules(rules.requiredRules('物料编码'),rules.maxLengthRules(18))")
+                      template(v-slot:append)
+                        v-progress-circular(v-if="loadCode", size="24", color="info", indeterminate)
                   v-flex(sm12, md6)
                     v-text-field(v-model="editedItem.specifications", label="规格", hint="当前物料规格",
                       :rules="rules.unionRules(rules.requiredRules('规格'))")
@@ -95,6 +97,7 @@ export default {
     dialog: false,
     editedItem: {},
     editedIndex: -1,
+    loadCode: false,
     materialType: [],
     headers: [
       { text: '物料名称', value: 'name', align: 'start' },
@@ -175,6 +178,7 @@ export default {
     handleClose () {
       this.initEdit()
       this.dialog = false
+      this.$refs.form.resetValidation()
     },
     handleReset () {
       this.editedItem = this._.cloneDeep(this.material[this.editedIndex])
@@ -207,6 +211,12 @@ export default {
     },
     materialTypeSelect () {
       this.editedItem.typeId = this.editedItem.materialType.id
+    },
+    handleExistCode () {
+      restAPI.getRestLink(`material/search/existsByCode?code=${this.editedItem.code}`)
+        .then(res => {
+          if (res.data) this.$refs.code.errorBucket = ['物料编码已存在，请重新输入']
+        }).finally(() => { this.loadCode = false })
     }
   }
 }

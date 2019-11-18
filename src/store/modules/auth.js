@@ -86,7 +86,6 @@ const actions = {
     return new Promise(async (resolve, reject) => {
       let err, res
       [err, res] = await to(oauthAPI.checkToken(state.token.access_token))
-      console.log('access')
       if (err) {
         commit('SET_AUTH', null)
         return reject(err.response)
