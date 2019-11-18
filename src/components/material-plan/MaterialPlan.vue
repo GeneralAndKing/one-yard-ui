@@ -11,7 +11,7 @@
             v-layout(wrap, style="width:100%")
               v-flex(sm12, md6, lg4)
                 v-text-field(v-model="materialPlan.name", ref="name", label="需求计划名称", :disabled='see',
-                  :rules="rules.union(rules.required('需求计划名称'))")
+                  :rules="rules.union(rules.required('需求计划名称'),rules.maxLength(50))")
               v-flex(sm12, md6, lg4)
                 v-select(v-model="materialPlan.planType", :items="planTypes", ref="planTypes", :disabled='see',
                   label="需求计划类型" :rules="rules.union(rules.required('需求计划类型'))")
@@ -20,7 +20,7 @@
                   item-text="name", item-value="id", label="需求部门" :rules="rules.union(rules.required('需求部门'))")
               v-flex(sm12, md6, lg4)
                 v-text-field(v-model="materialPlan.needPeople", ref="needPeople", label="需求人员",  :disabled='see',
-                  :rules="rules.union(rules.required('需求人员'))")
+                  :rules="rules.union(rules.required('需求人员'),rules.maxLength(18))")
               v-flex(xs12, md6, lg4, v-if="materialPlan.planType === '月度计划' || materialPlan.planType === '订单型需求计划'")
                 v-menu(ref="month", :close-on-content-click="false", :return-value.sync="date", transition="scale-transition",
                   v-model="menu", max-width="290px", min-width="290px",)
@@ -35,7 +35,7 @@
                 v-select(v-model="materialPlan.month", :items="years", ref="month", :readonly='see', :disabled="see",
                   label="需求年份" :rules="rules.union(rules.required('需求年份'))")
               v-flex(sm12, md6, lg4)
-                v-text-field(v-model="materialPlan.remark", label="备注", :disabled='see')
+                v-text-field(v-model="materialPlan.remark", label="备注", :disabled='see' :rules="rules.union(rules.maxLength(255))")
               v-flex(sm12, md6, lg4)
                 v-switch(v-model="materialPlan.isBudgetPlan", :disabled='see')
                   template(v-slot:label)
@@ -124,7 +124,7 @@
                                       v-text-field(v-model="editedItem.unit", label="计量单位", :rules="rules.union(rules.required('计量单位'))",
                                         readonly, hint="当前物料计量单位")
                                     v-flex(xs12, md6, md4)
-                                      v-text-field(v-model="editedItem.number", label="需求数量", type="number", :rules="rules.union(rules.requiredMessage('需求数量'))",
+                                      v-text-field(v-model="editedItem.number", label="需求数量", type="number", :rules="rules.union(rules.requiredMessage('需求数量'),rules.maxLength(10))",
                                         hint="当前物料所需数量")
                                     v-flex(xs12, md6, md4)
                                       v-menu(v-model="dayMenu", :close-on-content-click="false", transition="scale-transition",
@@ -177,7 +177,7 @@
 </template>
 
 <script>
-import { requiredRules, unionRules, requiredMessageRules } from '_u/rule'
+import { requiredRules, unionRules, requiredMessageRules, maxLengthRules } from '_u/rule'
 import MoreBtn from '_c/more-btn/MoreBtn'
 import { planTypesSelect } from '_u/status'
 import * as materialPlanAPI from '_api/materialPlan'
@@ -207,7 +207,8 @@ export default {
     rules: {
       required: requiredRules,
       requiredMessage: requiredMessageRules,
-      union: unionRules
+      union: unionRules,
+      maxLength: maxLengthRules
     },
     date: new Date().toISOString().substr(0, 7),
     needDate: new Date().toISOString().substr(0, 10),

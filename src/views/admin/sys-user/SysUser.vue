@@ -50,14 +50,14 @@
                             v-file-input.d-none(accept="image/*", label="上传头像", prepend-icon="", ref="icon", @change="uploadAvatar")
                           v-flex(xs12, sm6, md4)
                             v-text-field(v-model="editedItem.username", counter="18", label="用户名", validate-on-blur,
-                              :rules="rules.union(rules.required('用户名'))", ref="username", @blur="handleExist('username')")
+                              :rules="rules.union(rules.required('用户名'),rules.maxLength(18))", ref="username", @blur="handleExist('username')")
                               template(v-slot:append)
                                 v-progress-circular(v-if="load.username", size="24", color="info", indeterminate)
                           v-flex(xs12, sm6, md4)
                             v-text-field(v-model="editedItem.name", counter="18", label="姓名", validate-on-blur,
-                              :rules="rules.union(rules.required('姓名'))", ref="name")
+                              :rules="rules.union(rules.required('姓名'),rules.maxLength(18))", ref="name")
                           v-flex(xs12, sm6, md4)
-                            v-text-field(type="password", v-model="editedItem.password", counter="60", label="密码", validate-on-blur,
+                            v-text-field(type="password", v-model="editedItem.password", counter="18", label="密码", validate-on-blur,
                               :rules="rules.password", ref="password")
                               template(v-slot:append)
                                 v-progress-circular(v-if="load.email", size="24", color="info", indeterminate)
@@ -75,7 +75,7 @@
                             v-select(v-model="editedItem.roles", label="角色", :items="roles", item-text="description", return-object, chips, multiple,
                               :rules="rules.union(rules.required('角色'))", deletable-chips)
                           v-flex(xs12, sm12)
-                            v-textarea(label="备注", v-model="editedItem.remark", counter="250")
+                            v-textarea(label="备注", v-model="editedItem.remark", counter="250" :rules="rules.union(rules.maxLength(250))")
                   v-card-actions.text-right.justify-end
                     v-btn.darken-1(text, @click="close", dark, color='error') 取消
                     v-btn.darken-1(text, @click="save", dark, color='success') 保存
@@ -83,7 +83,7 @@
 
 <script>
 import TableCardSheet from '_c/table-card-sheet'
-import { emailRules, passwordRules, requiredRules, unionRules, phoneRules, imageRequiredRules } from '_u/rule'
+import { emailRules, passwordRules, requiredRules, unionRules, phoneRules, imageRequiredRules, maxLengthRules } from '_u/rule'
 import * as restAPI from '_api/rest'
 import * as oauthAPI from '_api/oauth'
 import * as sysUserAPI from '_api/sysUser'
@@ -159,7 +159,8 @@ export default {
       required: requiredRules,
       union: unionRules,
       phone: phoneRules,
-      image: imageRequiredRules
+      image: imageRequiredRules,
+      maxLength: maxLengthRules
     }
   }),
   computed: {
