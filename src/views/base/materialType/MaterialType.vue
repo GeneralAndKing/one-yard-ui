@@ -138,7 +138,8 @@ export default {
       } else {
         restAPI.patchOne(materialType, this.editedItem.id, {
           name: this.editedItem.name,
-          sort: this.editedItem.sort
+          sort: this.editedItem.sort,
+          code: this.editedItem.code
         }).then(res => {
           this.materialType.splice(this.editedIndex, 1, res.data)
           this.dialog = false
