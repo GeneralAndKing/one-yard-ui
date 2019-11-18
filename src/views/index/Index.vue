@@ -56,7 +56,7 @@ import { Role } from '_u/role'
 export default {
   name: 'Index',
   created () {
-    if (this.$store.getters['auth/role'].includes(Role.ROLE_ACCESS)) {
+    if (this.$store.getters['auth/role'].length === 1 && this.$store.getters['auth/role'].includes(Role.ROLE_ACCESS)) {
       this.$message({ content: '你当前为游客权限,请联系管理员', timeout: 0, x: 'left' })
     }
   }

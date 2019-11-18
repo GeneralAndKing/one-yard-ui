@@ -27,7 +27,10 @@ const getters = {
   },
   isTokenExpired: state => {
     /* 从localStorage中取出token过期时间 */
-    if (state.auth === null) {
+    if (state.token === null) {
+      return false
+    }
+    if (state.auth === null || state.me === null) {
       return true
     }
 
@@ -73,10 +76,8 @@ const actions = {
     return new Promise(async (resolve, reject) => {
       let err, res
       [err, res] = await to(oauthAPI.oauthToken(formUser))
-      if (res === null) return reject(new Error('请求失败'))
       if (err) return reject(err.response)
       let token = res.data
-      if (token === null) return reject(new Error('请求失败'))
       commit('SET_TOKEN', token)
       resolve(token) // 接口请求完成
     })
@@ -85,24 +86,35 @@ const actions = {
     return new Promise(async (resolve, reject) => {
       let err, res
       [err, res] = await to(oauthAPI.checkToken(state.token.access_token))
-      if (res === null) return reject(new Error('请求失败'))
-      if (err) return reject(err.response)
+      console.log('access')
+      if (err) {
+        commit('SET_AUTH', null)
+        return reject(err.response)
+      }
       commit('SET_AUTH', res.data)
       resolve(res.data) // 接口请求完成
     })
   },
   getMe ({ commit }) {
     return new Promise(async (resolve, reject) => {
-      const res = await oauthAPI.getMe()
-      if (res === null) return reject(new Error('请求失败'))
+      let err, res
+      [err, res] = await to(oauthAPI.getMe())
+      if (err) {
+        commit('SET_ME', null)
+        return reject(err.response)
+      }
       commit('SET_ME', res.data.me)
       resolve(res.data) // 接口请求完成
     })
   },
   refreshToken ({ commit, dispatch, state }) {
     return new Promise(async (resolve, reject) => {
-      const res = await oauthAPI.refreshToken(state.token.refresh_token)
-      if (res === null) return reject(new Error('请求失败'))
+      let err, res
+      [err, res] = await to(oauthAPI.refreshToken(state.token.refresh_token))
+      if (err) {
+        commit('SET_TOKEN', null)
+        return reject(err.response)
+      }
       commit('SET_TOKEN', res.data)
       dispatch('checkToken')
       resolve(res.data) // 接口请求完成

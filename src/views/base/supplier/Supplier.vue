@@ -37,7 +37,7 @@
             v-form(ref="form")
               v-layout(wrap, style="width:100%")
                 v-flex(sm12)
-                  v-text-field(v-model="editedItem.name", label="需求计划名称" :rules="rules.unionRules(rules.requiredRules('需求计划名称'),rules.maxLengthRules(18))")
+                  v-text-field(v-model="editedItem.name", label="供应商名称" :rules="rules.unionRules(rules.requiredRules('供应商名称'),rules.maxLengthRules(18))")
                 v-flex(sm12)
                   v-text-field(v-model="editedItem.sort", label="排序", type="number" :rules="rules.unionRules(rules.requiredRules('排序'))")
         v-card-actions.justify-end
