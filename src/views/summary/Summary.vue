@@ -280,9 +280,11 @@
                 v-slider(
                   v-model="editedItem.newNumber"
                   :max="editedItem.number-1"
-                  :min="1")
+                  :min="1"
+                  track-color="red"
+                  thumb-label="always")
                   template(v-slot:prepend)
-                    v-text-field(value="editedItem.newNumber" type="number" label="拆分物料(1)")
+                    v-text-field(:value="editedItem.newNumber" type="number" label="拆分物料(1)" disabled)
                   template(v-slot:append)
                     v-text-field(type="number" label="拆分物料(2)" disabled :value="editedItem.number-editedItem.newNumber")
       v-snackbar(v-model="revokeSnackbar", vertical, :timeout="0") 您确定退回此需求吗？
