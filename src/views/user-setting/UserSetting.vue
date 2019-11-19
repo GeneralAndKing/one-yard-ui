@@ -31,8 +31,8 @@
       v-flex.pa-2(xs12, md4)
         v-card.mt-5.mb-3
           .one-avatar.text-center
-            v-avatar.mx-auto.one-avatar-img.elevation-18(height="130px", width="130px")
-              v-img(:src="me.icon", lazy-src="http://q0zlaui5t.bkt.clouddn.com/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195")
+            v-avatar.mx-auto.elevation-18(height="130px", width="130px")
+              v-img.one-avatar-img(:src="me.icon", lazy-src="http://q0zlaui5t.bkt.clouddn.com/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195")
           v-flex.text-center(xs12, sm12)
             v-btn(color="light-blue", dark, @click="handleUpload", :loading="loading.upload") 上传头像
             v-file-input.d-none(accept="image/*", label="上传头像", prepend-icon="", ref="icon", @change="uploadAvatar")
@@ -194,7 +194,7 @@ export default {
   top -54px
   position relative
 .one-avatar-img
-  transition transform 1s ease-in
+  transition transform 0.5s ease-in
   &:hover
     -moz-transform rotate(360deg)
     -o-transform rotate(360deg)
