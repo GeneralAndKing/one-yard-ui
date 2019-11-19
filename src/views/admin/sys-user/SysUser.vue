@@ -253,7 +253,7 @@ export default {
       }
     },
     handleExist (action) {
-      if (!this.editedItem[action]) return
+      if ((!this.editedItem[action]) || this.editedIndex === -1) return
       if (this.desserts[this.editedIndex][action] === this.editedItem[action]) return
       this.load[action] = true
       oauthAPI.authExist({

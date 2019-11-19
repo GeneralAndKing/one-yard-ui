@@ -102,13 +102,30 @@ export default {
           this.loading = true
           oauthAPI.authRegisterEmail(this.account)
             .then(() => { this.window = this.window + 1 })
+            .catch(error => {
+              let message = '注册错误'
+              if (error.response.data !== undefined && (error.response.data.hasOwnProperty('error') || error.response.data.hasOwnProperty('error_description'))) {
+                message = error.response.data.error + ': ' + error.response.data.error_description
+              }
+              this.$message(message, 'error')
+            })
             .finally(() => { this.loading = false })
         }
       } else if (this.window === 1) {
         this.loading = true
         if (this.$refs.code.validate(true)) {
           oauthAPI.authRegister(this.account)
-            .then(() => { this.$router.push({ name: 'login' }) })
+            .then(() => {
+              this.$message('注册成功', 'success')
+              this.$router.push({ name: 'login' })
+            })
+            .catch(error => {
+              if (error.response.data !== undefined && (error.response.data.hasOwnProperty('error') || error.response.data.hasOwnProperty('error_description'))) {
+                this.$refs.code.errorBucket = [error.response.data.error_description]
+              } else {
+                this.$refs.code.errorBucket = ['验证错误']
+              }
+            })
             .finally(() => { this.loading = false })
         }
       }
