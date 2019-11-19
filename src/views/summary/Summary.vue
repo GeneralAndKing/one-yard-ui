@@ -40,7 +40,7 @@
               span 编辑
             v-tooltip(top)
               template(v-slot:activator="{ on }")
-                v-btn.mr-2(outlined, rounded, x-small, fab, color="warning", @click="handleBack(item)", v-on="on")
+                v-btn.mr-2(outlined, rounded, x-small, fab, color="warning", v-if='item.planId !== null', @click="handleBack(item)", v-on="on")
                   v-icon mdi-arrow-collapse-left
               span 需求退回
             v-tooltip(top, v-if="!item.id")
@@ -48,7 +48,7 @@
                 v-btn.mr-2(outlined, rounded, x-small, fab, color="error", @click="handleDelete(item)", v-on="on")
                   v-icon mdi-delete
               span 删除
-            v-tooltip(top, v-if="item.id")
+            v-tooltip(top, v-if="item.id !== null")
               template(v-slot:activator="{ on }")
                 v-btn.mr-2(outlined, rounded, x-small, fab, color="error", @click="handleSplit(item)", v-on="on")
                   v-icon mdi-cash-multiple
@@ -82,6 +82,8 @@
                       v-text-field(v-model="editedItem.material.size", label="型号", disabled)
                     v-flex(xs12, md6, lg3)
                       v-text-field(v-model="editedItem.material.unit", label="单位", disabled)
+                    v-flex(xs12, md6, lg3)
+                      v-text-field(v-model="editedItem.material.lowNumber", label="最低库存", disabled)
                     v-flex(xs12, md6, lg3)
                       v-text-field(v-model="editedItem.number", label="需求数量", disabled)
                     v-flex(xs12, md6, lg3)
@@ -153,12 +155,17 @@
                     v-flex(xs12, md6, lg3)
                       v-text-field(:value="editedItem.materialTrackingCode", label="物料追踪码", readonly,
                         hint="此项为随机生成，请勿修改", persistent-hint)
-                    v-flex(xs12, md6, lg3)
+                    v-flex(xs12, md6, lg3, v-if="editedItem.id !== null")
                       v-select(v-model="editedItem.supplyMode", label="供应方式", :rules="rules.union(rules.requiredMessage('供应方式'))",
                         hint="供应方式", :items="supplyMode")
-                    v-flex(xs12, md6, lg3)
-                      v-text-field(v-model="editedItem.number", label="供应数量", type="number", :rules="rules.union(rules.requiredMessage('供应数量'))",
-                        hint="值为需求数量，不可修改", readonly)
+                    v-flex(xs12, md6, lg3, v-if="editedItem.id === null")
+                      v-text-field(v-model="editedItem.supplyMode", label="供应方式", readonly,
+                        hint="采购部新增物资只允许采购")
+                    v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '库存供应'")
+                      v-text-field(v-model="editedItem.supplyNumber", label="供应数量", type="number", :rules="rules.union(rules.requiredMessage('供应数量'))",
+                        hint="填写库存供应数量，若为达到需求数量则自动拆分" )
+                    v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '采购'")
+                      v-text-field(label="采购数量", hint="当前物料采购数量") 采购数量与需求数量保持一致
                     v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '采购'")
                       v-menu(v-model="purchaseMenu", :close-on-content-click="false", transition="scale-transition",
                         offset-y, max-width="290px", min-width="290px")
@@ -410,6 +417,7 @@ export default {
       this.editedIndex = -1
       this.editedItem = {
         date: '',
+        id: null,
         expectationSupplier: null,
         fixedSupplier: null,
         inventory: null,
@@ -421,13 +429,13 @@ export default {
         materialType: {},
         materialTypeId: 1,
         name: null,
-        number: 50,
+        number: 0,
         planId: null,
         procurementPlanId: null,
         purchaseDate: null,
         remark: null,
         status: 'INIT',
-        supplyMode: null,
+        supplyMode: '采购',
         supplyNumber: null
       }
     },
@@ -453,12 +461,15 @@ export default {
       restAPI.getLink(`materialPlanSummary/getMaterialPlanSummary/${result.id}`)
         .then(res => {
           this.desserts = res.data.planMaterials
-          console.log(this.desserts)
+          this.desserts.forEach(pm => {
+            if (pm.departmentName === null && pm.remark !== null) pm.departmentName = pm.remark
+          })
         })
         .finally(() => { this.loading = false })
     },
     handleAdd () {
       this.initEditedItem()
+      this.editedItem.supplMode = '采购'
       this.dialog = true
     },
     handleEdit (item) {
@@ -476,7 +487,6 @@ export default {
       this.returnDescription = ''
     },
     revokeOk () {
-      // TODO: 退回
       // this.returnItem 是退回的那一行数据
       // this.returnMethod 是退回的方法，true：整个计划，false：当前物资
       // this.returnDescription 是审批意见
@@ -522,7 +532,6 @@ export default {
       rightItem.id = null
       rightItem.supplyNumber = null
       planMaterialAPI.splitMaterialPlan(this.editedItem, [leftItem, rightItem]).then(res => {
-        console.log('456')
         let planMaterials = res.data
         this.desserts.splice(this.editedIndex, 1)
         for (let i = 1; i < planMaterials.length; i++) {
@@ -550,7 +559,9 @@ export default {
       if (!this.$refs.edit.validate()) return
       this.editedItem.materialId = this.editedItem.material.id
       this.editedItem.materialTypeId = this.editedItem.materialType.id
-      this.editedItem.supplyNumber = this.editedItem.number
+      if (this.editedItem.supplyMode === '采购') {
+        this.editedItem.supplyNumber = this.editedItem.number
+      }
       if (this.edit) this.desserts.splice(this.editedIndex, 1, this.editedItem)
       else this.desserts.unshift(this.editedItem)
       this.initEditedItem()
@@ -602,10 +613,11 @@ export default {
         this.$message('数据少于2条,不能合并', 'error')
         return
       }
+      console.log(this.selected)
       let item = this._.cloneDeep(this.selected[0])
       let ids = [item['id']]
       if (item['id'] === null) {
-        this.$message('新添加的物料不能合并')
+        this.$message('新添加的物料不允许合并')
         return
       }
       item['id'] = null
@@ -617,16 +629,16 @@ export default {
         item['remark'] = item['departmentName']
       }
       for (let i = 1; i < this.selected.length; i++) {
+        if (this.selected[i]['id'] === null) {
+          this.$message('新添加的物料不允许合并')
+          return
+        }
         if (item['materialId'] !== this.selected[i]['materialId']) {
           this.$message('物料不同，不能合并')
           return
         }
         if (item['supplyMode'] !== this.selected[i]['supplyMode']) {
           this.$message('供应方式不同,不能合并')
-          return
-        }
-        if (item['id'] === null) {
-          this.$message('新添加的物料不能合并')
           return
         }
         item['number'] += this.selected[i]['number']
@@ -641,6 +653,8 @@ export default {
             item['supplyNumber'] = null
           }
         }
+        console.log(item)
+        console.log(ids)
         planMaterialAPI.mergeMaterialPlan(item, ids).then(res => {
           for (let item in this.selected) {
             this.desserts.splice(this.desserts.indexOf(item), 1)
