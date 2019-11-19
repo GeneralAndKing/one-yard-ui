@@ -245,6 +245,8 @@
                     strong.primary--text 已拆分
                   p 5. 点击拆分数据后，将会
                     strong.primary--text 立即生效
+                  p 6. 拆分后的物料
+                    strong.primary--text 不能退回
             v-layout.mt-4(wrap)
               v-flex(xs12, md6, lg4)
                 v-text-field(v-model="editedItem.material.code", label="物料编码", disabled)
@@ -277,12 +279,10 @@
               v-flex
                 v-slider(
                   v-model="editedItem.newNumber"
-                  class="align-center"
                   :max="editedItem.number-1"
-                  :min="1"
-                  hide-details)
+                  :min="1")
                   template(v-slot:prepend)
-                    v-text-field(type="number" label="拆分物料(1)" disabled :value="editedItem.newNumber")
+                    v-text-field(value="editedItem.newNumber" type="number" label="拆分物料(1)")
                   template(v-slot:append)
                     v-text-field(type="number" label="拆分物料(2)" disabled :value="editedItem.number-editedItem.newNumber")
       v-snackbar(v-model="revokeSnackbar", vertical, :timeout="0") 您确定退回此需求吗？
@@ -526,10 +526,12 @@ export default {
       leftItem.purchaseDate = null
       leftItem.supplyMode = null
       leftItem.supplyNumber = null
+      leftItem.planId = null
       rightItem.number = rightNum
       rightItem.purchaseDate = null
       rightItem.supplyMode = null
       rightItem.id = null
+      rightItem.planId = null
       rightItem.supplyNumber = null
       planMaterialAPI.splitMaterialPlan(this.editedItem, [leftItem, rightItem]).then(res => {
         let planMaterials = res.data
@@ -608,6 +610,7 @@ export default {
         }).finally(() => { this.submitLoading = true })
     },
     handleAnd () {
+      console.log('123')
       // 合并数据
       if (this.selected.length < 2) {
         this.$message('数据少于2条,不能合并', 'error')
@@ -653,16 +656,15 @@ export default {
             item['supplyNumber'] = null
           }
         }
-        console.log(item)
-        console.log(ids)
-        planMaterialAPI.mergeMaterialPlan(item, ids).then(res => {
-          for (let item in this.selected) {
-            this.desserts.splice(this.desserts.indexOf(item), 1)
-          }
-          this.desserts.unshift(res.data)
-          this.$message('合并成功')
-        })
       }
+      planMaterialAPI.mergeMaterialPlan(item, ids).then(res => {
+        for (let item in this.selected) {
+          this.desserts.splice(this.desserts.indexOf(item), 1)
+        }
+        this.desserts.unshift(res.data)
+        this.selected = []
+        this.$message('合并成功')
+      })
     },
     print () {
       if (this.desserts.length < 1) {
