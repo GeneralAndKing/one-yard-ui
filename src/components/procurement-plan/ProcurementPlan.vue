@@ -47,7 +47,7 @@
               v-btn.mr-2(outlined, rounded, x-small, fab, color="success", @click="handleEdit(item)", v-on="on", :disabled="see")
                 v-icon mdi-pencil
             span 编辑
-          v-tooltip(top, v-if="item.new")
+          v-tooltip(top, v-if="item.new && item.status==='INIT'")
             template(v-slot:activator="{ on }")
               v-btn.mr-2(outlined, rounded, x-small, fab, color="warning", @click="handleDelete(item)", v-on="on", :disabled="see")
                 v-icon delete
