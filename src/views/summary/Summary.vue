@@ -83,8 +83,6 @@
                     v-flex(xs12, md6, lg3)
                       v-text-field(v-model="editedItem.material.unit", label="单位", disabled)
                     v-flex(xs12, md6, lg3)
-                      v-text-field(v-model="editedItem.material.lowNumber", label="最低库存", disabled)
-                    v-flex(xs12, md6, lg3)
                       v-text-field(v-model="editedItem.number", label="需求数量", disabled)
                     v-flex(xs12, md6, lg3)
                       v-text-field(v-model="editedItem.inTransitNum", label="在途数量", readonly, disabled)
@@ -105,7 +103,7 @@
                     v-flex(xs12, md6, lg3)
                       v-select(v-model="editedItem.supplyMode", label="供应方式", :rules="rules.union(rules.requiredMessage('供应方式'))",
                         hint="供应方式", :items="supplyMode", )
-                    v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '采购'")
+                    v-flex(xs12, md6, lg3)
                       v-text-field(v-model="editedItem.supplyNumber", label="供应数量", type="number", :rules="rules.union(rules.requiredMessage('供应数量'))",
                         hint="当前物料供应数量", )
                     v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '采购'")
@@ -217,7 +215,7 @@
           v-card-actions
             v-spacer
             v-btn(text, color="success", @click="revokeOk") 确认退回
-      v-dialog(v-model="splitDialog", fullscreen, hide-overlay, transition="dialog-bottom-transition", scrollable)
+      v-dialog(v-model="splitDialog", hide-overlay, transition="scale-transition", scrollable)
         v-card(tile)
           v-card-title.pa-0
             v-toolbar(flat, dark, color="primary")
@@ -230,20 +228,15 @@
               v-expansion-panel
                 v-expansion-panel-header 查看拆分规则
                 v-expansion-panel-content
-                  p 1. 拆分后物料的需求日期不能在当前物料的需求日期
-                    strong.primary--text 之后！
-                  p 2. 拆分物料的需求总数量
-                    strong.primary--text 必须相等于
-                    | 当前物料的需求数量；总量不相等的情况下
-                    strong.error--text 无法进行拆分！
-                  p 3. 拆分物料的基础信息（物料类别等信息）与原来一致
+                  p 1. 拆分物料为两条，如果需要请
+                    strong.primary--text 多次拆分
+                  p 2. 拆分物料的基础信息（物料类别等信息）与原来一致
                     strong.primary--text 不可修改
-                  p 4. 表格中的所有字段均
-                    strong.primary--text 必填！
-                    strong.success--text 点击相应单元格即可编辑
-                  p 5. 拆分完成后，本条数据会完全被标识为
+                  p 3. 拆分后的物料供应方式需要
+                    strong.primary--text 重新填写
+                  p 4. 拆分完成后，本条数据会完全被标识为
                     strong.primary--text 已拆分
-                  p 6. 点击保存修改后，将会
+                  p 5. 点击拆分数据后，将会
                     strong.primary--text 立即生效
             v-layout.mt-4(wrap)
               v-flex(xs12, md6, lg4)
@@ -263,9 +256,9 @@
               v-flex(xs12, md6, lg4)
                 v-text-field(v-model="editedItem.material.unit", label="单位", disabled)
               v-flex(xs12, md6, lg4)
-                v-text-field(v-model="editedItem.number", label="需求数量", disabled, persistent-hint, hint="拆分数量之和必须等于此值")
+                v-text-field(v-model="editedItem.number", label="需求数量", disabled)
               v-flex(xs12, md6, lg4)
-                v-text-field(v-model="editedItem.date", label="需求日期", disabled, persistent-hint, hint="拆分后的日期不能在此之后")
+                v-text-field(v-model="editedItem.date", label="需求日期", disabled)
               v-flex(xs12, md6, lg4)
                 v-text-field(v-model="editedItem.inTransitNum", label="在途数量", readonly, disabled)
               v-flex(xs12, md6, lg4)
@@ -273,49 +266,18 @@
               v-flex(xs12, md6, lg4)
                 v-text-field(v-model="editedItem.occupiedNum", label="已占库存", readonly, disabled)
               v-flex.text-right(xs12)
-                v-btn(outlined, color="primary", @click="handleSplitData") 拆分数据
-            v-data-table(:headers="splitHeaders", :items="splitItems", item-key="id", hide-default-footer, no-data-text="暂无数据")
-              template(v-slot:item.number="props")
-                v-edit-dialog(:return-value.sync="props.item.number", large, save-text="确定", cancel-text="取消") {{ props.item.number }}
-                  template(v-slot:input)
-                    v-text-field(v-model="props.item.number", type="number", label="需求数量", single-line)
-              template(v-slot:item.fixedSupplier="props")
-                v-edit-dialog(:return-value.sync="props.item.fixedSupplier", large, save-text="确定", cancel-text="取消", :eager="true")
-                  | {{ props.item.fixedSupplier }}
-                  template(v-slot:input)
-                    v-select(v-model="props.item.fixedSupplier", label="固定供应商", single-line, :items="suppliers",
-                      item-text="name", item-value="name")
-              template(v-slot:item.expectationSupplier="props")
-                v-edit-dialog(:return-value.sync="props.item.expectationSupplier", large,  save-text="确定", cancel-text="取消")
-                  | {{ props.item.expectationSupplier }}
-                  template(v-slot:input)
-                    v-select(v-model="props.item.expectationSupplier", label="期望供应商", single-line, :items="suppliers",
-                      item-text="name", item-value="name")
-              template(v-slot:item.supplyMode="props")
-                v-edit-dialog(:return-value.sync="props.item.supplyMode", large, save-text="确定", cancel-text="取消")
-                  | {{ props.item.supplyMode }}
-                  template(v-slot:input)
-                    v-select(v-model="props.item.supplyMode", label="供应方式", single-line, :items="supplyMode")
-              template(v-slot:item.date="props")
-                v-edit-dialog(:return-value.sync="props.item.date", large, save-text="确定", cancel-text="取消")
-                  | {{ props.item.date }}
-                  template(v-slot:input)
-                    v-menu(v-model="splitPurchaseMenu", :close-on-content-click="false", transition="scale-transition",
-                      offset-y, max-width="290px", min-width="290px")
-                      template(v-slot:activator="{ on }")
-                        v-text-field(v-model="props.item.date", v-on="on", label="需求日期", readonly,
-                          :rules="rules.union(rules.required('需求日期'))")
-                      v-date-picker(v-model="props.item.date", no-title, @input="splitPurchaseMenu = false", locale="zh-cn")
-              template(v-slot:item.action="{ item }")
-                v-tooltip(top)
-                  template(v-slot:activator="{ on }")
-                    v-btn.mr-2(outlined, rounded, x-small, fab, color="error",
-                      @click="splitDelete(item)", v-on="on")
-                      v-icon mdi-delete
-                  span 删除
-          v-card-actions
-            v-spacer
-            v-btn(outlined, color="success", @click="handleSplitSave") 保存拆分数据
+                v-btn(outlined, color="primary", @click="handleSplitSave") 拆分数据
+              v-flex
+                v-slider(
+                  v-model="editedItem.newNumber"
+                  class="align-center"
+                  :max="editedItem.number-1"
+                  :min="1"
+                  hide-details)
+                  template(v-slot:prepend)
+                    v-text-field(type="number" label="拆分物料(1)" disabled :value="editedItem.newNumber")
+                  template(v-slot:append)
+                    v-text-field(type="number" label="拆分物料(2)" disabled :value="editedItem.number-editedItem.newNumber")
       v-snackbar(v-model="revokeSnackbar", vertical, :timeout="0") 您确定退回此需求吗？
         v-row.justify-end
           v-btn.ma-3(color="error", text, @click="revokeSnackbar = false") 取消
@@ -453,10 +415,10 @@ export default {
         inventory: null,
         isEnable: true,
         isSourceGoods: true,
-        material: Object,
+        material: {},
         materialId: 1,
         materialTrackingCode: uuidv4(),
-        materialType: Object,
+        materialType: {},
         materialTypeId: 1,
         name: null,
         number: 50,
@@ -537,72 +499,38 @@ export default {
     handleSplit (item) {
       this.initEditedItem()
       this.editedItem = this._.cloneDeep(item)
+      this.editedItem.newNumber = 1
       this.editedIndex = this._.indexOf(this.desserts, item)
       this.splitItems = []
       this.splitDialog = true
     },
-    handleSplitData () {
-      this.splitItems.unshift({
-        number: 0,
-        fixedSupplier: '无',
-        expectationSupplier: '无',
-        supplyMode: '采购',
-        date: '2019-11-11'
-      })
-    },
-    splitDelete (item) {
-      this.splitItems.splice(this._.indexOf(this.splitItems, item), 1)
-    },
     handleSplitSave () {
-      if (this.splitItems.length === 0) {
-        this.$message('您没有任何拆分后的数据', 'warning')
-        return
-      }
-      if (this.splitItems.length < 2) {
-        this.$message('拆分数据数量必须大于一条', 'warning')
-        return
-      }
-      let num = 0
-      let splitResult = []
-      for (const i in this.splitItems) {
-        if (this.checkNUll(this.splitItems[i].number)) {
-          this.$message(`第${i + 1}条数据的需求数量不能为空！`, 'warning')
-          return
+      console.log(this.editedItem)
+      let leftNum = this.editedItem.newNumber
+      let rightNum = this.editedItem.number - leftNum
+      delete this.editedItem.newNumber
+      let leftItem = this._.cloneDeep(this.editedItem)
+      let rightItem = this._.cloneDeep(this.editedItem)
+      leftItem.number = leftNum
+      leftItem.id = null
+      leftItem.purchaseDate = null
+      leftItem.supplyMode = null
+      leftItem.supplyNumber = null
+      rightItem.number = rightNum
+      rightItem.purchaseDate = null
+      rightItem.supplyMode = null
+      rightItem.id = null
+      rightItem.supplyNumber = null
+      planMaterialAPI.splitMaterialPlan(this.editedItem, [leftItem, rightItem]).then(res => {
+        console.log('456')
+        let planMaterials = res.data
+        this.desserts.splice(this.editedIndex, 1)
+        for (let i = 1; i < planMaterials.length; i++) {
+          this.desserts.unshift(planMaterials[i])
         }
-        num += parseInt(this.splitItems[i].number)
-        if (this.checkNUll(this.splitItems[i].supplyMode)) {
-          this.$message(`第${i + 1}条数据的供应方式不能为空！`, 'warning')
-          return
-        }
-        if (this.checkNUll(this.splitItems[i].date)) {
-          this.$message(`第${i + 1}条数据的供应日期不能为空！`, 'warning')
-          return
-        }
-        if (parseInt(this.editedItem.date) < parseInt(this.splitItems[i].date.replace(/-/g, ''))) {
-          this.$message(`第${i + 1}条数据的供应日期不能晚于当前数据的供应日期！`, 'warning')
-          return
-        }
-        let split = this._.cloneDeep(this.editedItem)
-        split.id = null
-        split.number = parseInt(this.splitItems[i].number)
-        split.fixedSupplier = this.splitItems[i].fixedSupplier
-        split.expectationSupplier = this.splitItems[i].expectationSupplier
-        split.supplyMode = this.splitItems[i].supplyMode
-        split.date = this.splitItems[i].date.replace(/-/g, '')
-        splitResult.push(split)
-      }
-      if (num !== this.editedItem.number) {
-        this.$message(`所有数据的需求数量总和为 ${num}, 当前拆分数据的需求总量为 ${this.editedItem.number}，两者不相等，无法拆分！`, 'warning')
-        return
-      }
-      planMaterialAPI.splitMaterialPlan(this._.cloneDeep(this.editedItem), splitResult)
-        .then(() => {
-          this.desserts.splice(this.editedIndex, 1)
-          splitResult.forEach(res => this.desserts.unshift(res))
-          this.splitDialog = false
-          this.$message('拆分数据成功！', 'success')
-          this.initEditedItem()
-        })
+        this.$message('拆分成功')
+        this.splitDialog = false
+      })
     },
     materialTypeSelect (item) {
       this.editedItem.material = {}
@@ -676,6 +604,10 @@ export default {
       }
       let item = this._.cloneDeep(this.selected[0])
       let ids = [item['id']]
+      if (item['id'] === null) {
+        this.$message('新添加的物料不能合并')
+        return
+      }
       item['id'] = null
       item['planId'] = null
       item['createTime'] = null
@@ -690,6 +622,10 @@ export default {
         }
         if (item['supplyMode'] !== this.selected[i]['supplyMode']) {
           this.$message('供应方式不同,不能合并')
+          return
+        }
+        if (item['id'] === null) {
+          this.$message('新添加的物料不能合并')
           return
         }
         item['number'] += this.selected[i]['number']
