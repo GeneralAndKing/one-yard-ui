@@ -1,52 +1,17 @@
 <template lang="pug">
     v-card.one-index.px-md-9
       v-card-text
-        v-timeline(:dense="$vuetify.breakpoint.smAndDown")
-          v-timeline-item(color="purple lighten-2", fill-dot, right)
-            v-card
-              v-card-title.purple.lighten-2
-                v-icon.mr-4(dark, size="42") mdi-magnify
-                h2.display-1.white--text.font-weight-light Title 1
-              v-container
-                v-row
-                  v-col(cols="12" md="10") Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit.
-                  v-col.hidden-sm-and-down.text-right(md="2")
-                    v-icon(size="64") mdi-calendar-text
-          v-timeline-item(color="amber lighten-1", fill-dot, left, small)
-            v-card
-              v-card-title.amber.lighten-1.justify-end
-                h2.display-1.mr-4.white--text.font-weight-light Title 2
-                v-icon(dark, size="42") mdi-home-outline
-              v-container
-                v-row
-                  v-col(cols="12" md="8") Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit.
-                  v-col(cols="12" md="4") Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit.
-          v-timeline-item(color="cyan lighten-1", fill-dot, right)
-            v-card
-              v-card-title.cyan.lighten-1
-                v-icon.mr-4(dark, size="42") mdi-email-outline
-                h2.display-1.white--text.font-weight-light Title 3
-              v-container
-                v-row
-                  v-col( v-for="n in 3", :key="n", cols="12", md="4") Lorem ipsum dolor sit amet, no nam oblique veritus no nam oblique.
-          v-timeline-item(color="red lighten-1", fill-dot, left, small)
-            v-card
-              v-card-title.red.lighten-1.justify-end
-                h2.display-1.mr-4.white--text.font-weight-light Title 4
-                v-icon(dark, size="42") mdi-account-multiple-outline
-              v-container
-                v-row
-                  v-col.hidden-sm-and-down(md="2")
-                    v-icon(size="64") mdi-server-network
-                  v-col(cols="12" md="10") Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit, an vim zril disputando voluptatibus.
-          v-timeline-item(color="green lighten-1", fill-dot, right)
-            v-card
-              v-card-title.green.lighten-1
-                v-icon.mr-4(dark, size="42") mdi-phone-in-talk
-                h2.display-1.white--text.font-weight-light Title 5
-              v-container
-                v-row
-                  v-col  Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit, an vim zril disputando voluptatibus, vix an salutandi sententiae.
+        v-timeline(align-top, :dense="$vuetify.breakpoint.smAndDown")
+          v-timeline-item( v-for="(item, i) in items"
+            :key="i"
+            :color="item.color"
+            :icon="item.icon"
+            fill-dot)
+            v-card(:color="item.color", dark)
+              v-card-title.title {{item.title}}
+              v-card-text.white.text--primary.pt-2
+                p {{item.content}}
+                v-btn(:color="item.color", class="mx-0", outlined) {{item.button}}
 </template>
 
 <script>
@@ -55,6 +20,38 @@ import { Role } from '_u/role'
 
 export default {
   name: 'Index',
+  data: () => ({
+    items: [
+      {
+        color: 'red lighten-2',
+        icon: 'mdi-star',
+        title: 'Lorem Ipsum Dolor',
+        content: 'Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit, an vim zril disputando voluptatibus, vix an salutandi sententiae.',
+        button: 'Button'
+      },
+      {
+        color: 'purple darken-1',
+        icon: 'mdi-book-variant',
+        title: 'Lorem Ipsum Dolor',
+        content: 'Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit, an vim zril disputando voluptatibus, vix an salutandi sententiae.',
+        button: 'Button'
+      },
+      {
+        color: 'green lighten-1',
+        icon: 'mdi-airballoon',
+        title: 'Lorem Ipsum Dolor',
+        content: 'Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit, an vim zril disputando voluptatibus, vix an salutandi sententiae.',
+        button: 'Button'
+      },
+      {
+        color: 'indigo',
+        icon: 'mdi-buffer',
+        title: 'Lorem Ipsum Dolor',
+        content: 'Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit, an vim zril disputando voluptatibus, vix an salutandi sententiae.',
+        button: 'Button'
+      }
+    ]
+  }),
   created () {
     if (this.$store.getters['auth/role'].length === 1 && this.$store.getters['auth/role'].includes(Role.ROLE_ACCESS)) {
       this.$message({ content: '你当前为游客权限,请联系管理员', timeout: 0, x: 'left' })
