@@ -42,19 +42,19 @@ export default {
         actionIcon: 'vpn_key',
         action: '所有物料分类下的物料总数'
       }, {
-        subTitle: '需求计划提报数',
+        subTitle: '需求计划处理量',
         main: '0',
         icon: 'verified_user',
         iconColor: 'blue',
         actionIcon: 'vpn_key',
-        action: '已经提报的需求计划总数'
+        action: '已经处理的需求计划总数'
       }, {
-        subTitle: '采购计划生成数',
+        subTitle: '采购计划待执行量',
         main: '0',
         icon: 'error_outline',
         iconColor: 'red',
         actionIcon: 'vpn_key',
-        action: '已经生成的采购计划总数'
+        action: '待执行的采购计划总数'
       }
     ],
     charts: [
@@ -80,6 +80,8 @@ export default {
   created () {
     restAPI.getRestLink('sysUser/search/count?status=NORMAL').then(res => { this.statistical[0].main = `${res.data}` })
     restAPI.getRestLink('material/search/count').then(res => { this.statistical[1].main = `${res.data}` })
+    restAPI.getRestLink('materialDemandPlan/search/count').then(res => { this.statistical[2].main = `${res.data}` })
+    restAPI.getRestLink(`procurementPlan/search/count?planStatus=FINALLY`).then(res => { this.statistical[3].main = `${res.data}` })
     restAPI.getLink('dashboard/api').then(res => { this.chartDate(res, 0) })
     restAPI.getLink('dashboard/auth').then(res => { this.chartDate(res, 1) })
   },
