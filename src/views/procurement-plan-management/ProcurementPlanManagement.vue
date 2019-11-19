@@ -105,12 +105,7 @@ export default {
       requiredMessage: requiredMessageRules,
       union: unionRules
     },
-    search: {
-      name: '',
-      planStatus: '',
-      approvalStatus: '',
-      createTime: ''
-    },
+    search: {},
     desserts: [],
     headers: [
       { text: '名称', value: 'name' },
@@ -123,6 +118,13 @@ export default {
   created () {
     this.initApproval()
     this.initTable()
+    const date = new Date()
+    this.search = {
+      name: '',
+      planStatus: '',
+      approvalStatus: '',
+      createTime: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate() + 1}`
+    }
   },
   computed: {
     searchValue () {
