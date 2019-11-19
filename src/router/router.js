@@ -204,6 +204,7 @@ export const routes = [
             Role.ROLE_WAREHOUSE_PLANER,
             Role.ROLE_FINANCE_PLANER,
             Role.ROLE_WORKSHOP_PLANER,
+            Role.ROLE_PROCUREMENT_PLANER,
             Role.ROLE_WORKSHOP_SUPERVISOR,
             Role.ROLE_FINANCE_SUPERVISOR,
             Role.ROLE_WAREHOUSE_SUPERVISOR,
