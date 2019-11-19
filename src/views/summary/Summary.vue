@@ -53,6 +53,7 @@
                 v-btn.mr-2(outlined, rounded, x-small, fab, color="error", @click="handleSplit(item)", v-on="on")
                   v-icon mdi-cash-multiple
               span 拆分
+        // 点击 添加 和 编辑 按钮后弹出的模态框 -------------- A 开始
         v-dialog(v-model="dialog", max-width="1200px", persistent)
           v-card
             v-card-title(primary-title)
@@ -63,6 +64,7 @@
             v-card-text
               v-form(ref="edit")
                 v-container(grid-list-md)
+                  // 当点击的是 编辑 的时候，显示这部分 ------------ B开始
                   v-layout(wrap, v-if="edit")
                     v-flex(xs12, md6, lg3, v-if="editedItem.planId")
                       v-text-field(v-model="editedItem.planId", label="计划编号", disabled)
@@ -115,6 +117,8 @@
                           v-text-field(v-model="editedItem.purchaseDate", v-on="on", label="采购日期", readonly,
                             :rules="rules.union(rules.required('采购日期'))", )
                         v-date-picker(v-model="purchaseDate", no-title, @input="purchaseMenu = false", locale="zh-cn")
+                  // --------------------------------- B结束
+                  // 当点击的是 添加 的时候，显示这部分 ---------------- B 开始
                   v-layout(wrap, v-if="!edit")
                     v-flex(xs12, md6, lg3)
                       v-select(v-model="editedItem.materialType", label="物料分类", :items="materialTypes", @change="materialTypeSelect",
@@ -134,7 +138,7 @@
                       v-text-field(v-model="editedItem.material.unit", label="计量单位", :rules="rules.union(rules.required('计量单位'))",
                         readonly, hint="当前物料计量单位")
                     v-flex(xs12, md6, lg3)
-                      v-text-field(v-model="editedItem.material.number", label="需求数量", type="number", :rules="rules.union(rules.requiredMessage('需求数量'))",
+                      v-text-field(v-model="editedItem.number", label="需求数量", type="number", :rules="rules.union(rules.requiredMessage('需求数量'))",
                         hint="当前物料所需数量")
                     v-flex(xs12, md6, lg3)
                       v-menu(v-model="dayMenu", :close-on-content-click="false", transition="scale-transition",
@@ -166,10 +170,13 @@
                         v-date-picker(v-model="purchaseDate", no-title, @input="purchaseMenu = false", locale="zh-cn")
                     v-flex(xs12, md6, lg3)
                       v-switch(v-model="editedItem.isSourceGoods", :label="`货源是否确定:${editedItem.isSourceGoods ? '是': '否'}`")
+                  // --------------------------------------- B 结束
             v-card-actions
               v-spacer
               v-btn(outlined, color="error", @click="handleReset") 重置
               v-btn(outlined, color="success", @click="handleSave") {{edit ? '保存修改' : '添加'}}
+          // ----------------------------------  A 结束
+      // 点击 保存并生成采购计划 时弹出的模态框 ---------------- C 开始
       v-dialog(v-model="submitDialog", max-width="400px", persistent)
         v-card(tile, :loading="submitLoading")
           v-card-title.pa-0
@@ -186,6 +193,8 @@
           v-card-actions
             v-spacer
             v-btn(color="success", outlined, @click="handleSubmitOk") 生成
+      // -------------------------------------------------------- C 结束
+      // 点击 需求退回 的时候弹出的模态框 -------------------------- D 开始
       v-dialog(v-model="returnDialog", max-width="500px", persistent)
         v-card(tile)
           v-card-title.pa-0
@@ -213,6 +222,8 @@
           v-card-actions
             v-spacer
             v-btn(text, color="success", @click="revokeOk") 确认退回
+      // --------------------------------------------------- D 结束
+      // 点击 拆分 按钮的时候弹出的模态框 --------------------------- E 开始
       v-dialog(v-model="splitDialog", hide-overlay, transition="scale-transition", scrollable)
         v-card(tile)
           v-card-title.pa-0
@@ -278,10 +289,13 @@
                     v-text-field(:value="editedItem.newNumber" type="number" label="拆分物料(1)" disabled)
                   template(v-slot:append)
                     v-text-field(type="number" label="拆分物料(2)" disabled :value="editedItem.number-editedItem.newNumber")
+      // ------------------------------------ E 结束
+      // 点击 退回需求 的时候弹出的 提示条 ------------------ F 开始
       v-snackbar(v-model="revokeSnackbar", vertical, :timeout="0") 您确定退回此需求吗？
         v-row.justify-end
           v-btn.ma-3(color="error", text, @click="revokeSnackbar = false") 取消
           v-btn.ma-3(color="primary", text, @click="revokeOk") 确定
+      // -------------------------------------------------- F 结束
       v-card-actions
         v-spacer
         v-btn(outlined, color="success", @click="handleSubmit", :disabled="desserts.length === 0") 保存并生成采购计划
@@ -562,6 +576,7 @@ export default {
       }
       if (this.edit) this.desserts.splice(this.editedIndex, 1, this.editedItem)
       else this.desserts.unshift(this.editedItem)
+      console.log(this.editedItem)
       this.initEditedItem()
       this.handleClose()
     },
