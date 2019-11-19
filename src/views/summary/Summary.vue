@@ -569,10 +569,17 @@ export default {
     },
     handleSave () {
       if (!this.$refs.edit.validate()) return
+      if (this.editedItem.supplyMode === '采购' && this.editedItem.date < this.editedItem.purchaseDate) {
+        this.$message('采购日期不能晚于需求日期！', 'error')
+        return
+      }
       this.editedItem.materialId = this.editedItem.material.id
       this.editedItem.materialTypeId = this.editedItem.materialType.id
       if (this.editedItem.supplyMode === '采购') {
         this.editedItem.supplyNumber = this.editedItem.number
+      }
+      if (this.editedItem.supplyMode === '库存供应') {
+        this.editedItem.purchaseDate = this.editedItem.date
       }
       if (this.edit) this.desserts.splice(this.editedIndex, 1, this.editedItem)
       else this.desserts.unshift(this.editedItem)
