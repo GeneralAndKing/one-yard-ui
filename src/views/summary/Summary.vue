@@ -104,10 +104,10 @@
                       v-text-field(v-model="editedItem.inventory", label="需求库存组织", disabled)
                     v-flex(xs12, md6, lg3)
                       v-select(v-model="editedItem.supplyMode", label="供应方式", :rules="rules.union(rules.requiredMessage('供应方式'))",
-                        hint="供应方式", :items="supplyMode", )
+                        hint="供应方式", :items="supplyMode", @change="handleSupplyModeSelect")
                     v-flex(xs12, md6, lg3)
                       v-text-field(v-model="editedItem.supplyNumber", label="供应数量", type="number", :rules="rules.union(rules.requiredMessage('供应数量'))",
-                        hint="当前物料供应数量", )
+                        hint="填写库存供应数量，若为达到需求数量则自动拆分", :readonly="editedItem.supplyMode==='采购'")
                     v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '采购'")
                       v-menu(v-model="purchaseMenu", :close-on-content-click="false", transition="scale-transition",
                         offset-y, max-width="290px", min-width="290px")
@@ -155,18 +155,9 @@
                     v-flex(xs12, md6, lg3)
                       v-text-field(:value="editedItem.materialTrackingCode", label="物料追踪码", readonly,
                         hint="此项为随机生成，请勿修改", persistent-hint)
-                    v-flex(xs12, md6, lg3, v-if="editedItem.id !== null")
-                      v-select(v-model="editedItem.supplyMode", label="供应方式", :rules="rules.union(rules.requiredMessage('供应方式'))",
-                        hint="供应方式", :items="supplyMode")
-                    v-flex(xs12, md6, lg3, v-if="editedItem.id === null")
-                      v-text-field(v-model="editedItem.supplyMode", label="供应方式", readonly,
-                        hint="采购部新增物资只允许采购")
-                    v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '库存供应'")
-                      v-text-field(v-model="editedItem.supplyNumber", label="供应数量", type="number", :rules="rules.union(rules.requiredMessage('供应数量'))",
-                        hint="填写库存供应数量，若为达到需求数量则自动拆分" )
-                    v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '采购'")
-                      v-text-field(label="采购数量", hint="当前物料采购数量") 采购数量与需求数量保持一致
-                    v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '采购'")
+                    v-flex(xs12, md6, lg3)
+                      v-text-field(v-model="editedItem.supplyMode", label="供应方式", readonly, hint="采购部新增物资只允许采购")
+                    v-flex(xs12, md6, lg3)
                       v-menu(v-model="purchaseMenu", :close-on-content-click="false", transition="scale-transition",
                         offset-y, max-width="290px", min-width="290px")
                         template(v-slot:activator="{ on }")
@@ -487,6 +478,9 @@ export default {
       this.returnDialog = false
       this.returnItem = {}
       this.returnDescription = ''
+    },
+    handleSupplyModeSelect (item) {
+      if (item === '采购') this.editedItem.supplyNumber = this.editedItem.number
     },
     revokeOk () {
       // this.returnItem 是退回的那一行数据
