@@ -38,9 +38,9 @@
                 v-btn.mr-2(outlined, rounded, x-small, fab, color="primary", @click="handleEdit(item)", v-on="on")
                   v-icon mdi-pencil
               span 编辑
-            v-tooltip(top)
+            v-tooltip(top, v-if='item.planId !== null')
               template(v-slot:activator="{ on }")
-                v-btn.mr-2(outlined, rounded, x-small, fab, color="warning", v-if='item.planId !== null', @click="handleBack(item)", v-on="on")
+                v-btn.mr-2(outlined, rounded, x-small, fab, color="warning", @click="handleBack(item)", v-on="on")
                   v-icon mdi-arrow-collapse-left
               span 需求退回
             v-tooltip(top, v-if="!item.id")

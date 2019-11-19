@@ -52,7 +52,7 @@
               v-btn.mr-2(outlined, rounded, x-small, fab, color="warning", @click="handleDelete(item)", v-on="on", :disabled="see")
                 v-icon delete
             span 删除
-          v-tooltip(top, v-if="item.departmentName !== '采购部门'")
+          v-tooltip(top, v-if="item.departmentName !== '采购部' && item.planId !== null && !item.new ")
             template(v-slot:activator="{ on }")
               v-btn.mr-2(outlined, rounded, x-small, fab, color="error", @click="handleReturn(item)", v-on="on", :disabled="see")
                 v-icon mdi-backburger
