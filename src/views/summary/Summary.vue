@@ -680,6 +680,7 @@ export default {
       item['planId'] = null
       item['createTime'] = null
       item['createUser'] = null
+      item['status'] = 'INIT'
       if (item['remark'] === null) {
         item['remark'] = item['departmentName']
       }
