@@ -83,8 +83,6 @@
                     v-flex(xs12, md6, lg3)
                       v-text-field(v-model="editedItem.material.unit", label="单位", disabled)
                     v-flex(xs12, md6, lg3)
-                      v-text-field(v-model="editedItem.material.lowNumber", label="最低库存", disabled)
-                    v-flex(xs12, md6, lg3)
                       v-text-field(v-model="editedItem.number", label="需求数量", disabled)
                     v-flex(xs12, md6, lg3)
                       v-text-field(v-model="editedItem.inTransitNum", label="在途数量", readonly, disabled)
@@ -104,16 +102,13 @@
                       v-text-field(v-model="editedItem.inventory", label="需求库存组织", disabled)
                     v-flex(xs12, md6, lg3)
                       v-select(v-model="editedItem.supplyMode", label="供应方式", :rules="rules.union(rules.requiredMessage('供应方式'))",
-                        hint="供应方式", :items="supplyMode", )
-                    v-flex(xs12, md6, lg3)
-                      v-text-field(v-model="editedItem.supplyNumber", label="供应数量", type="number", :rules="rules.union(rules.requiredMessage('供应数量'))",
-                        hint="当前物料供应数量", )
+                        hint="供应方式", :items="supplyMode", ref="supplyMode" )
                     v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '采购'")
                       v-menu(v-model="purchaseMenu", :close-on-content-click="false", transition="scale-transition",
                         offset-y, max-width="290px", min-width="290px")
                         template(v-slot:activator="{ on }")
                           v-text-field(v-model="editedItem.purchaseDate", v-on="on", label="采购日期", readonly,
-                            :rules="rules.union(rules.required('采购日期'))", )
+                            :rules="rules.union(rules.required('采购日期'))", ref="purchaseDate")
                         v-date-picker(v-model="purchaseDate", no-title, @input="purchaseMenu = false", locale="zh-cn")
                   v-layout(wrap, v-if="!edit")
                     v-flex(xs12, md6, lg3)
@@ -154,7 +149,7 @@
                         item-text="name", item-value="name")
                     v-flex(xs12, md6, lg3)
                       v-text-field(:value="editedItem.materialTrackingCode", label="物料追踪码", readonly,
-                        hint="此项为随机生成，请勿修改", persistent-hint)
+                        hint="此项为随机生成，请勿修改", persistent-hint disabled)
                     v-flex(xs12, md6, lg3, v-if="editedItem.id !== null")
                       v-select(v-model="editedItem.supplyMode", label="供应方式", :rules="rules.union(rules.requiredMessage('供应方式'))",
                         hint="供应方式", :items="supplyMode")
@@ -163,7 +158,7 @@
                         hint="采购部新增物资只允许采购")
                     v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '库存供应'")
                       v-text-field(v-model="editedItem.supplyNumber", label="供应数量", type="number", :rules="rules.union(rules.requiredMessage('供应数量'))",
-                        hint="填写库存供应数量，若为达到需求数量则自动拆分" )
+                        hint="填写库存供应数量，若为达到需求数量则自动拆分")
                     v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '采购'")
                       v-text-field(label="采购数量", hint="当前物料采购数量") 采购数量与需求数量保持一致
                     v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '采购'")
@@ -529,10 +524,12 @@ export default {
       leftItem.supplyMode = null
       leftItem.supplyNumber = null
       leftItem.planId = null
+      leftItem.materialTrackingCode = uuidv4()
       rightItem.number = rightNum
       rightItem.purchaseDate = null
       rightItem.supplyMode = null
       rightItem.id = null
+      rightItem.materialTrackingCode = uuidv4()
       rightItem.planId = null
       rightItem.supplyNumber = null
       planMaterialAPI.splitMaterialPlan(this.editedItem, [leftItem, rightItem]).then(res => {
@@ -541,7 +538,7 @@ export default {
         for (let i = 1; i < planMaterials.length; i++) {
           this.desserts.unshift(planMaterials[i])
         }
-        this.$message('拆分成功')
+        this.$message('拆分成功', 'success')
         this.splitDialog = false
       })
     },
@@ -561,11 +558,36 @@ export default {
     },
     handleSave () {
       if (!this.$refs.edit.validate()) return
+      this.editedItem.supplyNumber = this.editedItem.number
+      if (this.editedItem.supplyMode !== '采购') {
+        if (this.editedItem.availableNum - this.editedItem.supplyNumber < 0) {
+          this.$refs.supplyMode.errorBucket = ['供应数量大于可用库存,请拆分后进行操作']
+          return
+        }
+        let sumNumber = this.desserts.reduce((total, value) => {
+          if (typeof total !== 'number') {
+            total = 0
+          }
+          if ((value.materialId === this.editedItem.materialId && value.supplyMode === '库存供应' && value.supplyNumber !== null) || value.materialTrackingCode === this.editedItem.materialTrackingCode) {
+            return total + value.number
+          } else {
+            return total
+          }
+        })
+        if (sumNumber > this.editedItem.availableNum) {
+          this.$refs.supplyMode.errorBucket = ['相同物料超出可用库存,请拆分后进行操作']
+          return
+        }
+      } else {
+        console.log('采购')
+        if (this.editedItem.date < this.editedItem.purchaseDate) {
+          this.$refs.purchaseDate.errorBucket = ['采购日期不能晚于需求日期']
+          return
+        }
+      }
       this.editedItem.materialId = this.editedItem.material.id
       this.editedItem.materialTypeId = this.editedItem.materialType.id
-      if (this.editedItem.supplyMode === '采购') {
-        this.editedItem.supplyNumber = this.editedItem.number
-      }
+
       if (this.edit) this.desserts.splice(this.editedIndex, 1, this.editedItem)
       else this.desserts.unshift(this.editedItem)
       this.initEditedItem()
@@ -630,6 +652,7 @@ export default {
       item['createTime'] = null
       item['createUser'] = null
       item['status'] = 'INIT'
+      item['materialTrackingCode'] = uuidv4()
       if (item['remark'] === null) {
         item['remark'] = item['departmentName']
       }
@@ -660,12 +683,12 @@ export default {
         }
       }
       planMaterialAPI.mergeMaterialPlan(item, ids).then(res => {
-        for (let item in this.selected) {
-          this.desserts.splice(this.desserts.indexOf(item), 1)
+        for (let i = 0; i < this.selected.length; i++) {
+          this.desserts.splice(this.desserts.indexOf(this.selected[i]), 1)
         }
         this.desserts.unshift(res.data)
         this.selected = []
-        this.$message('合并成功')
+        this.$message('合并成功', 'success')
       })
     },
     print () {
