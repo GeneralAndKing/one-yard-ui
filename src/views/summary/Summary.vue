@@ -217,7 +217,7 @@
           v-card-actions
             v-spacer
             v-btn(text, color="success", @click="revokeOk") 确认退回
-      v-dialog(v-model="splitDialog", fullscreen, hide-overlay, transition="dialog-bottom-transition", scrollable, persistent)
+      v-dialog(v-model="splitDialog", fullscreen, hide-overlay, transition="dialog-bottom-transition", scrollable)
         v-card(tile)
           v-card-title.pa-0
             v-toolbar(flat, dark, color="primary")
@@ -276,41 +276,41 @@
                 v-btn(outlined, color="primary", @click="handleSplitData") 拆分数据
             v-data-table(:headers="splitHeaders", :items="splitItems", item-key="id", hide-default-footer, no-data-text="暂无数据")
               template(v-slot:item.number="props")
-                v-edit-dialog(:return-value.sync="props.item.number", persistent, large, save-text="确定", cancel-text="取消") {{ props.item.number }}
+                v-edit-dialog(:return-value.sync="props.item.number", large, save-text="确定", cancel-text="取消") {{ props.item.number }}
                   template(v-slot:input)
                     v-text-field(v-model="props.item.number", type="number", label="需求数量", single-line)
               template(v-slot:item.fixedSupplier="props")
-                v-edit-dialog(:return-value.sync="props.item.fixedSupplier", large, persistent, save-text="确定", cancel-text="取消")
+                v-edit-dialog(:return-value.sync="props.item.fixedSupplier", large, save-text="确定", cancel-text="取消", :eager="true")
                   | {{ props.item.fixedSupplier }}
                   template(v-slot:input)
                     v-select(v-model="props.item.fixedSupplier", label="固定供应商", single-line, :items="suppliers",
                       item-text="name", item-value="name")
               template(v-slot:item.expectationSupplier="props")
-                v-edit-dialog(:return-value.sync="props.item.expectationSupplier", large, persistent, save-text="确定", cancel-text="取消")
+                v-edit-dialog(:return-value.sync="props.item.expectationSupplier", large,  save-text="确定", cancel-text="取消")
                   | {{ props.item.expectationSupplier }}
                   template(v-slot:input)
                     v-select(v-model="props.item.expectationSupplier", label="期望供应商", single-line, :items="suppliers",
                       item-text="name", item-value="name")
               template(v-slot:item.supplyMode="props")
-                v-edit-dialog(:return-value.sync="props.item.supplyMode", large, persistent, save-text="确定", cancel-text="取消")
+                v-edit-dialog(:return-value.sync="props.item.supplyMode", large, save-text="确定", cancel-text="取消")
                   | {{ props.item.supplyMode }}
                   template(v-slot:input)
                     v-select(v-model="props.item.supplyMode", label="供应方式", single-line, :items="supplyMode")
               template(v-slot:item.date="props")
-                v-edit-dialog(:return-value.sync="props.item.date", large, persistent, save-text="确定", cancel-text="取消")
+                v-edit-dialog(:return-value.sync="props.item.date", large, save-text="确定", cancel-text="取消")
                   | {{ props.item.date }}
                   template(v-slot:input)
-                    v-menu(v-model="purchaseMenu", :close-on-content-click="false", transition="scale-transition",
+                    v-menu(v-model="splitPurchaseMenu", :close-on-content-click="false", transition="scale-transition",
                       offset-y, max-width="290px", min-width="290px")
                       template(v-slot:activator="{ on }")
-                        v-text-field(v-model="props.item.date", v-on="on", label="采购日期", readonly,
-                          :rules="rules.union(rules.required('采购日期'))")
-                      v-date-picker(v-model="props.item.date", no-title, @input="purchaseMenu = false", locale="zh-cn")
+                        v-text-field(v-model="props.item.date", v-on="on", label="需求日期", readonly,
+                          :rules="rules.union(rules.required('需求日期'))")
+                      v-date-picker(v-model="props.item.date", no-title, @input="splitPurchaseMenu = false", locale="zh-cn")
               template(v-slot:item.action="{ item }")
                 v-tooltip(top)
                   template(v-slot:activator="{ on }")
                     v-btn.mr-2(outlined, rounded, x-small, fab, color="error",
-                      @click="(item) => {splitItems.splice(splitItems.indexOf(item), 1)}", v-on="on")
+                      @click="splitDelete(item)", v-on="on")
                       v-icon mdi-delete
                   span 删除
           v-card-actions
@@ -340,6 +340,7 @@ export default {
     MoreBtn
   },
   data: () => ({
+    splitPurchaseMenu: false,
     selected: [],
     splitDialog: false,
     submitLoading: false,
@@ -534,8 +535,10 @@ export default {
         )
     },
     handleSplit (item) {
+      this.initEditedItem()
       this.editedItem = this._.cloneDeep(item)
       this.editedIndex = this._.indexOf(this.desserts, item)
+      this.splitItems = []
       this.splitDialog = true
     },
     handleSplitData () {
@@ -547,9 +550,16 @@ export default {
         date: '2019-11-11'
       })
     },
+    splitDelete (item) {
+      this.splitItems.splice(this._.indexOf(this.splitItems, item), 1)
+    },
     handleSplitSave () {
       if (this.splitItems.length === 0) {
         this.$message('您没有任何拆分后的数据', 'warning')
+        return
+      }
+      if (this.splitItems.length < 2) {
+        this.$message('拆分数据数量必须大于一条', 'warning')
         return
       }
       let num = 0
@@ -574,7 +584,7 @@ export default {
         }
         let split = this._.cloneDeep(this.editedItem)
         split.id = null
-        split.number = this.splitItems[i].number
+        split.number = parseInt(this.splitItems[i].number)
         split.fixedSupplier = this.splitItems[i].fixedSupplier
         split.expectationSupplier = this.splitItems[i].expectationSupplier
         split.supplyMode = this.splitItems[i].supplyMode
