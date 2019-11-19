@@ -101,10 +101,10 @@ export default {
     }
   },
   created () {
+    this.$store.dispatch('auth/getMe')
     this.changeTheme()
     this.initNotice()
     this.initShowMessage()
-    this.$store.dispatch('auth/getMe')
   },
   beforeDestroy () {
     if (this.socket !== null) this.socket.close()

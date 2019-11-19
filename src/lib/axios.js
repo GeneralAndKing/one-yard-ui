@@ -90,6 +90,7 @@ class HttpRequest {
           case 401:
             message = '未经授权:访问由于凭据无效被拒绝'
             router.push({ name: 'login' })
+            console.clear()
             break
           case 403:
             message = '鉴权失败:您没有权限访问该资源'

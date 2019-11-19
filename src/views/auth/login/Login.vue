@@ -72,6 +72,7 @@ export default {
   },
   created () {
     this.$vuetify.theme.dark = false
+    console.clear()
   },
   methods: {
     handleAccount () {

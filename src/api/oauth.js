@@ -2,6 +2,8 @@ import axios from 'axios'
 import authAxios from './index'
 import qs from 'qs'
 import { baseURL } from './config'
+import { Base64 } from 'js-base64'
+import md5 from 'js-md5'
 const OAUTH_TOKEN = baseURL + 'oauth/token'
 const CHECK_TOKEN = baseURL + 'oauth/check_token'
 const authorizationBasic = 'Basic Z2FrOjEyMzQ1Ng=='
@@ -26,7 +28,7 @@ export const oauthToken = ({ username, password }) => {
     },
     data: qs.stringify({
       username: username,
-      password: password,
+      password: md5(Base64.encode(password)),
       grant_type: 'password',
       scope: 'all'
     })
@@ -86,7 +88,13 @@ export const authRegister = ({ username, email, phone, password, rePassword, cod
   return axios({
     url: AUTH_REGISTER,
     method: 'post',
-    data: { username, email, phone, password, rePassword, code }
+    data: {
+      username,
+      email,
+      phone,
+      code,
+      password: md5(Base64.encode(password)),
+      rePassword: md5(Base64.encode(rePassword)) }
   })
 }
 
@@ -116,7 +124,12 @@ export const authForget = ({ email, password, rePassword, code }) => {
   return axios({
     url: AUTH_FORGET,
     method: 'post',
-    data: { email, password, rePassword, code }
+    data: {
+      email,
+      code,
+      password: md5(Base64.encode(password)),
+      rePassword: md5(Base64.encode(rePassword))
+    }
   })
 }
 
@@ -189,6 +202,10 @@ export const modifyPassword = (passwords) => {
   return authAxios.request({
     url: '/sysUser/password/modify',
     method: 'post',
-    data: passwords
+    data: {
+      oldPassword: md5(Base64.encode(passwords.oldPassword)),
+      newPassword: md5(Base64.encode(passwords.newPassword)),
+      rePassword: md5(Base64.encode(passwords.rePassword))
+    }
   })
 }

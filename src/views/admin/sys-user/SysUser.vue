@@ -87,6 +87,8 @@ import { emailRules, passwordRules, requiredRules, unionRules, phoneRules, image
 import * as restAPI from '_api/rest'
 import * as oauthAPI from '_api/oauth'
 import * as sysUserAPI from '_api/sysUser'
+import { Base64 } from 'js-base64'
+import md5 from 'js-md5'
 import { Role } from '_u/role'
 export default {
   name: 'SysUser',
@@ -230,10 +232,11 @@ export default {
         this.submitLoading = true
         if (this.editedIndex > -1) {
           const data = this.editedItem.password === 'xxxxxxxxxxxxxxxxxx'
-            ? this._.omit(this.editedItem, 'password')
-            : this.editedItem
+            ? this._.cloneDeep(this._.omit(this.editedItem, 'password'))
+            : this._.cloneDeep(this.editedItem)
           data.roles = []
           this.editedItem.roles.forEach(role => data.roles.push(_this._.find(role.links, { rel: 'self' }).href))
+          if (data.hasOwnProperty('password')) data.password = md5(Base64.encode(data.password))
           restAPI.patchOne('sysUser', this.editedItem.id, data)
             .then(() => {
               Object.assign(this.desserts[this.editedIndex], this.editedItem)
@@ -243,6 +246,7 @@ export default {
         } else {
           const data = this._.cloneDeep(this.editedItem)
           data.roles = []
+          data.password = md5(Base64.encode(data.password))
           this.editedItem.roles.forEach(role => data.roles.push(_this._.find(role.links, { rel: 'self' }).href))
           restAPI.addOne('sysUser', data).then(() => {
             this.desserts.push(this.editedItem)
