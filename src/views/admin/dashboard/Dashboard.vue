@@ -11,6 +11,9 @@
           :icon="item.icon", :iconColor="item.iconColor",
           :actionIcon="item.actionIcon", :action="item.action"
           :iconSize="item.iconSize")
+    v-layout.mx-3.mt-4.elevation-9(wrap)
+      v-carousel(:interval="5000", cycle, show-arrows-on-hover)
+        v-carousel-item(v-for="(item,i) in images", :key="i", :src="item.src")
 </template>
 
 <script>
@@ -25,6 +28,12 @@ export default {
     ChartCard
   },
   data: () => ({
+    images: [
+      { src: `https://uploadbeta.com/api/pictures/random/?id=${Math.random()}` },
+      { src: `https://uploadbeta.com/api/pictures/random/?id=${Math.random()}` },
+      { src: `https://uploadbeta.com/api/pictures/random/?id=${Math.random()}` },
+      { src: `https://uploadbeta.com/api/pictures/random/?id=${Math.random()}` }
+    ],
     statistical: [
       {
         subTitle: '用户总数',
