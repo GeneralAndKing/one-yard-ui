@@ -560,6 +560,7 @@ export default {
       leftItem.supplyMode = null
       leftItem.supplyNumber = null
       leftItem.planId = null
+      leftItem.remark = this.editedItem.departmentName
       leftItem.materialTrackingCode = uuidv4()
       rightItem.number = rightNum
       rightItem.purchaseDate = null
@@ -567,6 +568,7 @@ export default {
       rightItem.id = null
       rightItem.materialTrackingCode = uuidv4()
       rightItem.planId = null
+      rightItem.remark = this.editedItem.departmentName
       rightItem.supplyNumber = null
       planMaterialAPI.splitMaterialPlan(this.editedItem, [leftItem, rightItem]).then(res => {
         let planMaterials = res.data
