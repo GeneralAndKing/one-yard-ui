@@ -35,3 +35,17 @@ export const uploadAvatarMe = (avatar) => {
     data: formData
   })
 }
+
+/**
+ * 修改用户信息
+ *
+ * @param data 用户信息
+ * @returns {*} 结果
+ */
+export const modifyInfo = (data) => {
+  return axios.request({
+    url: '/sysUser/setting',
+    method: 'POST',
+    data: data
+  })
+}
