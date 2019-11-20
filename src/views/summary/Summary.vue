@@ -147,7 +147,7 @@
                       v-text-field(v-model="editedItem.material.unit", label="计量单位", :rules="rules.union(rules.required('计量单位'))",
                         readonly, hint="当前物料计量单位")
                     v-flex(xs12, md6, lg3)
-                      v-text-field(v-model="editedItem.material.number", label="需求数量", type="number", :rules="rules.union(rules.requiredMessage('需求数量'))",
+                      v-text-field(v-model="editedItem.number", label="需求数量", type="number", :rules="rules.union(rules.requiredMessage('需求数量'))",
                         hint="当前物料所需数量")
                     v-flex(xs12, md6, lg3)
                       v-menu(v-model="dayMenu", :close-on-content-click="false", transition="scale-transition",
@@ -176,7 +176,7 @@
                         hint="采购部新增物资只允许采购")
                     v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '库存供应'")
                       v-text-field(v-model="editedItem.supplyNumber", label="供应数量", type="number", :rules="rules.union(rules.requiredMessage('供应数量'))",
-                        hint="填写库存供应数量，若为达到需求数量则自动拆分")
+                        hint="填写库存供应数量，若为达到需求数量则自动拆分" )
                     v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '采购'")
                       v-text-field(label="采购数量", hint="当前物料采购数量") 采购数量与需求数量保持一致
                     v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '采购'")
@@ -184,7 +184,7 @@
                         offset-y, max-width="290px", min-width="290px")
                         template(v-slot:activator="{ on }")
                           v-text-field(v-model="editedItem.purchaseDate", v-on="on", label="采购日期", readonly,
-                            :rules="rules.union(rules.required('采购日期'))")
+                            :rules="rules.union(rules.required('采购日期'))" ref="purchaseDate")
                         v-date-picker(v-model="purchaseDate", no-title, @input="purchaseMenu = false", locale="zh-cn")
                     v-flex(xs12, md6, lg3)
                       v-switch(v-model="editedItem.isSourceGoods", :label="`货源是否确定:${editedItem.isSourceGoods ? '是': '否'}`")
@@ -560,6 +560,7 @@ export default {
       leftItem.supplyMode = null
       leftItem.supplyNumber = null
       leftItem.planId = null
+      leftItem.remark = this.editedItem.departmentName
       leftItem.materialTrackingCode = uuidv4()
       rightItem.number = rightNum
       rightItem.purchaseDate = null
@@ -567,6 +568,7 @@ export default {
       rightItem.id = null
       rightItem.materialTrackingCode = uuidv4()
       rightItem.planId = null
+      rightItem.remark = this.editedItem.departmentName
       rightItem.supplyNumber = null
       planMaterialAPI.splitMaterialPlan(this.editedItem, [leftItem, rightItem]).then(res => {
         let planMaterials = res.data
