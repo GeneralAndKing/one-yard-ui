@@ -178,6 +178,8 @@
                       v-text-field(v-model="editedItem.supplyNumber", label="供应数量", type="number", :rules="rules.union(rules.requiredMessage('供应数量'))",
                         hint="填写库存供应数量，若为达到需求数量则自动拆分" )
                     v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '采购'")
+                      v-text-field(label="采购数量", hint="当前物料采购数量") 采购数量与需求数量保持一致
+                    v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '采购'")
                       v-menu(v-model="purchaseMenu", :close-on-content-click="false", transition="scale-transition",
                         offset-y, max-width="290px", min-width="290px")
                         template(v-slot:activator="{ on }")
@@ -592,7 +594,6 @@ export default {
     },
     handleSave () {
       if (!this.$refs.edit.validate()) return
-      console.log(this.editedItem)
       this.editedItem.supplyNumber = this.editedItem.number
       if (this.editedItem.supplyMode !== '采购') {
         if (this.editedItem.availableNum - this.editedItem.supplyNumber < 0) {
@@ -637,25 +638,24 @@ export default {
       const key = `${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}`
       for (const d in this.selected) {
         if (this.checkNUll(this.selected[d].supplyMode)) {
-          this.$message(`选中的第` + d + `条数据未填写供应方式`, 'warning')
+          this.$message(`选中的第` + (d + 1) + `条数据未填写供应方式`, 'warning')
           return
         } else if (this.checkNUll(this.selected[d].supplyNumber)) {
-          console.log('13')
-          this.$message(`选中的第` + d + `条数据未填写供应数量`, 'warning')
+          this.$message(`选中的第` + (d + 1) + `条数据未填写供应数量`, 'warning')
           return
         } else if (this.selected[d].supplyNumber > this.selected[d].number) {
-          this.$message(`选中的第` + d + `条数据供应数量超过了需求数量，请重新输入`, 'warning')
+          this.$message(`选中的第` + (d + 1) + `条数据供应数量超过了需求数量，请重新输入`, 'warning')
           return
         }
         if (this.selected[d].supplyMode === this.supplyMode[1]) {
           if (this.checkNUll(this.selected[d].purchaseDate)) {
-            this.$message(`选中的第` + d + `条数据未填写填写采购日期`, 'warning')
+            this.$message(`选中的第` + (d + 1) + `条数据未填写填写采购日期`, 'warning')
             return
           } else if (this.selected[d].purchaseDate > this.selected[d].date) {
-            this.$message(`选中的第` + d + `条数据采购日期不能晚于需求日期`, 'warning')
+            this.$message(`选中的第` + (d + 1) + `条数据采购日期不能晚于需求日期`, 'warning')
             return
           } else if (this.selected[d].purchaseDate < key) {
-            this.$message(`选中的第` + d + `条数据采购日期早于了当前日期（系统测试状态此处不自动驳回，仅做提示。）`, 'primary')
+            this.$message(`选中的第` + (d + 1) + `条数据采购日期早于了当前日期（系统测试状态此处不自动驳回，仅做提示。）`, 'primary')
             // return
           }
         }
@@ -701,7 +701,7 @@ export default {
       item['createUser'] = null
       item['status'] = 'INIT'
       item['materialTrackingCode'] = uuidv4()
-      if (item['remark'] === null) {
+      if (item['remark'] === null && item['departmentName'] !== null) {
         item['remark'] = item['departmentName']
       }
       for (let i = 1; i < this.selected.length; i++) {
@@ -736,7 +736,9 @@ export default {
           item['expectationSupplier'] = null
         }
         item['number'] += this.selected[i]['number']
-        if (item['remark'].search(this.selected[i]['departmentName']) === -1) {
+        if (item['remark'] === null && this.selected[i]['departmentName'] !== null) {
+          item['remark'] = this.selected[i]['departmentName']
+        } else if (item['remark'] !== null && this.selected[i]['departmentName'] !== null && item['remark'].search(this.selected[i]['departmentName']) === -1) {
           item['remark'] += ',' + this.selected[i]['departmentName']
         }
         ids.push(this.selected[i]['id'])

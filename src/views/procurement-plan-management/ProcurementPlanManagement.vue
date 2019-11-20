@@ -21,10 +21,10 @@
               v-flex.text-right(xs12)
                 v-btn.mr-4(outlined, color="light-blue",
                   v-per="[Role.ROLE_PROCUREMENT_SUPERVISOR, Role.ROLE_FINANCE]",
-                  @click="seeApprovalIng" ) 查看待审批计划
+                  @click="seeApprovalIng" ) 查看待审批的计划
                 v-btn.mr-4(outlined, color="light-blue",
                   v-per="[Role.ROLE_PROCUREMENT_SUPERVISOR, Role.ROLE_FINANCE]",
-                  @click="seeApprovalEd" ) 查看已审批计划
+                  @click="seeApprovalEd" ) 查看审批通过的计划
                 v-btn(outlined, color="light-blue", @click="seeReset") 重置条件
           v-data-table(:headers="headers", :items="desserts", :loading="loading", loading-text="加载中......",
             item-key="id", :mobile-breakpoint="800",  :custom-filter="filterSearch", :search="searchValue",
