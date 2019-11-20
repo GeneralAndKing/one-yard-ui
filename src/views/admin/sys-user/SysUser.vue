@@ -7,7 +7,7 @@
           loading-text="正在加载数据", :search="search")
           template(v-slot:item.icon="{ item }")
             v-avatar(size="36px")
-              v-img(:src="item.icon", :alt="item.name",
+              v-img.one-avatar-img(:src="item.icon", :alt="item.name",
                 lazy-src="http://q0zlaui5t.bkt.clouddn.com/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195")
           template(v-slot:item.roles="{ item }")
             v-chip.mr-1(v-for="role in item.roles", :key="role.name") {{role.description}}
@@ -289,5 +289,11 @@ export default {
 </script>
 
 <style scoped lang="stylus">
-
+.one-avatar-img
+  transition transform 0.5s ease-in
+  &:hover
+    -moz-transform rotate(360deg)
+    -o-transform rotate(360deg)
+    -webkit-transform rotate(360deg)
+    transform rotate(360deg)
 </style>

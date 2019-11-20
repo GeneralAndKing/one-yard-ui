@@ -53,6 +53,13 @@
             v-btn(text, color="error" v-show="editPassword" @click="initModifyPassword") 取消
             v-btn(text, @click="handlePassword" :color="editPassword ? 'orange' : 'primary'",
               :loading='loading.right') {{editPassword?'确认':'修改密码'}}
+    v-footer.text-center.justify-center.grey--text(style="background-color:rgba(255,255,255,0)")
+      v-col(cols="12") @ 2019 copy right by&nbsp;&nbsp;
+        a(href="https://echocow.cn", target="_blank") EchoCow &nbsp;&nbsp;
+        a(href="http://japoul.cn/", target="_blank") Japoul &nbsp;&nbsp;
+        a(href="https://github.com/RuiFG", target="_blank") RuiFG &nbsp;&nbsp;
+      v-btn(icon, x-large, href="https://github.com/GeneralAndKing/one-yard-ui", target="_blank")
+        v-icon mdi-github-circle
 
 </template>
 

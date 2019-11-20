@@ -72,8 +72,8 @@ export default {
         subTitle: '通过请求次数你可以更好的了解系统流量',
         icon: 'verified_user',
         description: '当前服务器指定日期接受到的请求总次数',
-        value: [ 200, 675, 410, 390, 310, 460, 250, 240 ],
-        labels: [ '12am', '3am', '6am', '9am', '12pm', '3pm', '6pm', '9pm' ]
+        value: [],
+        labels: []
       },
       {
         title: '授权次数',
@@ -81,8 +81,8 @@ export default {
         icon: 'verified_user',
         color: 'blue',
         description: '每当登录、授权、鉴权的时候都会触发此请求',
-        value: [ 200, 675, 410, 390, 310, 460, 250, 240 ],
-        labels: [ '12am', '3am', '6am', '9am', '12pm', '3pm', '6pm' ]
+        value: [],
+        labels: []
       }
     ]
   }),
