@@ -638,24 +638,24 @@ export default {
       const key = `${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}`
       for (const d in this.selected) {
         if (this.checkNUll(this.selected[d].supplyMode)) {
-          this.$message(`选中的第` + d + `条数据未填写供应方式`, 'warning')
+          this.$message(`选中的第` + (d + 1) + `条数据未填写供应方式`, 'warning')
           return
         } else if (this.checkNUll(this.selected[d].supplyNumber)) {
-          this.$message(`选中的第` + d + `条数据未填写供应数量`, 'warning')
+          this.$message(`选中的第` + (d + 1) + `条数据未填写供应数量`, 'warning')
           return
         } else if (this.selected[d].supplyNumber > this.selected[d].number) {
-          this.$message(`选中的第` + d + `条数据供应数量超过了需求数量，请重新输入`, 'warning')
+          this.$message(`选中的第` + (d + 1) + `条数据供应数量超过了需求数量，请重新输入`, 'warning')
           return
         }
         if (this.selected[d].supplyMode === this.supplyMode[1]) {
           if (this.checkNUll(this.selected[d].purchaseDate)) {
-            this.$message(`选中的第` + d + `条数据未填写填写采购日期`, 'warning')
+            this.$message(`选中的第` + (d + 1) + `条数据未填写填写采购日期`, 'warning')
             return
           } else if (this.selected[d].purchaseDate > this.selected[d].date) {
-            this.$message(`选中的第` + d + `条数据采购日期不能晚于需求日期`, 'warning')
+            this.$message(`选中的第` + (d + 1) + `条数据采购日期不能晚于需求日期`, 'warning')
             return
           } else if (this.selected[d].purchaseDate < key) {
-            this.$message(`选中的第` + d + `条数据采购日期早于了当前日期（系统测试状态此处不自动驳回，仅做提示。）`, 'primary')
+            this.$message(`选中的第` + (d + 1) + `条数据采购日期早于了当前日期（系统测试状态此处不自动驳回，仅做提示。）`, 'primary')
             // return
           }
         }
