@@ -269,7 +269,7 @@ export default {
     this.initEdit()
     restAPI.getRestLink(`sysDepartment/search/byRoles?ids=${this.$store.getters['auth/role'].join(',')}`)
       .then(res => {
-        this.departments = res.data.content.filter(d => d.name !== '暂无' && d.name !== '采购部')
+        this.departments = res.data.content.filter(d => d.name !== '系统' && d.name !== '采购部')
       })
     restAPI.getAll('materialType').then(res => { this.materialTypes = res.data.content })
     restAPI.getAll('supplier').then(res => { this.suppliers = res.data.content })
