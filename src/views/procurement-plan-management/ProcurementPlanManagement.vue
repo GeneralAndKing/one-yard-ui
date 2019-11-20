@@ -159,7 +159,6 @@ export default {
       }
       restAPI.getRestLink(resourcesLink)
         .then(res => {
-          console.log(res)
           this.desserts = res.data.content.filter(d => !d.hasOwnProperty('relTargetType'))
         })
         .finally(() => { this.loading = false })

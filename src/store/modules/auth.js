@@ -59,7 +59,6 @@ const mutations = {
     }
     auth.authorities.forEach((item) => {
       if (Role.hasOwnProperty(item)) {
-        console.log(Role[item])
         state.role.push(Role[item])
       }
     })

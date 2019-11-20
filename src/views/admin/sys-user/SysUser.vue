@@ -190,7 +190,6 @@ export default {
         const selectIds = selectRoles.data.content.map(s => s.id)
         this.roles.forEach(r => { if (!selectIds.includes(r.id)) r.disabled = true })
       }
-      console.log(resourcesLink)
       let users = await restAPI.getLink(resourcesLink)
       users.data.forEach(user => {
         user.model = false

@@ -253,7 +253,6 @@ export default {
       })
     procurementPlanAPI.getProcurementPlan(this.seeId)
       .then(res => {
-        console.log(res)
         this.desserts = res.data
         this.desserts.forEach(pm => {
           if (pm.departmentName === null && pm.remark === null) pm.departmentName = '采购部'
@@ -316,7 +315,6 @@ export default {
         }
         procurementPlanAPI.saveOrUpdate(this.procurementPlan, this.desserts)
           .then(res => {
-            console.log(res)
             this.$message('操作成功！', 'success')
             this.see = !this.see
           })

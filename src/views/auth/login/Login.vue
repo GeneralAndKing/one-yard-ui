@@ -88,7 +88,6 @@ export default {
       if (_this.window === 1) {
         if (_this.$refs['email'].validate(true) && this.$refs['password'].validate(true)) {
           _this.load = true
-          console.log('asd')
           try {
             await _this.$store.dispatch('auth/oauthLogin', {
               username: _this.user.email,

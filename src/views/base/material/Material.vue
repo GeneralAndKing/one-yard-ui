@@ -131,7 +131,6 @@ export default {
           }
         }
       })
-      console.log(this.material)
     } catch (e) {
       this.$message('数据初始化失败', 'error')
     } finally {
@@ -188,7 +187,6 @@ export default {
         return
       }
       this.submitLoading = true
-      console.log(this.editedItem)
       if (this.editedIndex === -1) {
         restAPI.addOne(material, this.editedItem)
           .then(res => {

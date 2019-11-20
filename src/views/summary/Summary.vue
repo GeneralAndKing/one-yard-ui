@@ -427,6 +427,7 @@ export default {
         typeof (this.search.month) === 'undefined') return ''
       let month = ''
       if (this.search.month.length === 1) month = `0${this.search.month}`
+      else month = `${this.search.month}`
       return `${this.search.year}${month}`
     }
   },
@@ -528,7 +529,6 @@ export default {
       // 校验输入框
       if (!this.$refs.description.validate(true)) return
       this.approval.description = this.returnDescription
-      console.log(this.returnItem)
       planMaterialAPI.backPlanOrMaterial(this.returnItem, this.approval, this.returnMethod)
         .then(() => {
           // 删除那一行数据
@@ -549,7 +549,6 @@ export default {
       this.splitDialog = true
     },
     handleSplitSave () {
-      console.log(this.editedItem)
       let leftNum = this.editedItem.newNumber
       let rightNum = this.editedItem.number - leftNum
       delete this.editedItem.newNumber
@@ -616,7 +615,6 @@ export default {
           return
         }
       } else {
-        console.log('采购')
         if (this.editedItem.date < this.editedItem.purchaseDate) {
           this.$refs.purchaseDate.errorBucket = ['采购日期不能晚于需求日期']
           return
@@ -691,7 +689,6 @@ export default {
         this.$message('数据少于2条,不能合并', 'error')
         return
       }
-      console.log(this.selected)
       let item = this._.cloneDeep(this.selected[0])
       let ids = [item['id']]
       if (item['id'] === null) {

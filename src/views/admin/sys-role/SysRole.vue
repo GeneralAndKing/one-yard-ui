@@ -101,12 +101,10 @@ export default {
       role.edit = !role.edit
       if (!role.edit) {
         // 保存的时候
-        console.log('保存')
         this.showTip('保存成功～！')
       } else {
         // 编辑的时候
         this.editItem = this._.cloneDeep(role)
-        console.log('编辑')
       }
       this.add = false
     },

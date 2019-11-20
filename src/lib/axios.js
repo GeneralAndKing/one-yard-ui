@@ -17,7 +17,6 @@ const refresh = async function () {
 class HttpRequest {
   constructor (baseUrl = baseURL) {
     this.baseUrl = baseUrl
-    console.log(this.baseUrl)
     // 请求队列
     this.queue = {}
   }
@@ -60,7 +59,6 @@ class HttpRequest {
         // iView.Spin.show()
       }
       this.queue[url] = true
-      console.log('123')
       // 如果有token 在header里加authorization
       if (store.getters['auth/isAuth']) {
         let token = store.getters['auth/token']
