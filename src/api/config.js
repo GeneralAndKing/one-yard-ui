@@ -1,3 +1,3 @@
 export const baseURL = process.env.NODE_ENV === 'prod'
-  ? 'http://127.0.0.1:8080'
-  : '/api/'
+  ? 'http://39.104.13.240:10011/api'
+  : '/api'

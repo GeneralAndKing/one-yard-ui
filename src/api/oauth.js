@@ -4,11 +4,11 @@ import qs from 'qs'
 import { baseURL } from './config'
 import { Base64 } from 'js-base64'
 import md5 from 'js-md5'
-const OAUTH_TOKEN = baseURL + 'oauth/token'
-const CHECK_TOKEN = baseURL + 'oauth/check_token'
+const OAUTH_TOKEN = baseURL + '/oauth/token'
+const CHECK_TOKEN = baseURL + '/oauth/check_token'
 const authorizationBasic = 'Basic Z2FrOjEyMzQ1Ng=='
-const AUTH_REGISTER = baseURL + 'auth/register'
-const AUTH_FORGET = baseURL + 'auth/forget'
+const AUTH_REGISTER = baseURL + '/auth/register'
+const AUTH_FORGET = baseURL + '/auth/forget'
 // 暂时不对 token 进行校验
 
 /**
