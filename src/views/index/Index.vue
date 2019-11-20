@@ -24,7 +24,7 @@ export default {
     items: [
       {
         color: 'red lighten-2',
-        icon: 'mdi-star',
+        icon: 'mdi-star mdi-spin',
         title: '第一步： 注册登陆获得权限及修改用户信息',
         content: '首次注册登陆后进入系统时账户为游客权限，需要联系管理员分配权限后重新登录才可进行对应的操作。每个用户都可点击系统右上角的下拉选项中的‘个人设置’进行个人信息的编辑修改，同时右上角还以查看通知信息以及改变系统主题。',
         button: '了解>>'

@@ -28,8 +28,12 @@
           v-list-item-group
             v-list-item(:to="{ name: 'userSetting' }")
               v-list-item-avatar
-                v-icon mdi-clock
+                v-icon mdi-settings mdi-spin
               v-list-item-content 个人设置
+            v-list-item(href="https://generalandking.github.io/one-yard-ui/", target="_blank")
+              v-list-item-avatar
+                v-icon mdi-help-circle
+              v-list-item-content 帮助
             v-list-item(@click="() => {$store.dispatch('auth/logout')}")
               v-list-item-avatar
                 v-icon mdi-flag

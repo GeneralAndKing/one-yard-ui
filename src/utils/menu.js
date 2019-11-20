@@ -3,13 +3,13 @@ import store from '_store'
 export const MENUS = [
   {
     to: { name: 'dashboard' },
-    icon: 'dashboard',
+    icon: 'mdi-view-dashboard',
     text: '仪表盘',
     auth: [Role.ROLE_ADMIN]
   },
   {
     text: '用户管理',
-    icon: 'account_circle',
+    icon: 'mdi-account-circle',
     to: { name: 'sysUser' },
     auth: [
       Role.ROLE_ADMIN,
@@ -29,7 +29,7 @@ export const MENUS = [
   {
     text: '部门管理',
     to: { name: 'sysDepartment' },
-    icon: 'how_to_vote',
+    icon: 'mdi-camera-metering-matrix',
     auth: [Role.ROLE_ADMIN]
   }, {
     name: '基础数据管理',
@@ -37,25 +37,25 @@ export const MENUS = [
       {
         text: '供应商管理',
         to: { name: 'supplier' },
-        icon: 'location_city',
+        icon: 'mdi-home-assistant',
         auth: [ Role.ROLE_ADMIN ]
       },
       {
         text: '仓库组织管理',
         to: { name: 'inventory' },
-        icon: 'location_city',
+        icon: 'mdi-hospital-building',
         auth: [ Role.ROLE_ADMIN ]
       },
       {
         text: '物料类别管理',
         to: { name: 'materialType' },
-        icon: 'location_city',
+        icon: 'mdi-dip-switch',
         auth: [ Role.ROLE_ADMIN ]
       },
       {
         text: '物料管理',
         to: { name: 'material' },
-        icon: 'location_city',
+        icon: 'mdi-dns',
         auth: [ Role.ROLE_ADMIN ]
       }
     ]
@@ -65,7 +65,7 @@ export const MENUS = [
       {
         text: '需求计划创建',
         to: { name: 'materialPlanCreate' },
-        icon: 'location_city',
+        icon: 'mdi-newspaper',
         auth: [
           Role.ROLE_PRODUCTION_PLANER,
           Role.ROLE_WAREHOUSE_PLANER,
@@ -76,7 +76,7 @@ export const MENUS = [
       {
         text: '需求计划管理',
         to: { name: 'materialPlanManagement' },
-        icon: 'location_city',
+        icon: 'mdi-nfc-variant',
         auth: [
           Role.ROLE_PRODUCTION_PLANER,
           Role.ROLE_WAREHOUSE_PLANER,
@@ -95,7 +95,7 @@ export const MENUS = [
       {
         text: '物资供应方案',
         to: { name: 'summary' },
-        icon: 'location_city',
+        icon: 'mdi-note-multiple',
         auth: [
           Role.ROLE_PROCUREMENT_PLANER
         ]
@@ -103,7 +103,7 @@ export const MENUS = [
       {
         text: '采购计划管理',
         to: { name: 'procurementPlanManagement' },
-        icon: 'location_city',
+        icon: 'mdi-nutrition',
         auth: [
           Role.ROLE_PROCUREMENT_PLANER,
           Role.ROLE_PROCUREMENT_SUPERVISOR,
