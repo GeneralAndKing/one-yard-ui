@@ -35,6 +35,7 @@ export const Role = {
     return role.includes(Role.ROLE_PRODUCTION_SUPERVISOR) ||
       role.includes(Role.ROLE_WORKSHOP_SUPERVISOR) ||
       role.includes(Role.ROLE_WAREHOUSE_SUPERVISOR) ||
+      role.includes(Role.ROLE_PROCUREMENT_SUPERVISOR) ||
       role.includes(Role.ROLE_FINANCE_SUPERVISOR)
   },
   supervisorList (role) {
@@ -49,6 +50,9 @@ export const Role = {
           break
         case Role.ROLE_WAREHOUSE_SUPERVISOR:
           list.push(Department.ROLE_WAREHOUSE_SUPERVISOR)
+          break
+        case Role.ROLE_PROCUREMENT_SUPERVISOR:
+          list.push(Department.ROLE_PROCUREMENT_SUPERVISOR)
           break
         case Role.ROLE_FINANCE_SUPERVISOR:
           list.push(Department.ROLE_WAREHOUSE_SUPERVISOR)

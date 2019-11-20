@@ -59,7 +59,6 @@
 <script>
 import TableCardSheet from '_c/table-card-sheet'
 import * as oauthAPI from '_api/oauth'
-import * as restAPI from '_api/rest'
 import { emailRules, passwordRules, requiredRules, unionRules, phoneRules, imageRequiredRules, maxLengthRules } from '_u/rule'
 import * as utils from '_u/util'
 import * as sysUserAPI from '_api/sysUser'
@@ -129,7 +128,8 @@ export default {
         }
         _this.loading.left = true
         // 此时是保存，保存数据成功以后，回调
-        restAPI.patchOne('sysUser', _this.me.id, {
+        sysUserAPI.modifyInfo({
+          id: _this.me.id,
           username: _this.me.username,
           name: _this.me.name,
           phone: _this.me.phone,

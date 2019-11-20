@@ -15,6 +15,20 @@
                   persistent-hint, :rules="rules.union(rules.required('月度'))")
               v-flex.my-4.text-right(sm12)
                 v-btn.mr-4(color="blue", outlined, @click="handleSelect") 查询
+                // 合并规则 菜单栏------------------------A 开始
+                v-menu(bottom, offset-y, :close-on-content-click="false")
+                  template(v-slot:activator="{ on }")
+                    v-btn.mr-4(color="blue accent-4", outlined, v-on="on") 合并规则
+                  v-list(dense)
+                    v-list-item
+                      v-switch(v-model="mergeRule.material", label="物料", disabled, dense, hide-details)
+                    v-list-item
+                      v-switch(v-model="mergeRule.expectationSupplier", label="期望供应商", dense, hide-details)
+                    v-list-item
+                      v-switch(v-model="mergeRule.fixedSupplier", label="固定供应商", dense, hide-details)
+                    v-list-item.mb-3
+                      v-switch(v-model="mergeRule.date", label="需求日期", dense, hide-details)
+                // -------------------------------------A 结束
                 v-btn.mr-4(color="success", outlined, @click="handleAdd", :disabled="desserts.length === 0") 添加
                 v-btn.mr-4(color="orange", outlined, @click="handleAnd", :disabled="selected.length === 0") 合并所选
         v-data-table(v-model="selected", :headers="headers", :items="desserts", :loading="loading", loading-text="加载中......", style="width:100%",
@@ -38,9 +52,9 @@
                 v-btn.mr-2(outlined, rounded, x-small, fab, color="primary", @click="handleEdit(item)", v-on="on")
                   v-icon mdi-pencil
               span 编辑
-            v-tooltip(top)
+            v-tooltip(top, v-if='item.planId !== null')
               template(v-slot:activator="{ on }")
-                v-btn.mr-2(outlined, rounded, x-small, fab, color="warning", v-if='item.planId !== null', @click="handleBack(item)", v-on="on")
+                v-btn.mr-2(outlined, rounded, x-small, fab, color="warning", @click="handleBack(item)", v-on="on")
                   v-icon mdi-arrow-collapse-left
               span 需求退回
             v-tooltip(top, v-if="!item.id")
@@ -338,6 +352,12 @@ export default {
     purchaseDate: new Date().toISOString().substr(0, 10),
     dayMenu: false,
     dialog: false,
+    mergeRule: {
+      material: true,
+      expectationSupplier: false,
+      fixedSupplier: false,
+      date: false
+    },
     search: {
       year: '',
       month: ''

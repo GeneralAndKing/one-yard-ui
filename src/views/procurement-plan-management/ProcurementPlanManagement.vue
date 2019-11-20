@@ -18,6 +18,14 @@
                   template(v-slot:activator="{ on }")
                     v-text-field(v-model="search.createTime", v-on="on", label="创建日期", readonly)
                   v-date-picker(v-model="search.createTime", no-title, @input="dayMenu = false", locale="zh-cn")
+              v-flex.text-right(xs12)
+                v-btn.mr-4(outlined, color="light-blue",
+                  v-per="[Role.ROLE_PROCUREMENT_SUPERVISOR, Role.ROLE_FINANCE]",
+                  @click="seeApprovalIng" ) 查看待审批计划
+                v-btn.mr-4(outlined, color="light-blue",
+                  v-per="[Role.ROLE_PROCUREMENT_SUPERVISOR, Role.ROLE_FINANCE]",
+                  @click="seeApprovalEd" ) 查看已审批计划
+                v-btn(outlined, color="light-blue", @click="seeReset") 重置条件
           v-data-table(:headers="headers", :items="desserts", :loading="loading", loading-text="加载中......",
             item-key="id", :mobile-breakpoint="800",  :custom-filter="filterSearch", :search="searchValue",
             no-data-text="暂无数据", no-results-text="暂无数据")
@@ -261,6 +269,36 @@ export default {
           this.desserts = []
           this.initTable()
         })
+    },
+    seeApprovalIng () {
+      this.desserts = []
+      this.initData()
+    },
+    seeApprovalEd () {
+      this.desserts = []
+      this.loading = true
+      let _this = this
+      let role = _this.$store.getters['auth/role']
+      let resourcesLink = null
+      if (role.includes(Role.ROLE_PROCUREMENT_SUPERVISOR)) {
+        resourcesLink = `procurementPlan/search/byStatus?planStatus=PROCUREMENT_OK&approvalStatus=APPROVAL_ING`
+      }
+      if (role.includes(Role.ROLE_FINANCE) || role.includes(Role.ROLE_FINANCE_PLANER) || role.includes(Role.ROLE_FINANCE_SUPERVISOR)) {
+        resourcesLink = `procurementPlan/search/byStatus?planStatus=FINALLY&approvalStatus=APPROVAL_OK`
+      }
+      restAPI.getRestLink(resourcesLink)
+        .then(res => {
+          this.desserts = res.data.content.filter(d => !d.hasOwnProperty('relTargetType'))
+        })
+        .finally(() => { this.loading = false })
+    },
+    seeReset () {
+      this.search = {
+        name: '',
+        planStatus: '',
+        approvalStatus: '',
+        createTime: ''
+      }
     }
   }
 }

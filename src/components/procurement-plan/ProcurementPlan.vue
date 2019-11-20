@@ -52,7 +52,7 @@
               v-btn.mr-2(outlined, rounded, x-small, fab, color="warning", @click="handleDelete(item)", v-on="on", :disabled="see")
                 v-icon delete
             span 删除
-          v-tooltip(top, v-if="item.departmentName !== '采购部门'")
+          v-tooltip(top, v-if="item.departmentName !== '采购部' && item.planId !== null && !item.new ")
             template(v-slot:activator="{ on }")
               v-btn.mr-2(outlined, rounded, x-small, fab, color="error", @click="handleReturn(item)", v-on="on", :disabled="see")
                 v-icon mdi-backburger
@@ -132,10 +132,10 @@
                       v-date-picker(v-model="needDate", no-title, @input="dayMenu = false", locale="zh-cn")
                   v-flex(xs12, md6, md4)
                     v-select(v-model="editedItem.supplyMode", label="供应方式", :rules="rules.union(rules.requiredMessage('供应方式'))",
-                      hint="供应方式", :items="supplyMode", :disabled="seeOne")
-                  v-flex(xs12, md6, md4, v-if="editedItem.supplyMode === '采购'")
+                      hint="供应方式", :items="supplyMode", :disabled="seeOne", @change="handleSupplyModeSelect")
+                  v-flex(xs12, md6, md4)
                     v-text-field(v-model="editedItem.supplyNumber", label="供应数量", type="number", :rules="rules.union(rules.requiredMessage('供应数量'))",
-                      hint="当前物料供应数量", :disabled="seeOne")
+                      hint="当前物料供应数量", :disabled="seeOne", :readonly="editedItem.supplyMode==='采购'")
                   v-flex(xs12, md6, md4, v-if="editedItem.supplyMode === '采购'")
                     v-menu(v-model="purchaseMenu", :close-on-content-click="false", transition="scale-transition",
                       offset-y, max-width="290px", min-width="290px")
@@ -425,6 +425,9 @@ export default {
           this.$message('退回成功！', 'success')
         }
         )
+    },
+    handleSupplyModeSelect (item) {
+      if (item === '采购') this.editedItem.supplyNumber = this.editedItem.number
     },
     print () {
       this.$router.push({
