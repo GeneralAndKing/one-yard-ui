@@ -29,7 +29,7 @@ module.exports = {
     docsDir: 'docs',
     nav: [
       { text: '主页', link: '/' },
-      { text: '需求分析', link: '/demand/' },
+      { text: '操作手册', link: '/demand/' },
       { text: '技术架构', link: '/architecture/' },
       { text: '关于', link: '/about/' }
     ],
@@ -37,17 +37,18 @@ module.exports = {
       '/demand/': [
         ['', '文档说明'],
         {
-          title: '基础需求',
+          title: '基础操作',
           collapsable: false,
           children: [
-            '/demand/system/base'
+            '/demand/system/base',
+            '/demand/system/admin'
           ]
         },
         {
           title: '物料需求',
           collapsable: false,
           children: [
-            '/demand/material-plan/create'
+            '/demand/system/start'
           ]
         }
       ],
@@ -57,9 +58,6 @@ module.exports = {
         ['back', '后端'],
         ['web', '前端'],
         ['summary', '总结']
-      ],
-      '/about/': [
-        ''
       ]
     },
     sidebarDepth: 2,
