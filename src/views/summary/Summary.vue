@@ -609,16 +609,20 @@ export default {
     },
     handleSubmit () {
       // 供应方式，供应数量，采购日期
-      for (const d in this.desserts) {
-        if (this.checkNUll(this.desserts[d].supplyMode)) {
+      if (this.selected.length < 1) {
+        this.$message('数据少于1条,不能生成采购计划', 'error')
+        return
+      }
+      for (const d in this.selected) {
+        if (this.checkNUll(this.selected[d].supplyMode)) {
           this.$message(`请确认所有的数据都已经填写供应方式`, 'warning')
           return
-        } else if (this.checkNUll(this.desserts[d].supplyNumber)) {
+        } else if (this.checkNUll(this.selected[d].supplyNumber)) {
           this.$message(`请确认所有的数据都已经填写供应数量`, 'warning')
           return
         }
-        if (this.desserts[d].supplyMode === this.supplyMode[1]) {
-          if (this.checkNUll(this.desserts[d].purchaseDate)) {
+        if (this.selected[d].supplyMode === this.supplyMode[1]) {
+          if (this.checkNUll(this.selected[d].purchaseDate)) {
             this.$message(`请确认所有供应方式为采购的数据都已经填写采购日期`, 'warning')
             return
           }
@@ -641,7 +645,7 @@ export default {
         approvalStatus: 'NO_SUBMIT',
         planStatus: 'FREE'
       }
-      procurementPlan.saveOrUpdate(purchase, this.desserts)
+      procurementPlan.saveOrUpdate(purchase, this.selected)
         .then(() => {
           this.submitDialog = false
           this.$router.push({ name: 'procurementPlanManagement' })
