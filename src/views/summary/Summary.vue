@@ -701,7 +701,7 @@ export default {
       item['createUser'] = null
       item['status'] = 'INIT'
       item['materialTrackingCode'] = uuidv4()
-      if (item['remark'] === null) {
+      if (item['remark'] === null && item['departmentName'] !== null) {
         item['remark'] = item['departmentName']
       }
       for (let i = 1; i < this.selected.length; i++) {
@@ -736,7 +736,9 @@ export default {
           item['expectationSupplier'] = null
         }
         item['number'] += this.selected[i]['number']
-        if (item['remark'].search(this.selected[i]['departmentName']) === -1) {
+        if (item['remark'] === null && this.selected[i]['departmentName'] !== null) {
+          item['remark'] = this.selected[i]['departmentName']
+        } else if (item['remark'] !== null && this.selected[i]['departmentName'] !== null && item['remark'].search(this.selected[i]['departmentName']) === -1) {
           item['remark'] += ',' + this.selected[i]['departmentName']
         }
         ids.push(this.selected[i]['id'])

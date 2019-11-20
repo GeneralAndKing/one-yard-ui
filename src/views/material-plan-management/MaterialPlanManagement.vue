@@ -25,10 +25,10 @@
               v-flex.text-right(xs12)
                 v-btn.mr-4(outlined, color="light-blue",
                 v-per="[Role.ROLE_PRODUCTION_SUPERVISOR,Role.ROLE_WORKSHOP_SUPERVISOR,Role.ROLE_WAREHOUSE_SUPERVISOR,Role.ROLE_FINANCE_SUPERVISOR]",
-                @click="seeApprovalIng" ) 查看待审批计划
+                @click="seeApprovalIng" ) 查看待审批的计划
                 v-btn.mr-4(outlined, color="light-blue",
                   v-per="[Role.ROLE_PRODUCTION_SUPERVISOR,Role.ROLE_WORKSHOP_SUPERVISOR,Role.ROLE_WAREHOUSE_SUPERVISOR,Role.ROLE_FINANCE_SUPERVISOR]",
-                  @click="seeApprovalEd" ) 查看已审批计划
+                  @click="seeApprovalEd" ) 查看审批通过的计划
                 v-btn.mr-4(outlined, color="light-blue",
                   v-per="[Role.ROLE_PRODUCTION_PLANER,Role.ROLE_WORKSHOP_PLANER,Role.ROLE_WAREHOUSE_PLANER,Role.ROLE_FINANCE_PLANER]",
                   @click="seeApproval") 查看审批中计划

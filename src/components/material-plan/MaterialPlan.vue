@@ -4,7 +4,7 @@
       v-btn(fab, small, color="green", dark, @click="print")
         v-icon mdi-printer-settings
     v-card
-      v-card-title {{see?'计划表编辑':'计划表创建'}}
+      v-card-title {{see?'需求计划表编辑':'需求计划表创建'}}
       v-card-text
         v-container(grid-list-md)
           v-form(ref="base")
