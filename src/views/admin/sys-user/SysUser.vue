@@ -126,7 +126,7 @@ export default {
     },
     roles: [],
     defaultItem: {
-      icon: 'https://picsum.photos/id/11/10/6',
+      icon: 'http://q0zlaui5t.bkt.clouddn.com/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195',
       password: '',
       username: '',
       name: '',
