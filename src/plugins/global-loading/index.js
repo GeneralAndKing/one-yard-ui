@@ -27,7 +27,6 @@ GlobalLoading.config = function (options = {}) {
   GlobalLoading.install = {
     start () {
       if (Vue.$isServer) return
-      console.log('123')
       vm.options.active = true
     },
     finish () {
