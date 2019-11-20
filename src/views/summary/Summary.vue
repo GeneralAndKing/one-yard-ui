@@ -639,8 +639,6 @@ export default {
       let date = new Date()
       const key = `${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}`
       for (const d in this.selected) {
-        console.log(this.selected[d])
-        console.log(d)
         if (this.checkNUll(this.selected[d].supplyMode)) {
           this.$message(`选中的第` + d + `条数据未填写供应方式`, 'warning')
           return
@@ -688,7 +686,6 @@ export default {
         }).finally(() => { this.submitLoading = true })
     },
     handleAnd () {
-      console.log('123')
       // 合并数据
       if (this.selected.length < 2) {
         this.$message('数据少于2条,不能合并', 'error')

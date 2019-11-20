@@ -38,7 +38,7 @@
                     v-form(ref="editedItem")
                       v-container(grid-list-md)
                         v-layout(wrap)
-                          v-flex(xs12, sm12)
+                          v-flex(xs12, sm12, v-if="editedIndex !== -1")
                             v-hover
                               template( v-slot:default="{ hover }")
                                 v-avatar(size="64px")
@@ -126,7 +126,7 @@ export default {
     },
     roles: [],
     defaultItem: {
-      icon: 'https://picsum.photos/id/11/10/6',
+      icon: 'http://q0zlaui5t.bkt.clouddn.com/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195',
       password: '',
       username: '',
       name: '',
@@ -249,8 +249,10 @@ export default {
           data.roles = []
           data.password = md5(Base64.encode(data.password))
           this.editedItem.roles.forEach(role => data.roles.push(_this._.find(role.links, { rel: 'self' }).href))
-          restAPI.addOne('sysUser', data).then(() => {
-            this.desserts.push(this.editedItem)
+          restAPI.addOne('sysUser', data).then((res) => {
+            res.data.password = 'xxxxxxxxxxxxxxxxxx'
+            res.data.roles = this.editedItem.roles
+            this.desserts.push(res.data)
             this.close()
             this.$message('添加成功！', 'success')
           }).finally(() => { this.submitLoading = false })
@@ -258,8 +260,8 @@ export default {
       }
     },
     handleExist (action) {
-      if ((!this.editedItem[action]) || this.editedIndex === -1) return
-      if (this.desserts[this.editedIndex][action] === this.editedItem[action]) return
+      if (!this.editedItem[action]) return
+      if (this.editedIndex !== -1 && this.desserts[this.editedIndex][action] === this.editedItem[action]) return
       this.load[action] = true
       oauthAPI.authExist({
         username: this.editedItem[action],
