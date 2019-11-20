@@ -549,6 +549,10 @@ export default {
       this.splitDialog = true
     },
     handleSplitSave () {
+      if (this.editedItem.newNumber <= 0 || this.editedItem.number - this.editedItem.newNumber <= 0) {
+        this.$message('拆分失败,物料数量小于0', 'error')
+        return
+      }
       let leftNum = this.editedItem.newNumber
       let rightNum = this.editedItem.number - leftNum
       delete this.editedItem.newNumber
