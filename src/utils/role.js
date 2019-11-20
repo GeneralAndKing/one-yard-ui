@@ -55,7 +55,7 @@ export const Role = {
           list.push(Department.ROLE_PROCUREMENT_SUPERVISOR)
           break
         case Role.ROLE_FINANCE_SUPERVISOR:
-          list.push(Department.ROLE_WAREHOUSE_SUPERVISOR)
+          list.push(Department.ROLE_FINANCE_SUPERVISOR)
           break
       }
     })
