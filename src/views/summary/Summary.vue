@@ -147,7 +147,7 @@
                       v-text-field(v-model="editedItem.material.unit", label="计量单位", :rules="rules.union(rules.required('计量单位'))",
                         readonly, hint="当前物料计量单位")
                     v-flex(xs12, md6, lg3)
-                      v-text-field(v-model="editedItem.material.number", label="需求数量", type="number", :rules="rules.union(rules.requiredMessage('需求数量'))",
+                      v-text-field(v-model="editedItem.number", label="需求数量", type="number", :rules="rules.union(rules.requiredMessage('需求数量'))",
                         hint="当前物料所需数量")
                     v-flex(xs12, md6, lg3)
                       v-menu(v-model="dayMenu", :close-on-content-click="false", transition="scale-transition",
@@ -176,15 +176,13 @@
                         hint="采购部新增物资只允许采购")
                     v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '库存供应'")
                       v-text-field(v-model="editedItem.supplyNumber", label="供应数量", type="number", :rules="rules.union(rules.requiredMessage('供应数量'))",
-                        hint="填写库存供应数量，若为达到需求数量则自动拆分")
-                    v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '采购'")
-                      v-text-field(label="采购数量", hint="当前物料采购数量") 采购数量与需求数量保持一致
+                        hint="填写库存供应数量，若为达到需求数量则自动拆分" )
                     v-flex(xs12, md6, lg3, v-if="editedItem.supplyMode === '采购'")
                       v-menu(v-model="purchaseMenu", :close-on-content-click="false", transition="scale-transition",
                         offset-y, max-width="290px", min-width="290px")
                         template(v-slot:activator="{ on }")
                           v-text-field(v-model="editedItem.purchaseDate", v-on="on", label="采购日期", readonly,
-                            :rules="rules.union(rules.required('采购日期'))")
+                            :rules="rules.union(rules.required('采购日期'))" ref="purchaseDate")
                         v-date-picker(v-model="purchaseDate", no-title, @input="purchaseMenu = false", locale="zh-cn")
                     v-flex(xs12, md6, lg3)
                       v-switch(v-model="editedItem.isSourceGoods", :label="`货源是否确定:${editedItem.isSourceGoods ? '是': '否'}`")
@@ -594,6 +592,7 @@ export default {
     },
     handleSave () {
       if (!this.$refs.edit.validate()) return
+      console.log(this.editedItem)
       this.editedItem.supplyNumber = this.editedItem.number
       if (this.editedItem.supplyMode !== '采购') {
         if (this.editedItem.availableNum - this.editedItem.supplyNumber < 0) {
@@ -641,6 +640,7 @@ export default {
           this.$message(`选中的第` + d + `条数据未填写供应方式`, 'warning')
           return
         } else if (this.checkNUll(this.selected[d].supplyNumber)) {
+          console.log('13')
           this.$message(`选中的第` + d + `条数据未填写供应数量`, 'warning')
           return
         } else if (this.selected[d].supplyNumber > this.selected[d].number) {
