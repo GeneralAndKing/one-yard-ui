@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import * as oauthAPI from '_api/oauth'
 import { Role } from '_u/role'
 import { to } from '_u/util'
@@ -52,6 +53,10 @@ const mutations = {
   SET_AUTH (state, auth) {
     state.auth = auth
     state.role = []
+    if (!auth.hasOwnProperty('authorities') || auth.authorities.length === 0) {
+      Vue.prototype.$message('当前用户没有任何角色，请联系系统管理员赋予角色！', 'error')
+      return
+    }
     auth.authorities.forEach((item) => {
       if (Role.hasOwnProperty(item)) {
         console.log(Role[item])
