@@ -682,6 +682,24 @@ export default {
           this.$message('供应方式不同,不能合并')
           return
         }
+        if (this.mergeRule.date && this.selected[i]['date'] !== item['date']) {
+          this.$message('需求日期不一致,不能合并')
+          return
+        } else {
+          item['date'] = item['date'] < this.selected[i]['date'] ? item['date'] : this.selected[i]['date']
+        }
+        if (this.mergeRule.fixedSupplier && this.selected[i]['fixedSupplier'] !== item['fixedSupplier']) {
+          this.$message('固定供应商不一致,不能合并')
+          return
+        } else if (!this.mergeRule.fixedSupplier && this.selected[i]['fixedSupplier'] !== item['fixedSupplier']) {
+          item['fixedSupplier'] = null
+        }
+        if (this.mergeRule.expectationSupplier && this.selected[i]['expectationSupplier'] !== item['expectationSupplier']) {
+          this.$message('期待供应商不一致,不能合并')
+          return
+        } else if (!this.mergeRule.fixedSupplier && this.selected[i]['expectationSupplier'] !== item['expectationSupplier']) {
+          item['expectationSupplier'] = null
+        }
         item['number'] += this.selected[i]['number']
         if (item['remark'].search(this.selected[i]['departmentName']) === -1) {
           item['remark'] += ',' + this.selected[i]['departmentName']
