@@ -92,7 +92,6 @@ const actions = {
       let err, res
       [err, res] = await to(oauthAPI.checkToken(state.token.access_token))
       if (err) {
-        commit('SET_AUTH', null)
         return reject(err.response)
       }
       commit('SET_AUTH', res.data)
@@ -104,7 +103,6 @@ const actions = {
       let err, res
       [err, res] = await to(oauthAPI.getMe())
       if (err) {
-        commit('SET_ME', null)
         return reject(err.response)
       }
       commit('SET_ME', res.data.me)
@@ -116,7 +114,6 @@ const actions = {
       let err, res
       [err, res] = await to(oauthAPI.refreshToken(state.token.refresh_token))
       if (err) {
-        commit('SET_TOKEN', null)
         return reject(err.response)
       }
       commit('SET_TOKEN', res.data)
