@@ -1,6 +1,6 @@
 module.exports = {
   title: '智能制造协同平台',
-  description: '智能制造协同平台文档说明',
+  description: '文档说明',
   port: 1111,
   locales: {
     '/': { lang: 'zh-CN' }
@@ -52,7 +52,11 @@ module.exports = {
         }
       ],
       '/architecture/': [
-        ''
+        ['', '概览'],
+        ['maintain', '运维'],
+        ['back', '后端'],
+        ['web', '前端'],
+        ['summary', '总结']
       ],
       '/about/': [
         ''

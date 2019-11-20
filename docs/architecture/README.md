@@ -1,55 +1,62 @@
-about
+---
+title: 概览
+---
 
---------------
+## 技术选型
 
+本项目采用前后断完全分离模式，基于 `http` 与 `websocket` 进行通信，采用技术如下：
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin luctus ornare cursus. Aenean dignissim in dolor sed blandit. In faucibus lorem a nisl vulputate venenatis. Quisque pulvinar justo ut quam cursus, quis elementum risus accumsan. Vestibulum dapibus ligula nulla, non tincidunt justo feugiat ac. Donec sit amet vehicula purus. Praesent tempor nulla et ipsum sodales scelerisque. Donec commodo libero eu turpis condimentum, et gravida nulla rutrum. Suspendisse vulputate justo sit amet nibh ullamcorper, eget interdum enim interdum. Praesent ipsum nulla, mollis eu ipsum eget, fringilla iaculis dolor.
+### 后端技术选型
 
-In eros metus, iaculis eu risus non, egestas sollicitudin lectus. Duis in metus eu magna maximus malesuada nec feugiat nulla. Integer ullamcorper metus eu tempus scelerisque. Suspendisse potenti. Nulla dapibus ante eu porttitor pretium. Ut a nisi pharetra, auctor dolor eget, porttitor nunc. Duis iaculis, mi sit amet blandit ultrices, augue libero consequat nisi, sed luctus leo tortor a ante. Donec sed pulvinar massa. In iaculis ante lectus. Mauris condimentum velit sit amet lacus malesuada, ut cursus felis imperdiet. Nunc scelerisque risus a fermentum vestibulum. Duis dignissim ipsum ac felis dictum malesuada. Aenean consectetur euismod lacus vitae lacinia. Nulla dictum nec augue eget consectetur. Suspendisse et porttitor risus. Pellentesque et neque sem.
+> 项目地址：[one-yard](https://github.com/GeneralAndKing/one-yard)
 
-Nam at elementum metus. Nullam consequat ut purus egestas consequat. Donec maximus, justo ut finibus malesuada, lectus mi vestibulum elit, vel faucibus diam justo vel velit. Integer nec efficitur dolor. Cras hendrerit elit non est rhoncus, nec lobortis massa mollis. Morbi lacus ex, condimentum vel sagittis et, vestibulum in arcu. Sed eu ultricies nunc. Mauris aliquet sit amet risus sit amet tempor. Suspendisse lacinia eros tortor, ut gravida purus rhoncus at. Vivamus viverra dui ut dolor gravida, et tincidunt erat faucibus. Curabitur ut posuere augue. In nec nulla eget justo pellentesque commodo ut quis sapien. Curabitur a nulla volutpat, fermentum justo non, aliquet ipsum.
+- 开源协议： [GNU GENERAL PUBLIC LICENSE Version 3](https://github.com/GeneralAndKing/one-yard/blob/master/LICENSE)
+- 开发环境： [jdk 11](http://openjdk.java.net/projects/jdk/11/)
+- 构建工具： [gradle5](https://gradle.org/)
+- 核心框架： [spring-boot](https://spring.io/projects/spring-boot)
+- 安全框架： [spring-security-oauth](https://spring.io/projects/spring-security-oauth)
+- 授权协议： [oauth2](https://tools.ietf.org/html/rfc6749)
+- 应用缓存： [redis](https://redis.io/)
+- 应用容器： [docker](https://www.docker.com/)
+- 容器编排： [docker-compose](https://github.com/docker/compose)
+- 接口规范： [restful](https://tools.ietf.org/html/rfc6690)
+- 接口测试： [postman](https://www.getpostman.com/)
+- 模板引擎： [Freemarker](https://freemarker.apache.org/)
+- 反向代理： [nginx](https://nginx.org/en/)
+- 数据库： [mysql8](https://dev.mysql.com/)
+- 邮件： [腾讯企业邮](https://exmail.qq.com/)
+- 图床： [七牛云](https://www.qiniu.com/)
 
-Vestibulum a ex vitae neque mollis euismod. Aenean id risus nunc. Aliquam faucibus non quam sit amet pharetra. Donec tempus dolor augue, non tristique turpis efficitur sit amet. Vivamus et est gravida, lacinia metus sit amet, ultricies libero. Nulla quis tristique tortor. Phasellus sollicitudin dignissim sem, quis dignissim eros auctor a. Nulla et ullamcorper orci. In hac habitasse platea dictumst. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum nec est purus. Maecenas consequat velit quam, vitae pellentesque purus finibus sed. Quisque lobortis nulla turpis, sed varius purus convallis quis.
+### 前端技术选型
 
-Donec quis laoreet purus. Curabitur congue, elit sit amet sagittis tristique, dolor dolor luctus neque, eu malesuada mauris erat elementum ex. In et quam id lacus tristique pretium sed sit amet ipsum. Aliquam gravida neque at quam accumsan aliquet. Proin at aliquet metus. Suspendisse orci dui, pretium vitae orci id, molestie malesuada lectus. Phasellus congue interdum nisl, quis efficitur arcu ultrices at. Praesent risus orci, pharetra vitae eros eu, porttitor pretium tellus.
+> 项目地址：[one-yard-ui](https://github.com/GeneralAndKing/one-yard-ui)
 
-Maecenas eget malesuada nulla, id venenatis felis. Sed condimentum turpis vel magna commodo auctor. Fusce non neque at justo dapibus sodales. Praesent pharetra lacus orci, sed tempor turpis sagittis mattis. Donec sit amet lectus condimentum, ornare lacus et, gravida velit. Donec vel feugiat sapien. Cras varius ornare ullamcorper.
+- 开源协议： [GNU GENERAL PUBLIC LICENSE Version 3](https://github.com/GeneralAndKing/one-yard-ui/blob/master/LICENSE)
+- 开发环境： [node 12](https://nodejs.org)
+- 构建工具： [yarn](https://yarnpkg.com/lang/en/)
+- 核心组件： [vuetify](https://vuetifyjs.com/zh-Hans/)
+- 核心框架： [Vue](https://vuejs.org/)
+- 项目文档： [vue-press](https://vuepress.vuejs.org)
+- 设计风格： [Material Design](https://material.io/design/)
+- 模板引擎： [pug](https://pugjs.org/)
+- 预处理器： [stylus](http://stylus-lang.com/)
+- 代码约束： [ESLint](https://eslint.org/)
+- HTTP 库: [Axios](https://www.axios.com)
 
-Curabitur accumsan venenatis nisi, vel vestibulum ligula feugiat non. Sed mauris est, gravida volutpat quam id, interdum sollicitudin turpis. Ut ac tortor et arcu tempor convallis. Curabitur egestas lacinia volutpat. Etiam fermentum tortor vitae dictum auctor. Vivamus pulvinar quam eget velit maximus consequat. Proin dignissim quam sodales leo sollicitudin, vitae commodo ligula tempus. Aliquam tempus turpis vitae ante feugiat commodo. Nulla malesuada velit elit, vel dapibus arcu malesuada eget. Vivamus ullamcorper imperdiet dignissim. Suspendisse sed dui auctor, dignissim metus et, venenatis ex. Praesent ultricies malesuada sem, id viverra arcu luctus in. Maecenas diam lacus, viverra et congue at, elementum non augue. Vestibulum gravida, lacus faucibus tincidunt blandit, arcu neque luctus ex, a tempor ex nulla et sapien.
+## 接口规范
 
-Nulla facilisi. Vestibulum posuere consectetur leo. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Phasellus elementum, purus sit amet consequat fermentum, sem purus vestibulum elit, eget semper sem sem et ante. Sed feugiat vitae elit non accumsan. Suspendisse eu pulvinar erat. Vestibulum eget lacus quam. Aenean erat purus, iaculis vitae augue at, ultrices scelerisque metus. Nulla eleifend sit amet sapien eu convallis. Maecenas in nisi vel enim aliquet suscipit quis eget est.
+完全遵循 restful 进行设计，通过 url 定位资源， 用 HTTP 动词（`GET`,`POST`,`DELETE`,`PATCH`,`PUT`）描述操作，所有操作如下：
 
-Donec posuere urna quis nulla aliquet vulputate. Maecenas sed risus elit. Proin lectus mi, bibendum eu nulla a, vestibulum efficitur diam. Aenean luctus odio vitae lorem malesuada vehicula. Sed cursus iaculis felis ut ornare. Duis justo dui, hendrerit sed augue eu, mollis suscipit mauris. Praesent ut gravida dui, non eleifend nulla. Phasellus ultricies quam nulla, et eleifend erat pretium eu. Maecenas sed feugiat nulla. Donec id tincidunt massa.
+> 为了系统的安全性，我们不会真正的将一个数据进行删除，而是通过将其 `is_enable` 字段置为 `FALSE`，同时，查询的时候我们将不会显示任何 `is_enable` 为 `FALSE` 的数据。所以我们默认**不开放任何资源的 `DELETE` 操作**。
 
-Ut fringilla tincidunt tempor. Etiam sagittis arcu tempus placerat mollis. Aliquam non neque lectus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Ut mauris enim, condimentum id libero id, tincidunt vestibulum diam. Fusce mattis lacinia diam, sit amet iaculis velit pellentesque id. Proin ullamcorper ultrices aliquet. Donec mattis odio in quam aliquet dictum. Donec ut dui leo. Integer congue, felis non imperdiet gravida, augue metus congue eros, sit amet porttitor lacus arcu eu nunc.
+> 为了使得操作更加明确，我们默认不开放 `PUT` 方法来对整个数据进行修改！
 
-Quisque in sodales est. Pellentesque nec ante id nisi condimentum efficitur at condimentum nisi. Duis ac nisl non odio condimentum laoreet eu in augue. Integer quis rhoncus quam. Aliquam eu congue nisi, sed accumsan ex. Fusce elementum quam scelerisque, pellentesque massa in, gravida lacus. Nulla sodales metus orci, id dapibus erat consequat sed. Maecenas accumsan suscipit lorem dictum gravida. Maecenas a lobortis diam. Praesent facilisis libero eu ipsum vulputate hendrerit. Etiam convallis efficitur ultrices. Donec condimentum aliquet magna, sit amet facilisis ex volutpat maximus. Nulla eget lacus non ante viverra auctor facilisis ut enim. Maecenas feugiat tortor orci, in consequat ante faucibus nec.
-
-Vivamus volutpat arcu ut vulputate sagittis. Duis augue tellus, euismod ut porttitor aliquam, semper quis odio. Maecenas laoreet luctus lorem, et condimentum sem sodales a. Cras pellentesque neque id lacus consequat, sed maximus augue rutrum. Aenean ullamcorper sodales laoreet. Donec nec quam ac dolor gravida placerat. In imperdiet sagittis augue, eu venenatis justo blandit non. Phasellus malesuada vehicula tellus non tempor. Nulla venenatis accumsan ligula in sodales. Aliquam pharetra nec mi quis varius. Suspendisse potenti. Suspendisse eget leo justo.
-
-Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed condimentum, velit id maximus maximus, lorem erat laoreet massa, in ultrices augue nibh vitae ipsum. Curabitur condimentum lectus ante, quis pharetra metus pellentesque in. Morbi porttitor tristique massa non venenatis. Proin vehicula malesuada maximus. Aenean tellus turpis, faucibus nec tempor in, molestie et risus. Phasellus in dolor auctor, fringilla arcu eget, efficitur ligula. Mauris lacus erat, tristique a sodales sit amet, efficitur et libero. Praesent ultrices enim ac ligula mattis, id volutpat risus consectetur. Duis volutpat, lectus vel fringilla ultricies, augue justo commodo est, nec bibendum enim eros facilisis ipsum. Sed vitae maximus elit. Donec cursus aliquet felis nec efficitur. Ut et urna velit.
-
-Praesent nec tortor sed nisl vulputate dictum vel non eros. Pellentesque ornare, ex a dignissim consequat, enim metus pellentesque ex, vel hendrerit leo purus at ipsum. Phasellus porta, felis eu sodales consectetur, tellus sapien euismod orci, a porttitor leo erat non eros. In tempor egestas libero nec hendrerit. Integer sed est nec sapien euismod rhoncus. Curabitur interdum neque eros, eu mollis purus sagittis eu. Maecenas facilisis in libero et fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Phasellus pulvinar turpis ut lobortis pellentesque. Proin molestie laoreet dictum. Sed fringilla quis lorem non fermentum. Nullam mattis diam sapien, ullamcorper maximus enim pulvinar nec. Maecenas scelerisque dolor tortor, ut placerat turpis aliquam ac. In eleifend risus nec orci ultrices ornare. Phasellus in congue nulla, at malesuada justo.
-
-Nam nec pharetra ligula. Sed ullamcorper magna mollis tempus tincidunt. Etiam at dolor diam. Mauris mauris enim, elementum at erat vitae, vestibulum gravida arcu. Aliquam in rutrum quam, eget venenatis ligula. Sed luctus feugiat dapibus. Suspendisse blandit tortor quis sapien faucibus vestibulum. Maecenas eget iaculis turpis.
-
-Proin vehicula, nisi ac pharetra commodo, augue enim tincidunt magna, at condimentum nisl velit laoreet ante. Vivamus at sem urna. Aliquam vitae accumsan purus. Etiam laoreet viverra lorem, sed tempor neque imperdiet ut. Sed aliquet dictum erat ut accumsan. Sed est quam, scelerisque non mi at, eleifend volutpat dui. Donec vehicula velit a auctor dapibus. Donec mollis malesuada eros, sit amet dignissim magna elementum eu. Phasellus nec lacus viverra, porttitor tortor ut, interdum urna. Donec ut lacinia risus.
-
-Fusce egestas pretium volutpat. Integer id felis porta, pellentesque mauris tempor, posuere erat. Suspendisse elementum purus eget lorem commodo, id molestie dolor euismod. Proin sed egestas turpis, at mollis mi. Etiam iaculis semper aliquet. Morbi finibus neque eu nisl tristique imperdiet. Ut quis libero nec urna dapibus faucibus sed quis lorem. Vestibulum venenatis leo vitae purus suscipit, at condimentum lectus hendrerit. Nullam nec lectus nec sem pretium semper. Quisque posuere, elit ac cursus bibendum, nisl mauris rutrum lectus, eu fringilla ante sem vitae enim. Integer facilisis pellentesque lorem vitae varius. Phasellus non malesuada ligula. Quisque imperdiet metus eget nisi fermentum egestas. Vivamus eu orci nec tellus pellentesque consequat nec id turpis.
-
-Aliquam finibus malesuada mauris sed tempor. Vivamus rhoncus finibus massa, sed mollis quam tempus tincidunt. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Phasellus pretium dictum mollis. Mauris ut velit lobortis, ullamcorper felis a, malesuada tortor. Aliquam sapien ex, maximus a magna vel, porttitor scelerisque urna. Maecenas ut erat sit amet sem pellentesque imperdiet. Duis interdum in magna eu feugiat. Suspendisse potenti. Suspendisse faucibus eget dolor sed consequat. Vivamus luctus dignissim leo sit amet lobortis. Nulla mauris justo, efficitur at elit eu, congue iaculis ante. Duis accumsan justo id lacus luctus, consequat molestie neque iaculis. Mauris venenatis, ante eu eleifend convallis, neque augue mattis odio, ornare vulputate mauris ex eget mi.
-
-Ut facilisis posuere massa a sagittis. Nunc quis mauris neque. Maecenas pellentesque justo hendrerit dictum pellentesque. In hac habitasse platea dictumst. Morbi neque odio, pharetra id erat non, fringilla faucibus lacus. Etiam non interdum mi. Curabitur pretium, purus id ultrices gravida, erat tellus dapibus neque, eu tempor sapien elit ut tortor. Suspendisse dolor ante, elementum ut mattis vel, molestie vel neque. Suspendisse hendrerit interdum ligula, a ultricies ligula ornare eget. Proin quis fermentum turpis, sit amet mollis turpis. Fusce pretium magna at dolor sagittis, vitae mollis risus finibus. Vivamus eget rutrum augue, ac tempor felis.
-
-Aenean sodales elit eleifend, facilisis odio sit amet, ullamcorper arcu. Sed eu auctor enim. Integer mollis posuere volutpat. Quisque et neque est. Duis nunc elit, sollicitudin ac magna id, sodales maximus purus. Fusce finibus a augue sit amet posuere. Mauris a diam commodo arcu mollis elementum consequat eu leo. Duis non elit velit.
-
-Nulla facilisi. Quisque urna est, tempor vel scelerisque nec, commodo at tellus. Sed consequat, sem vitae faucibus aliquet, tortor justo accumsan urna, quis venenatis mi turpis nec leo. Mauris vel finibus augue. Sed eget venenatis nibh. Nam semper id libero id mattis. Proin accumsan, leo dictum ultrices pulvinar, ex lorem fringilla urna, congue cursus neque erat eget est. Vestibulum tristique, turpis quis viverra laoreet, neque erat finibus turpis, sit amet pharetra justo metus at nulla. Aliquam erat volutpat.
-
-Aenean congue sapien ante. Nunc nec hendrerit neque, quis maximus sapien. Aliquam pellentesque vehicula fringilla. Cras a tristique diam. Vestibulum elementum dapibus egestas. Vivamus at tristique tellus, in suscipit magna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam diam tortor, finibus eget ultrices quis, condimentum eget arcu. Vestibulum ac sem dignissim, gravida ipsum at, eleifend nibh. Sed id diam in nisi dignissim dapibus in ac justo.
-
-Suspendisse vel interdum sem. Donec elit ipsum, vulputate quis risus vehicula, facilisis semper eros. Aliquam consequat ante quis tortor tristique eleifend. Cras scelerisque, orci ut vestibulum semper, metus lectus ornare lorem, at egestas est lectus eu dolor. Proin vitae lacinia elit. Aliquam fringilla dapibus nunc, eu fringilla felis vulputate at. Quisque erat elit, suscipit id sodales eget, ornare quis ante.
-
-Proin ultricies enim ut tellus ornare lobortis. Vivamus volutpat massa vitae nibh vulputate eleifend. Sed ac faucibus massa. Vestibulum non elit nibh. Integer tempor ligula sapien, et lobortis leo porttitor vitae. Sed scelerisque erat quis nisi mattis euismod. Duis lobortis lacinia ex quis posuere. Praesent sollicitudin suscipit mauris, vel iaculis metus. Aliquam sed interdum erat. Donec lacinia, quam non porttitor commodo, tortor odio sollicitudin tellus, sed imperdiet tellus libero et metus. Donec tincidunt ornare nunc quis condimentum. Vestibulum ac laoreet metus. Suspendisse sit amet dolor maximus, sollicitudin elit sed, vehicula dui.
-
-In interdum a libero non tristique. Morbi in sodales massa, maximus dignissim purus. Mauris sollicitudin ut velit vitae finibus. Pellentesque rutrum vel tortor non ultrices. Proin at consequat dolor. Aliquam vulputate metus at interdum accumsan. Praesent sem velit, vehicula sit amet consequat non, elementum eu metus. Vestibulum feugiat sagittis nulla sed elementum. Phasellus luctus malesuada pellentesque. Maecenas nec aliquam metus. Maecenas sed molestie felis. In nisi ipsum, viverra eu eros at, maximus congue neque. Cras feugiat sed erat et venenatis. 
-
+| 路径  | 方法 | 描述 |
+|---|---| ----|
+| /rest/{resource}  | GET | 查询所有的资源信息，分页 |
+| /rest/{resource}/{id}  | GET | 获取指定 id 的某个资源信息 |
+| /rest/{resource}/search/all  | GET | 查询所有的资源信息 |
+| /rest/{resource}  | POST | 添加资源信息 |
+| /rest/{resource}/{id}  | PATCH | 修改指定 id 的某个资源信息 |
+| /rest/{resource}/{id}  | DELETE | 删除指定 id 的某个资源信息（**禁用**） |
+| /rest/{resource}/{id}  | PUT | 修改指定 id 的整个资源信息（**禁用**） |
