@@ -30,8 +30,7 @@ module.exports = {
     nav: [
       { text: '主页', link: '/' },
       { text: '操作手册', link: '/demand/' },
-      { text: '技术架构', link: '/architecture/' },
-      { text: '关于', link: '/about/' }
+      { text: '技术架构', link: '/architecture/' }
     ],
     sidebar: {
       '/demand/': [
@@ -41,16 +40,11 @@ module.exports = {
           collapsable: false,
           children: [
             '/demand/system/base',
-            '/demand/system/admin'
+            '/demand/system/admin',
+            '/demand/system/ready'
           ]
         },
-        {
-          title: '物料需求',
-          collapsable: false,
-          children: [
-            '/demand/system/start'
-          ]
-        }
+        ['/demand/material-plan/start', '整体流程']
       ],
       '/architecture/': [
         ['', '概览'],

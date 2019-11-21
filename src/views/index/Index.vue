@@ -11,7 +11,7 @@
               v-card-title.title {{item.title}}
               v-card-text.white.text--primary.pt-2
                 p {{item.content}}
-                v-btn(:color="item.color", class="mx-0", outlined) {{item.button}}
+                v-btn(:color="item.color", class="mx-0", outlined, href="https://generalandking.github.io/one-yard-ui/", target="_blank") {{item.button}}
 </template>
 
 <script>

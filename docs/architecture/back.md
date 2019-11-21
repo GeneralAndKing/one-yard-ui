@@ -232,7 +232,7 @@ select pm.*,
 from (((
     (plan_material pm inner join material m on pm.material_id = m.id)
         inner join material_type mt on mt.id = pm.material_type_id)
-    inner join material_demand_plan mdp on pm.material_type_id = mdp.id)
+    inner join material_demand_plan mdp on pm.plan_id = mdp.id)
          inner join sys_department sd on sd.id = mdp.department_id)
 where pm.status = 0
   and pm.is_enable = 1

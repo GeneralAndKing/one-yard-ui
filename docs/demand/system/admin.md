@@ -27,3 +27,6 @@ title: 管理员操作
 
 ![](http://q0zlaui5t.bkt.clouddn.com/docs/%E5%9B%BE%E7%89%8722.png)
 
+六、锁定用户： 出现下列状况说明若账户被管理员锁定：
+
+![](http://q0zlaui5t.bkt.clouddn.com/docs/%E5%9B%BE%E7%89%877.png)

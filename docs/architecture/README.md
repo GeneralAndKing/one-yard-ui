@@ -60,3 +60,9 @@ title: 概览
 | /rest/{resource}/{id}  | PATCH | 修改指定 id 的某个资源信息 |
 | /rest/{resource}/{id}  | DELETE | 删除指定 id 的某个资源信息（**禁用**） |
 | /rest/{resource}/{id}  | PUT | 修改指定 id 的整个资源信息（**禁用**） |
+
+## 开发人员
+
+- [EchoCow](https://echocow.cn)
+- [Japoul](http://japoul.cn/)
+- [RuiFG](https://github.com/RuiFG)
