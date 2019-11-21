@@ -44,14 +44,16 @@ module.exports = {
             '/demand/system/ready'
           ]
         },
-        ['/demand/material-plan/start', '整体流程']
+        ['/demand/action/start', '整体流程'],
+        ['/demand/action/adaptation', '移动端适配']
       ],
       '/architecture/': [
         ['', '概览'],
         ['maintain', '运维'],
         ['back', '后端'],
         ['web', '前端'],
-        ['summary', '总结']
+        ['summary', '总结'],
+        ['other', '附录：接口设计表格']
       ]
     },
     sidebarDepth: 2,
