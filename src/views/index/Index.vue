@@ -7,9 +7,9 @@
             :color="item.color"
             :icon="item.icon"
             fill-dot)
-            v-card(:color="item.color", dark)
-              v-card-title.title {{item.title}}
-              v-card-text.white.text--primary.pt-2
+            v-card(:color="item.color")
+              v-card-title.title.white--text {{item.title}}
+              v-card-text.pt-2.white.black--text
                 p {{item.content}}
                 v-btn(:color="item.color", class="mx-0", outlined, href="https://generalandking.github.io/one-yard-ui/", target="_blank") {{item.button}}
 </template>

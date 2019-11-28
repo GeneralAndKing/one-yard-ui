@@ -3,7 +3,7 @@
     v-card
       v-card-title 物料管理
       v-card-text
-        v-skeleton-loader(:loading="load", type="table")
+        v-skeleton-loader(:loading="load", type="table", transition="slide-y-transition")
           v-data-table(:headers="headers", :items="material", item-key="id", :loading="loading", :sort-by="['sort']"
             loading-text="正在加载数据", no-data-text="暂无数据", no-results-text="没有匹配的数据", :search="search")
             template(v-slot:item.materialTypeCode="{ item }")

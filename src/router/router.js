@@ -98,6 +98,15 @@ export const routes = [
           auth: [Role.ROLE_ADMIN]
         },
         component: () => import(/* webpackChunkName: "sys-department" */ '_v/admin/sys-department')
+      },
+      {
+        path: 'sysLog',
+        name: 'sysLog',
+        meta: {
+          meta: '日志管理',
+          auth: [Role.ROLE_ADMIN]
+        },
+        component: () => import(/* webpackChunkName: "sys-department" */ '_v/admin/sys-log')
       }, {
         path: 'materialPlanCreate',
         name: 'materialPlanCreate',
