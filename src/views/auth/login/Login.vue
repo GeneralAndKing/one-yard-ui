@@ -99,18 +99,18 @@ export default {
             await _this.$store.dispatch('auth/getMe')
             await _this.$router.push({ name: 'home' })
           } catch (e) {
-            _this.$refs['password'].errorBucket = (e.data && e.data.hasOwnProperty('error_description')) ? [e.data.error_description] : ['验证失败']
+            _this.$refs['password'].errorBucket = [_this._.get(e, 'data.error_description', '验证失败')]
           } finally {
             _this.load = false
           }
         }
       } else {
         if (this.$refs['email'].validate(true)) {
-          this.load = true
+          _this.load = true
           let res, err
           [err, res] = await to(oauthAPI.authExistEmail(_this.user))
-          if (res !== null && res.data && err === null) _this.window += 1
-          else this.$refs['email'].errorBucket = ['账户不存在，请重新输入']
+          if (res !== null) _this.window += 1
+          else this.$refs['email'].errorBucket = [_this._.get(err, 'data.error_description', '账户不存在，请重新输入')]
           _this.load = false
         }
       }

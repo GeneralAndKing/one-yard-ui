@@ -103,11 +103,7 @@ export default {
           oauthAPI.authRegisterEmail(this.account)
             .then(() => { this.window = this.window + 1 })
             .catch(error => {
-              let message = '注册错误'
-              if (error.response.data !== undefined && (error.response.data.hasOwnProperty('error') || error.response.data.hasOwnProperty('error_description'))) {
-                message = error.response.data.error + ': ' + error.response.data.error_description
-              }
-              this.$message(message, 'error')
+              this.$message(this._.get(error, 'response.data.error_description', '注册错误'), 'error')
             })
             .finally(() => { this.loading = false })
         }
@@ -120,11 +116,7 @@ export default {
               this.$router.push({ name: 'login' })
             })
             .catch(error => {
-              if (error.response.data !== undefined && (error.response.data.hasOwnProperty('error') || error.response.data.hasOwnProperty('error_description'))) {
-                this.$refs.code.errorBucket = [error.response.data.error_description]
-              } else {
-                this.$refs.code.errorBucket = ['验证错误']
-              }
+              this.$refs.code.errorBucket = [this._.get(error, 'response.data.error_description', '验证错误')]
             })
             .finally(() => { this.loading = false })
         }
