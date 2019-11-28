@@ -72,7 +72,6 @@ export default {
   },
   created () {
     this.$vuetify.theme.dark = false
-    console.clear()
   },
   methods: {
     handleAccount () {
@@ -109,7 +108,7 @@ export default {
           _this.load = true
           let res, err
           [err, res] = await to(oauthAPI.authExistEmail(_this.user))
-          if (res !== null) _this.window += 1
+          if (this._.get(res, 'data', false)) _this.window += 1
           else this.$refs['email'].errorBucket = [_this._.get(err, 'data.error_description', '账户不存在，请重新输入')]
           _this.load = false
         }

@@ -1,6 +1,7 @@
 <template lang="pug">
     div
-        v-progress-linear(          :active="options.active"
+        v-progress-linear(
+          :active="options.active"
             :background-opacity="options.opacity"
             :bottom="options.bottom"
             :buffer-value="options.buffer"
@@ -12,8 +13,9 @@
             :striped="options.striped"
             :top="options.top"
             :value="options.value"
-            color="light-blue")
-        br
+            color="light-blue"
+          fixed
+          style="z-index: 50")
 </template>
 <script>
 export default {
@@ -23,17 +25,15 @@ export default {
       type: Object,
       default () {
         return {
-          absolute: false,
-          active: true,
+          active: false,
           opacity: 0.3,
           bottom: false,
           buffer: 100,
-          fixed: false,
           height: 4,
-          indeterminate: false,
+          indeterminate: true,
           query: false,
-          rounded: false,
-          stream: false,
+          rounded: true,
+          stream: true,
           striped: false,
           top: false,
           value: 25
