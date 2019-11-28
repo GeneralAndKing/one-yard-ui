@@ -2,16 +2,18 @@
   v-container#auth-dashboard
     v-layout(wrap)
       v-flex(xs12, sm12, md6, lg6, v-for="chart in charts", :key="chart.title")
-        ChartCard(:title="chart.title", :subTitle="chart.subTitle", :icon="chart.icon",
-          :description="chart.description", :value="chart.value", :labels="chart.labels",
-          :color="chart.color")
+        v-skeleton-loader.ma-3.pa-1.mt-9(:loading="loading", type="card", transition="slide-y-transition")
+          ChartCard(:title="chart.title", :subTitle="chart.subTitle", :icon="chart.icon",
+            :description="chart.description", :value="chart.value", :labels="chart.labels",
+            :color="chart.color")
     v-layout(wrap)
       v-flex.v-text-field--full-width(xs12, sm6, md6, lg3, v-for="item in statistical", :key="item.subTitle")
-        DataCard(:subTitle="item.subTitle", :main="item.main",
-          :icon="item.icon", :iconColor="item.iconColor",
-          :actionIcon="item.actionIcon", :action="item.action"
-          :iconSize="item.iconSize")
-    v-layout.mx-3.mt-4.elevation-9(wrap)
+        v-skeleton-loader.ma-3.pa-1.mt-9(:loading="loading", type="image", :max-height="150", transition="slide-y-transition")
+          DataCard(:subTitle="item.subTitle", :main="item.main",
+            :icon="item.icon", :iconColor="item.iconColor",
+            :actionIcon="item.actionIcon", :action="item.action"
+            :iconSize="item.iconSize")
+    v-layout.mx-3.mt-4.elevation-9(wrap, v-if="!loading")
       v-carousel(:interval="5000", cycle, show-arrows-on-hover)
         v-carousel-item(v-for="(item,i) in images", :key="i", :src="item.src")
 </template>
@@ -28,6 +30,7 @@ export default {
     ChartCard
   },
   data: () => ({
+    loading: true,
     images: [
       { src: `https://uploadbeta.com/api/pictures/random/?id=${Math.random()}` },
       { src: `https://uploadbeta.com/api/pictures/random/?id=${Math.random()}` },
@@ -86,13 +89,25 @@ export default {
       }
     ]
   }),
-  created () {
-    restAPI.getRestLink('sysUser/search/count?status=NORMAL').then(res => { this.statistical[0].main = `${res.data}` })
-    restAPI.getRestLink('material/search/count').then(res => { this.statistical[1].main = `${res.data}` })
-    restAPI.getRestLink('materialDemandPlan/search/count').then(res => { this.statistical[2].main = `${res.data}` })
-    restAPI.getRestLink(`procurementPlan/search/count?planStatus=FINALLY`).then(res => { this.statistical[3].main = `${res.data}` })
-    restAPI.getLink('dashboard/api').then(res => { this.chartDate(res, 0) })
-    restAPI.getLink('dashboard/auth').then(res => { this.chartDate(res, 1) })
+  async created () {
+    try {
+      let [users, materials, materialDemandPlans, procurementPlans, dashboardApi, dashboardAuth] = await Promise.all([
+        restAPI.getRestLink('sysUser/search/count?status=NORMAL'),
+        restAPI.getRestLink('material/search/count'),
+        restAPI.getRestLink('materialDemandPlan/search/count'),
+        restAPI.getRestLink(`procurementPlan/search/count?planStatus=FINALLY`),
+        restAPI.getLink('dashboard/api'),
+        restAPI.getLink('dashboard/auth')
+      ])
+      this.statistical[0].main = `${users.data}`
+      this.statistical[1].main = `${materials.data}`
+      this.statistical[2].main = `${materialDemandPlans.data}`
+      this.statistical[3].main = `${procurementPlans.data}`
+      this.chartDate(dashboardApi, 0)
+      this.chartDate(dashboardAuth, 1)
+    } finally {
+      this.loading = false
+    }
   },
   methods: {
     chartDate (res, num) {

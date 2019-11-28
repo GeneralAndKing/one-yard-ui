@@ -3,28 +3,29 @@
     v-card
       v-card-title 仓库组织管理
       v-card-text
-        v-data-table(:headers="headers", :items="inventory", item-key="id", :loading="loading", :sort-by="['sort']"
-          loading-text="正在加载数据", no-data-text="暂无数据", no-results-text="没有匹配的数据", :search="search")
-          template(v-slot:item.createTime="{ item }")
-            span {{formatDate(item.createTime)}}
-          template(v-slot:item.modifyTime="{ item }")
-            span {{formatDate(item.modifyTime)}}
-          template(v-slot:item.action="{ item }")
-            v-tooltip(top)
-              template(v-slot:activator="{ on }")
-                v-btn.mr-2(outlined, rounded, x-small, fab, color="primary", v-on="on", @click="handleEdit(item)")
-                  v-icon mdi-pencil
-              span 修改
-            v-tooltip(top)
-              template(v-slot:activator="{ on }")
-                v-btn.mr-2(outlined, rounded, x-small, fab, color="error", v-on="on", @click="handleDelete(item)")
-                  v-icon mdi-delete
-              span 删除
-          template(v-slot:top)
-            v-toolbar(flat)
-              v-spacer
-              v-text-field(v-model="search", append-icon="search", label="输入名字查询", single-line, hide-details)
-              v-btn.ml-4(outlined, color="success", @click="handleAdd") 添加
+        v-skeleton-loader(:loading="load", type="table")
+          v-data-table(:headers="headers", :items="inventory", item-key="id", :loading="loading", :sort-by="['sort']"
+            loading-text="正在加载数据", no-data-text="暂无数据", no-results-text="没有匹配的数据", :search="search")
+            template(v-slot:item.createTime="{ item }")
+              span {{formatDate(item.createTime)}}
+            template(v-slot:item.modifyTime="{ item }")
+              span {{formatDate(item.modifyTime)}}
+            template(v-slot:item.action="{ item }")
+              v-tooltip(top)
+                template(v-slot:activator="{ on }")
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="primary", v-on="on", @click="handleEdit(item)")
+                    v-icon mdi-pencil
+                span 修改
+              v-tooltip(top)
+                template(v-slot:activator="{ on }")
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="error", v-on="on", @click="handleDelete(item)")
+                    v-icon mdi-delete
+                span 删除
+            template(v-slot:top)
+              v-toolbar(flat)
+                v-spacer
+                v-text-field(v-model="search", append-icon="search", label="输入名字查询", single-line, hide-details)
+                v-btn.ml-4(outlined, color="success", @click="handleAdd") 添加
     v-dialog(v-model="dialog", max-width="400px", persistent)
       v-card(tile, :loading="submitLoading")
         v-card-title
@@ -63,6 +64,7 @@ export default {
     editedItem: {},
     editedIndex: -1,
     search: '',
+    load: true,
     loading: false,
     headers: [
       { text: '仓库组织名称', value: 'name', align: 'start' },
@@ -80,6 +82,7 @@ export default {
     restAPI.getAll(inventory).then(res => {
       this.inventory = res.data.content.filter(d => !d.hasOwnProperty('relTargetType'))
       this.loading = false
+      this.load = false
     })
   },
   methods: {

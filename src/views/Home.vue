@@ -130,7 +130,7 @@ export default {
       this.theme = this.$store.getters['sundry/theme']
     },
     initNotice () {
-      this.socket = new WebSocket(`ws://39.104.13.240:10011/api/notify/${this.me.id}`)
+      this.socket = new WebSocket(`ws://127.0.0.1:8080/api/notify/${this.me.id}`)
       restAPI.getRestLink(`notification/search/byReceiverId?receiverId=${this.me.id}`).then((res) => {
         this.messages[1].items = res.data.content.filter(n => n.status === 'READ')
         this.messages[0].items = res.data.content.filter(n => n.status === 'UNREAD')
