@@ -4,14 +4,15 @@
       v-card-text
         v-row
           v-col(sm="12", md="4", xl="3")
-            v-treeview(:items="items", open-on-click, activatable, :open.sync="open",
-              :load-children="handleLoading", @update:active="handleActive", item-key="name",
-              :active.sync="active", transition, return-object)
-              template(v-slot:prepend="{ item, active }")
-                v-icon(v-if="!item.children") mdi-account
-              template(v-slot:label="{ item, leaf }")
-                span(v-if="leaf") {{item.description}}
-                span(v-else) {{item.name}}
+            v-skeleton-loader.mt-6(:loading="loading", type="card-heading, card-heading, card-heading, card-heading, card-heading, card-heading")
+              v-treeview(:items="items", open-on-click, activatable, :open.sync="open",
+                :load-children="handleLoading", @update:active="handleActive", item-key="name",
+                :active.sync="active", transition, return-object)
+                template(v-slot:prepend="{ item, active }")
+                  v-icon(v-if="!item.children") mdi-account
+                template(v-slot:label="{ item, leaf }")
+                  span(v-if="leaf") {{item.description}}
+                  span(v-else) {{item.name}}
           v-divider(vertical)
           v-col(sm="12", md="7", xl="8")
             v-tabs(v-model="tab")
@@ -77,6 +78,7 @@ import * as departmentAPI from '_api/department'
 export default {
   name: 'SysDepartment',
   data: () => ({
+    loading: true,
     tab: null,
     selected: {},
     active: [],
@@ -98,6 +100,7 @@ export default {
       d.children = []
       _this.items.push(d)
     })
+    this.loading = false
   },
   methods: {
     handleActive (item) {
