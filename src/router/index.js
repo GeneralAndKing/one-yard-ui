@@ -9,7 +9,7 @@ const router = new VueRouter({
 })
 router.beforeEach((to, from, next) => {
   // TODO: 加载开始
-  // iView.LoadingBar.start()
+  Vue.prototype.$loading.start()
   if (store.getters['auth/isAuth']) {
     if (to.meta === {} || to.meta.auth === undefined) {
       next({ name: 'error',
@@ -40,6 +40,10 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach(route => {
   // iView.LoadingBar.finish()
+
+  setTimeout(() => {
+    Vue.prototype.$loading.finish()
+  }, 1000)
   // TODO: 加载完成
   window.document.title = route.meta.meta || '一码当先'
 })

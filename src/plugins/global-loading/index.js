@@ -3,6 +3,7 @@ import GlobalLoading from './GlobalLoading.vue'
 // TODO 未完成 日他妈的
 GlobalLoading.install = null
 GlobalLoading.config = function (options = {}) {
+  console.log('123123')
   Vue.component(GlobalLoading.name, GlobalLoading)
   const Component = Vue.extend(GlobalLoading)
   // 拿到自定义的属性
@@ -31,7 +32,7 @@ GlobalLoading.config = function (options = {}) {
     },
     finish () {
       if (Vue.$isServer) return
-      vm.active = false
+      vm.options.active = false
     }
   }
 }
