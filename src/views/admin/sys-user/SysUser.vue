@@ -49,6 +49,8 @@
                                       v-overlay(v-if="hover", absolute)
                                         v-btn(test, x-small, @click="handleUpload", :loading="load.upload") 上传头像
                               v-file-input.d-none(accept="image/*", label="上传头像", prepend-icon="", ref="icon", @change="uploadAvatar")
+                            v-flex(xs12, sm12, v-else)
+                              p.font-weight-black.primary--text TIP: 创建用户以后才可以上传头像哦～
                             v-flex(xs12, sm6, md4)
                               v-text-field(v-model="editedItem.username", counter="18", label="用户名", validate-on-blur,
                                 :rules="rules.union(rules.required('用户名'),rules.maxLength(18))", ref="username", @blur="handleExist('username')")

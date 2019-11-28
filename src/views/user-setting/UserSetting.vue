@@ -34,7 +34,9 @@
             v-avatar.mx-auto.elevation-18(height="130px", width="130px")
               v-img.one-avatar-img(:src="me.icon", lazy-src="http://q0zlaui5t.bkt.clouddn.com/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195")
           v-flex.text-center(xs12, sm12)
-            v-btn(color="light-blue", dark, @click="handleUpload", :loading="loading.upload") 上传头像
+            v-btn(color="light-blue", dark, @click="handleUpload", :loading="loading.upload")
+              v-icon mdi-cloud-upload
+              span.pl-1 上传头像
             v-file-input.d-none(accept="image/*", label="上传头像", prepend-icon="", ref="icon", @change="uploadAvatar")
           v-card-text
             v-form(ref="password")

@@ -35,7 +35,7 @@ export const MENUS = [
   {
     text: '系统日志',
     to: { name: 'sysLog' },
-    icon: 'mdi-camera-metering-matrix',
+    icon: 'mdi-compass mdi-spin',
     auth: [Role.ROLE_ADMIN]
   }, {
     name: '基础数据管理',

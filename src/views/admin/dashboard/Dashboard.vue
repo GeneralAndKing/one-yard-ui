@@ -63,7 +63,7 @@ export default {
       }, {
         subTitle: '采购计划待执行量',
         main: '0',
-        icon: 'error_outline',
+        icon: 'mdi-gamepad mdi-spin',
         iconColor: 'red',
         actionIcon: 'vpn_key',
         action: '待执行的采购计划总数'
