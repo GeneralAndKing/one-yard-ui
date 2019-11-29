@@ -43,7 +43,7 @@ router.afterEach(route => {
 
   setTimeout(() => {
     Vue.prototype.$loading.finish()
-  }, 1000)
+  }, 500)
   // TODO: 加载完成
   window.document.title = route.meta.meta || '一码当先'
 })

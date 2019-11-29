@@ -1,4 +1,5 @@
 // 打印类属性、方法定义
+import Vue from 'vue'
 /* eslint-disable */
 const Print = function (dom, options) {
   if (!(this instanceof Print)) return new Print(dom, options);
@@ -132,4 +133,4 @@ MyPlugin.install = function (Vue, options) {
   // 4. 添加实例方法
   Vue.prototype.$print = Print
 }
-export default MyPlugin
+Vue.use(MyPlugin)

@@ -27,17 +27,17 @@ export default {
       default () {
         return {
           active: false,
-          opacity: 0.3,
+          opacity: 1,
           bottom: false,
-          buffer: 100,
-          height: 4,
+          buffer: 0,
+          height: 5,
           indeterminate: true,
           query: false,
           rounded: true,
           stream: true,
           striped: true,
           top: false,
-          value: 25
+          value: 0
         }
       }
     }
