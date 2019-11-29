@@ -25,9 +25,9 @@
               v-text-field(label="确认您的新密码", ref="rePassword", type="password", dense, validate-on-blur, @keyup.enter="next"
                 outlined, :rules="rules.union(rules.password,rules.rePassword)", v-model='rePassword', counter='18')
       v-card-actions.px-0
-        v-btn(text, color="primary", @click="handleAccount", :disabled="disabled") {{accountText}}
+        v-btn(outlined, color="info", @click="handleAccount", :disabled="disabled") {{accountText}}
         v-spacer
-        v-btn(color="primary", @click="next") {{nextBtnText}}
+        v-btn(color="info", @click="next") {{nextBtnText}}
       v-footer#form-footer.grey--text @ 2019 copy right
 </template>
 

@@ -49,7 +49,7 @@
           template(v-slot:item.action="{ item }")
             v-tooltip(top)
               template(v-slot:activator="{ on }")
-                v-btn.mr-2(outlined, rounded, x-small, fab, color="primary", @click="handleEdit(item)", v-on="on")
+                v-btn.mr-2(outlined, rounded, x-small, fab, color="info", @click="handleEdit(item)", v-on="on")
                   v-icon mdi-pencil
               span 编辑
             v-tooltip(top, v-if='item.planId !== null')
@@ -198,7 +198,7 @@
       v-dialog(v-model="submitDialog", max-width="400px", persistent)
         v-card(tile, :loading="submitLoading")
           v-card-title.pa-0
-            v-toolbar(flat, dark, color="primary")
+            v-toolbar(flat, dark, color="info")
               v-toolbar-title 生成采购计划
               v-spacer
               v-btn(icon, dark, @click="submitDialog = false")
@@ -216,7 +216,7 @@
       v-dialog(v-model="returnDialog", max-width="500px", persistent)
         v-card(tile)
           v-card-title.pa-0
-            v-toolbar(flat, dark, color="primary")
+            v-toolbar(flat, dark, color="info")
               v-toolbar-title 需求退回
               v-spacer
               v-btn(icon, dark, @click="handleCloseReturn")
@@ -239,13 +239,13 @@
             strong 注意：此操作会立即生效且不可逆，请谨慎操作！
           v-card-actions
             v-spacer
-            v-btn(text, color="success", @click="revokeOk") 确认退回
+            v-btn(outlined, color="success", @click="revokeOk") 确认退回
       // --------------------------------------------------- D 结束
       // 点击 拆分 按钮的时候弹出的模态框 --------------------------- E 开始
       v-dialog(v-model="splitDialog", hide-overlay, transition="scale-transition", scrollable)
         v-card(tile)
           v-card-title.pa-0
-            v-toolbar(flat, dark, color="primary")
+            v-toolbar(flat, dark, color="info")
               v-toolbar-title 拆分数据
               v-spacer
               v-btn(icon, dark, @click="splitDialog = false")
@@ -295,7 +295,7 @@
               v-flex(xs12, md6, lg4)
                 v-text-field(v-model="editedItem.occupiedNum", label="已占库存", readonly, disabled)
               v-flex.text-right(xs12)
-                v-btn(outlined, color="primary", @click="handleSplitSave") 拆分数据
+                v-btn(outlined, color="info", @click="handleSplitSave") 拆分数据
               v-flex
                 v-slider(
                   v-model="editedItem.newNumber"
@@ -311,8 +311,8 @@
       // 点击 退回需求 的时候弹出的 提示条 ------------------ F 开始
       v-snackbar(v-model="revokeSnackbar", vertical, :timeout="0") 您确定退回此需求吗？
         v-row.justify-end
-          v-btn.ma-3(color="error", text, @click="revokeSnackbar = false") 取消
-          v-btn.ma-3(color="primary", text, @click="revokeOk") 确定
+          v-btn.ma-3(color="error", outlined, @click="revokeSnackbar = false") 取消
+          v-btn.ma-3(color="info", outlined, @click="revokeOk") 确定
       // -------------------------------------------------- F 结束
       v-card-actions
         v-spacer

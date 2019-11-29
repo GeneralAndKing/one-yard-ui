@@ -30,9 +30,9 @@
           v-card-text.px-0
             v-text-field(label="输入验证码", ref="code", type="text", outlined, v-model="account.code", counter="4" :rules="rules.code", @keyup.enter="next")
       v-card-actions.px-0
-        v-btn(text, color="primary", @click="previous") {{preBtnText}}
+        v-btn(outlined, color="info", @click="previous") {{preBtnText}}
         v-spacer
-        v-btn(color="primary", @click="next") {{nextBtnText}}
+        v-btn(color="info", @click="next") {{nextBtnText}}
       v-footer#form-footer.grey--text @ 2019 copy right
 </template>
 

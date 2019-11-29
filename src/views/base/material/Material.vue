@@ -17,7 +17,7 @@
             template(v-slot:item.action="{ item }")
               v-tooltip(top)
                 template(v-slot:activator="{ on }")
-                  v-btn.mr-2(outlined, rounded, x-small, fab, color="primary", v-on="on", @click="handleEdit(item)")
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="info", v-on="on", @click="handleEdit(item)")
                     v-icon mdi-pencil
                 span 修改
             //v-tooltip(top)

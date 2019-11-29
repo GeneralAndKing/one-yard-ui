@@ -49,13 +49,13 @@
                 span 提交审批
               v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
                 template(v-slot:activator="{ on }")
-                  v-btn.mr-2(outlined, rounded, x-small, fab, color="primary", v-on="on",
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="info", v-on="on",
                     v-per="Role.ROLE_PROCUREMENT_SUPERVISOR", @click="handleApproval(item)")
                     v-icon mdi-book-open-variant
                 span 审批
               v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'PROCUREMENT_OK'")
                 template(v-slot:activator="{ on }")
-                  v-btn.mr-2(outlined, rounded, x-small, fab, color="primary", v-on="on",
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="info", v-on="on",
                     v-per="Role.ROLE_FINANCE", @click="handleApproval(item)")
                     v-icon mdi-book-open-variant
                 span 审批
@@ -67,8 +67,8 @@
                 span 撤回
           v-snackbar(v-model="revokeSnackbar", vertical, :timeout="0") 您确定撤回吗？
             v-row.justify-end
-              v-btn.ma-3(color="error", text, @click="revokeSnackbar = false") 取消
-              v-btn.ma-3(color="primary", text, @click="revokeOk") 确定
+              v-btn.ma-3(color="error", outlined, @click="revokeSnackbar = false") 取消
+              v-btn.ma-3(color="info", outlined, @click="revokeOk") 确定
           v-dialog(v-model="approval.show", max-width="350px")
             v-card
               v-card-title.headline
@@ -81,10 +81,10 @@
                   rows="5", ref='description', auto-grow, counter)
               v-card-actions
                 v-spacer
-                v-btn(text, color="error", @click="handlePlanApproval('审批退回')") 需求退回
-                v-btn(text, color="success", @click="handlePlanApproval('审批通过')") 需求通过
+                v-btn(outlined, color="error", @click="handlePlanApproval('审批退回')") 需求退回
+                v-btn(outlined, color="success", @click="handlePlanApproval('审批通过')") 需求通过
     procurement-plan(v-else, :see-id="see")
-      v-btn(text, color='warning', @click="handleBack", outlined) 返回
+      v-btn(color='warning', @click="handleBack", outlined) 返回
 </template>
 
 <script>

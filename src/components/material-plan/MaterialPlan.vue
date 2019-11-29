@@ -29,8 +29,8 @@
                       :rules="rules.union(rules.required('需求月份'))")
                   v-date-picker(v-model="date", type="month", no-title, scrollable, locale="zh-cn")
                     v-spacer
-                    v-btn(text, color="primary",  @click="menu = false") 取消
-                    v-btn(text, color="primary",  @click="$refs.month.save(date)") 选择
+                    v-btn(outlined, color="info",  @click="menu = false") 取消
+                    v-btn(outlined, color="info",  @click="$refs.month.save(date)") 选择
               v-flex(xs12, md6, lg4, v-if="materialPlan.planType === '年度计划'")
                 v-select(v-model="materialPlan.month", :items="years", ref="month", :readonly='see', :disabled="see",
                   label="需求年份" :rules="rules.union(rules.required('需求年份'))")
@@ -41,7 +41,7 @@
                   template(v-slot:label)
                     span 是否预算内计划：
                     span(:class="materialPlan.isBudgetPlan? 'green--text' : 'red--text'") {{materialPlan.isBudgetPlan? '是' : '否'}}
-        v-toolbar(flat, color="primary")
+        v-toolbar(flat, color="info")
         v-tabs(v-model="tab", show-arrows)
           v-tab(:key="1")
             v-icon(left) mdi-account
@@ -87,7 +87,7 @@
                         span 编辑
                       v-tooltip(top)
                         template(v-slot:activator="{ on }")
-                          v-btn(outlined, rounded, x-small, fab, color="primary", @click="handleCopy(item)", v-on="on", :disabled="see")
+                          v-btn(outlined, rounded, x-small, fab, color="info", @click="handleCopy(item)", v-on="on", :disabled="see")
                             v-icon file_copy
                         span 复制
                     template(v-slot:top)
@@ -96,8 +96,8 @@
                         v-spacer
                         v-dialog(v-model="dialog", max-width="1200px", persistent)
                           template(v-slot:activator="{ on }")
-                            v-btn.mb-2.ml-3.mr-3(text, color="primary", v-on="on", :disabled="see") 添加
-                            v-btn.mb-2.ml-3.mr-3(text, color="error", @click="handleDeleteSelected", :disabled="see") 删除所选物料
+                            v-btn.mb-2.ml-3.mr-3(outlined, color="info", v-on="on", :disabled="see") 添加
+                            v-btn.mb-2.ml-3.mr-3(outlined, color="error", @click="handleDeleteSelected", :disabled="see") 删除所选物料
                           v-card
                             v-card-title(primary-title)
                               .headline.lighten-2 添加数据
@@ -144,8 +144,8 @@
                                       v-switch(v-model="editedItem.isSourceGoods", :label="`货源是否, 确定:${editedItem.isSourceGoods ? '是': '否'}`")
                             v-card-actions
                               v-spacer
-                              v-btn(text, color="error", @click="handleReset") 重置
-                              v-btn(text, color="success", @click="handleAdd") {{editIndex < 0 ? '添加' : '保存修改'}}
+                              v-btn(outlined, color="error", @click="handleReset") 重置
+                              v-btn(outlined, color="success", @click="handleAdd") {{editIndex < 0 ? '添加' : '保存修改'}}
             v-tab-item(:key="2")
               v-card(flat)
                 v-card-text
@@ -172,8 +172,8 @@
       v-card-actions
         v-spacer
         slot
-        v-btn(text, color="purple", @click="handleSave(false)", v-if="materialPlan.planStatus === 'FREE'") {{see? '编辑' : '保存'}}
-        v-btn(v-if="!see", text, color="success", @click="handleSave(true)") 保存并提交审批
+        v-btn(outlined, color="purple", @click="handleSave(false)", v-if="materialPlan.planStatus === 'FREE'") {{see? '编辑' : '保存'}}
+        v-btn(v-if="!see", outlined, color="success", @click="handleSave(true)") 保存并提交审批
 </template>
 
 <script>

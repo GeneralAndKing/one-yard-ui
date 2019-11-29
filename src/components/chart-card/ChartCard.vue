@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-card.auth-chart
+  v-card.auth-chart.pa-1
     v-sheet.auth-chart-top.ml-5(:color="color", elevation="12", max-width="calc(100% - 32px)", v-if="value.length > 0")
       v-sparkline(:labels="labels"
         :value="value",

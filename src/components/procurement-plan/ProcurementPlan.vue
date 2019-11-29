@@ -28,7 +28,7 @@
         template(v-slot:top)
           v-toolbar(flat)
             v-spacer
-            v-btn(text, color="success", outlined, :disabled="see", @click="handleAdd") 添加
+            v-btn(color="success", outlined, :disabled="see", @click="handleAdd") 添加
         template(v-slot:item.isSourceGoods="{ item }")
           span {{item.isSourceGoods?'是':'否'}}
         template(v-slot:item.supplyNumber="{ item }")
@@ -60,7 +60,7 @@
       v-dialog(v-model="returnDialog", max-width="500px", persistent)
         v-card(tile)
           v-card-title.pa-0
-            v-toolbar(flat, dark, color="primary")
+            v-toolbar(flat, dark, color="info")
               v-toolbar-title 需求退回
               v-spacer
               v-btn(icon, dark, @click="handleCloseReturn")
@@ -83,11 +83,11 @@
             strong 注意：此操作会立即生效且不可逆，请谨慎操作！
           v-card-actions
             v-spacer
-            v-btn(text, color="success", @click="handleReturnSubmit") 确认退回
+            v-btn(outlined, color="success", @click="handleReturnSubmit") 确认退回
       v-dialog(v-model="dialog", max-width="800px", persistent)
         v-card(tile)
           v-card-title.pa-0
-            v-toolbar(flat, dark, color="primary")
+            v-toolbar(flat, dark, color="info")
               v-toolbar-title 添加
               v-spacer
               v-btn(icon, dark, @click="handleClose")
@@ -159,13 +159,13 @@
                     v-switch(v-model="editedItem.isSourceGoods", :disabled="seeOne", :label="`货源是否确定:${editedItem.isSourceGoods ? '是': '否'}`")
           v-card-actions(v-if="!seeOne")
             v-spacer
-            v-btn(text, color="error", @click="handleReset") 重置
-            v-btn(text, color="success", @click="handleActionOne") {{editIndex < 0 ? '添加' : '保存修改'}}
+            v-btn(outlined, color="error", @click="handleReset") 重置
+            v-btn(outlined, color="success", @click="handleActionOne") {{editIndex < 0 ? '添加' : '保存修改'}}
     v-card-actions
       slot
       v-spacer
-      v-btn(text, color='primary', v-if="procurementPlan.planStatus === 'FREE' && !see", @click="handleSave(true)", outlined) 保存并提交审批
-      v-btn(text, color="primary", v-if="procurementPlan.planStatus === 'FREE'", @click="handleSave(false)", outlined) {{ see ? '编辑' : '保存' }}
+      v-btn(color='info', v-if="procurementPlan.planStatus === 'FREE' && !see", @click="handleSave(true)", outlined) 保存并提交审批
+      v-btn(color="info", v-if="procurementPlan.planStatus === 'FREE'", @click="handleSave(false)", outlined) {{ see ? '编辑' : '保存' }}
 </template>
 
 <script>

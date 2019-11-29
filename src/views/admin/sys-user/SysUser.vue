@@ -2,7 +2,7 @@
   v-container#auth-user.mt-9
     v-card
       v-card-text
-        table-card-sheet(title="用户管理", description="你可以自由查看与管理当前系统的用户信息", color="primary")
+        table-card-sheet(title="用户管理", description="你可以自由查看与管理当前系统的用户信息", color="secondary")
         v-skeleton-loader(:loading="loading", type="table", transition="slide-y-transition")
           v-data-table(:headers="headers", :items="desserts", item-key="username", :loading="load.table",
             loading-text="正在加载数据", :search="search")
@@ -31,7 +31,7 @@
                 )
                 v-dialog(v-model="dialog", max-width="800px", persistent)
                   template(v-slot:activator="{ on }")
-                    v-btn.mb-2.ml-3(color="primary", v-on="on") 添加
+                    v-btn.mb-2.ml-3(color="info", v-on="on") 添加
                   v-card(:loading="submitLoading")
                     v-card-title
                       span.headline {{ formTitle }}
@@ -80,8 +80,8 @@
                             v-flex(xs12, sm12)
                               v-textarea(label="备注", v-model="editedItem.remark", counter="250" :rules="rules.union(rules.maxLength(250))")
                     v-card-actions.text-right.justify-end
-                      v-btn.darken-1(text, @click="close", dark, color='error') 取消
-                      v-btn.darken-1(text, @click="save", dark, color='success') 保存
+                      v-btn.darken-1(outlined, @click="close", dark, color='error') 取消
+                      v-btn.darken-1(outlined, @click="save", dark, color='success') 保存
 </template>
 
 <script>

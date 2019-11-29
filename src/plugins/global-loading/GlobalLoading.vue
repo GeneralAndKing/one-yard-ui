@@ -1,23 +1,24 @@
 <template lang="pug">
-    div
-        v-progress-linear(
-          :active="options.active"
-            :background-opacity="options.opacity"
-            :bottom="options.bottom"
-            :buffer-value="options.buffer"
-            :height="options.height"
-            :indeterminate="options.indeterminate"
-            :query="options.query"
-            :rounded="options.rounded"
-            :stream="options.stream"
-            :striped="options.striped"
-            :top="options.top"
-            :value="options.value"
-            color="light-blue"
-          fixed
-          style="z-index: 50")
+  div
+    v-progress-linear(
+      :active="options.active"
+      :background-opacity="options.opacity"
+      :bottom="options.bottom"
+      :buffer-value="options.buffer"
+      :height="options.height"
+      :indeterminate="options.indeterminate"
+      :query="options.query"
+      :rounded="options.rounded"
+      :stream="options.stream"
+      :striped="options.striped"
+      :top="options.top"
+      :value="options.value"
+      :color="color"
+      fixed
+      style="z-index: 50")
 </template>
 <script>
+import store from '_store'
 export default {
   name: 'GlobalLoading',
   props: {
@@ -34,11 +35,18 @@ export default {
           query: false,
           rounded: true,
           stream: true,
-          striped: false,
+          striped: true,
           top: false,
           value: 25
         }
       }
+    }
+  },
+  data: () => ({
+  }),
+  computed: {
+    color: function () {
+      return store.getters['sundry/theme'] ? '#2196f3' : '#f44336'
     }
   }
 }

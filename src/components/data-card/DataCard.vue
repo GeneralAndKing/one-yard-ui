@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-card.rigth
+  v-card.rigth.pa-1
     v-sheet.auth-card-icon.ml-5.text-center(:color="iconColor", :elevation="elevation", :width="width", :height="height")
       v-icon.fill-height.fill-width.white--text(:size="iconSize") {{ icon }}
     v-card-text.pa-2

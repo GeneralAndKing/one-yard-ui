@@ -19,9 +19,9 @@
                         v-text-field(label="输入您的密码", name="password", type="password", autofocus,
                             outlined, :rules="rules.password", v-model='user.password', ref="password", @keyup.enter="next")
             v-card-actions.px-0
-                v-btn(text, color="primary", @click="handleAccount") {{accountText}}
+                v-btn(outlined, color="info", @click="handleAccount") {{accountText}}
                 v-spacer
-                v-btn(color="primary", @click="next") {{nextBtnText}}
+                v-btn(color="info", @click="next") {{nextBtnText}}
             v-footer#form-footer.grey--text @ 2019 copy right by EchoCow Japoul BugRui
 </template>
 

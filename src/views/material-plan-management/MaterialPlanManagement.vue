@@ -62,7 +62,7 @@
                 span 提交审批
               v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
                 template(v-slot:activator="{ on }")
-                  v-btn.mr-2(outlined, rounded, x-small, fab, color="primary",
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="info",
                     v-per="[Role.ROLE_PRODUCTION_SUPERVISOR,Role.ROLE_WORKSHOP_SUPERVISOR,Role.ROLE_WAREHOUSE_SUPERVISOR,Role.ROLE_FINANCE_SUPERVISOR]",
                     @click="handleApproval(item)", v-on="on")
                     v-icon mdi-book-open-variant
@@ -83,8 +83,8 @@
                 span 删除
           v-snackbar(v-model="revokeSnackbar", vertical, :timeout="0") 您确定撤回吗？
             v-row.justify-end
-              v-btn.ma-3(color="error", text, @click="revokeSnackbar = false") 取消
-              v-btn.ma-3(color="primary", text, @click="revokeOk") 确定
+              v-btn.ma-3(color="error", outlined, @click="revokeSnackbar = false") 取消
+              v-btn.ma-3(color="info", outlined, @click="revokeOk") 确定
           v-dialog(v-model="approval.show", max-width="350px")
             v-card
               v-card-title.headline
@@ -97,10 +97,10 @@
                   rows="5", ref='description', auto-grow, counter)
               v-card-actions
                 v-spacer
-                v-btn(text, color="error", @click="handlePlanApproval('FREE', 'APPROVAL_NO', '审批退回')") 需求退回
-                v-btn(text, color="success", @click="handlePlanApproval('SUMMARY', 'APPROVAL_OK', '部门主管审批通过')") 需求通过
+                v-btn(outlined, color="error", @click="handlePlanApproval('FREE', 'APPROVAL_NO', '审批退回')") 需求退回
+                v-btn(outlined, color="success", @click="handlePlanApproval('SUMMARY', 'APPROVAL_OK', '部门主管审批通过')") 需求通过
   material-plan(v-else, :see-id="see")
-    v-btn(text, color="primary", @click="handleBack") 返回
+    v-btn(outlined, color="info", @click="handleBack") 返回
 </template>
 
 <script>

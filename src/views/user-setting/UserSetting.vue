@@ -26,8 +26,8 @@
                   v-flex(xs12, sm12)
                     v-textarea(label="备注", v-model="me.remark", counter="250", :disabled='!edit')
           v-card-actions.justify-end
-            v-btn(v-if="edit", text, color="error", @click="handleCancel") 取消
-            v-btn(text, :color="edit ? 'success' : 'primary'", @click="handleSubmit", :loading='loading.left') {{edit ? '保存' : '编辑' }}
+            v-btn(v-if="edit", outlined, color="error", @click="handleCancel") 取消
+            v-btn(outlined, :color="edit ? 'success' : 'info'", @click="handleSubmit", :loading='loading.left') {{edit ? '保存' : '编辑' }}
       v-flex.pa-2(xs12, md4)
         v-card.mt-5.mb-3
           .one-avatar.text-center
@@ -52,8 +52,8 @@
                     v-text-field(type="password", v-model="passwords.rePassword", counter="18", label="重复密码", validate-on-blur,
                       :rules="rules.union(rules.password,rules.rePassword)", :disabled='!editPassword')
           v-card-actions.justify-end
-            v-btn(text, color="error" v-show="editPassword" @click="initModifyPassword") 取消
-            v-btn(text, @click="handlePassword" :color="editPassword ? 'orange' : 'primary'",
+            v-btn(outlined, color="error" v-show="editPassword" @click="initModifyPassword") 取消
+            v-btn(outlined, @click="handlePassword" :color="editPassword ? 'orange' : 'info'",
               :loading='loading.right') {{editPassword?'确认':'修改密码'}}
     v-footer.text-center.justify-center.grey--text(style="background-color:rgba(255,255,255,0)")
       v-col(cols="12") @ 2019 copy right by&nbsp;&nbsp;

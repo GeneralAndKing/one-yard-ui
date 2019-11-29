@@ -2,13 +2,12 @@
   v-container#auth-dashboard
     v-layout(wrap)
       v-flex(xs12, sm12, md6, lg6, v-for="chart in charts", :key="chart.title")
-        v-skeleton-loader.ma-3.pa-1.mt-9(:loading="loading", type="card", transition="slide-y-transition")
+        v-skeleton-loader.ma-3.mt-9(:loading="loading", type="card", transition="slide-y-transition")
           ChartCard(:title="chart.title", :subTitle="chart.subTitle", :icon="chart.icon",
             :description="chart.description", :value="chart.value", :labels="chart.labels",
             :color="chart.color")
-    v-layout(wrap)
       v-flex.v-text-field--full-width(xs12, sm6, md6, lg3, v-for="item in statistical", :key="item.subTitle")
-        v-skeleton-loader.ma-3.pa-1.mt-9(:loading="loading", type="image", :max-height="150", transition="slide-y-transition")
+        v-skeleton-loader.ma-3.mt-9(:loading="loading", type="image", :max-height="150", transition="slide-y-transition")
           DataCard(:subTitle="item.subTitle", :main="item.main",
             :icon="item.icon", :iconColor="item.iconColor",
             :actionIcon="item.actionIcon", :action="item.action"
@@ -42,7 +41,7 @@ export default {
         subTitle: '用户总数',
         main: '0',
         icon: 'color_lens',
-        iconColor: 'orange',
+        iconColor: 'secondary',
         actionIcon: 'vpn_key',
         iconSize: 56,
         action: '当前系统中未锁定的用户总数'
@@ -50,21 +49,21 @@ export default {
         subTitle: '物料总数',
         main: '0',
         icon: 'check_circle_outline',
-        iconColor: 'green',
+        iconColor: 'accent',
         actionIcon: 'vpn_key',
         action: '所有物料分类下的物料总数'
       }, {
         subTitle: '需求计划处理量',
         main: '0',
         icon: 'verified_user',
-        iconColor: 'blue',
+        iconColor: 'warning',
         actionIcon: 'vpn_key',
         action: '已经处理的需求计划总数'
       }, {
         subTitle: '采购计划待执行量',
         main: '0',
         icon: 'mdi-gamepad mdi-spin',
-        iconColor: 'red',
+        iconColor: 'success',
         actionIcon: 'vpn_key',
         action: '待执行的采购计划总数'
       }
@@ -74,6 +73,7 @@ export default {
         title: '接口请求次数',
         subTitle: '通过请求次数你可以更好的了解系统流量',
         icon: 'verified_user',
+        color: 'success',
         description: '当前服务器指定日期接受到的请求总次数',
         value: [],
         labels: []
@@ -82,7 +82,7 @@ export default {
         title: '授权次数',
         subTitle: '通过授权次数能够从另一方面反映出您系统的安全性',
         icon: 'verified_user',
-        color: 'blue',
+        color: 'info',
         description: '每当登录、授权、鉴权的时候都会触发此请求',
         value: [],
         labels: []

@@ -1,6 +1,6 @@
 <template lang="pug">
   v-container#auth-res
-    v-alert(type="warning", border="left", prominent, elevation="2", outlined) 权限管理是系统中极其重要的部分，暂时不提供添加和修改服务！！！
+    v-alert(type="success", border="left", prominent, elevation="2") 权限管理是系统中极其重要的部分，暂时不提供添加和修改服务！！！
     v-card
       v-card-text
         v-skeleton-loader(:loading="loading", :type="type")

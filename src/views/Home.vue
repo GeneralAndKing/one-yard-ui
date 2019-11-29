@@ -1,13 +1,13 @@
 <template lang="pug">
   #auth
-    v-app-bar#auth-bar(app, clipped-left, :color="color")
+    v-app-bar#auth-bar(app, clipped-left, color="primary")
       v-app-bar-nav-icon.white--text(@click.stop="drawer = !drawer")
       v-toolbar-title.mr-12.align-center
         span.title.white--text G&K 智能制造管理系统
       v-spacer
       v-btn(icon, @click="handleTheme")
         v-icon.white--text navigation
-      v-badge.one-badge(:color="theme ? 'blue' : 'error'", overlap, top)
+      v-badge.one-badge(color="info", overlap, top)
         template(v-slot:badge, v-if="messages[0].items.length > 0")
           span {{messages[0].items.length}}
         v-btn(icon, @click="notice = true")
@@ -52,7 +52,7 @@
                   v-list-item-title {{message.name}}
                   v-list-item-subtitle(v-html="message.message")
                   v-list-item-icon.ma-0.justify-end
-                    v-btn(outlined, small, color="primary", @click="handleInfo(message)") 详情
+                    v-btn(outlined, small, color="info", @click="handleInfo(message)") 详情
                     v-btn(outlined, small, :color="message.status === 'READ'? 'error' : 'success'", @click="handleChange(message)") {{message.status === 'READ' ? '标为未读' : '标为已读'}}
                   span.overline.font-weight-thin.text-right {{message.createTime.replace('T', ' ')}}
               v-list-item(v-if="item.items.length === 0")
@@ -64,7 +64,7 @@
           p(v-html="showMessage.message")
         v-card-actions
           v-spacer
-          v-btn(outlined, color="primary", @click="handleRead") 已读
+          v-btn(outlined, color="info", @click="handleRead") 已读
     v-content
       v-scroll-y-transition(hide-on-leave, mode="out-in")
         router-view
@@ -97,9 +97,6 @@ export default {
     }
   },
   computed: {
-    color: function () {
-      return this.theme ? 'red' : 'blue'
-    },
     me: function () {
       return this.$store.getters['auth/me']
     }
