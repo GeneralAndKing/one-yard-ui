@@ -1,3 +1,3 @@
-import MaterialPlanManagement from './MaterialPlanManagement'
+import MaterialPlanManagement from './Management'
 
 export default MaterialPlanManagement

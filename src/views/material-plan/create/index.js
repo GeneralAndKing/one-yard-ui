@@ -1,3 +1,3 @@
-import MaterialPlanCreate from './MaterialPlanCreate'
+import MaterialPlanCreate from './Create'
 
 export default MaterialPlanCreate

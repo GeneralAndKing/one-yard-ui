@@ -221,8 +221,18 @@ export const routes = [
           ]
         },
         component: () => import(/* webpackChunkName: "sys-department" */ '_v/print')
+      },
+      {
+        path: 'procurementOrderCreate',
+        name: 'procurementOrderCreate',
+        meta: {
+          meta: '采购订单创建',
+          auth: [
+            Role.ROLE_PROCUREMENT_PLANER
+          ]
+        },
+        component: () => import(/* webpackChunkName: "sys-department" */ '_v/procurement-order/create')
       }
-
     ]
   },
   {

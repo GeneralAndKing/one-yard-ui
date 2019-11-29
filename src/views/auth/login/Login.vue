@@ -1,28 +1,33 @@
 <template lang="pug">
-    center-card#one-login
-        v-card#form-card.px-6.pb-7.px-sm-10.pb-sm-9.mx-auto(outlined, :loading="load")
-            v-spacer.pt-6.pt-sm-12
-            v-card-title.justify-center.headline {{welcomeText}}
-            #login-user.pb-2.text-center(style="height:44px")
-                v-btn(v-if="window === 1", outlined, rounded, @click="previous") {{user.email}}
-            v-spacer
-            v-card-subtitle.text-center.subtitle-1.pt-0 {{infoText}}
-            v-spacer
-            v-window(v-model="window", style="min-height:180px")
-                v-window-item(:key="0")
-                    v-card-text.px-0
-                        v-text-field(label="电子邮件地址", name="email", type="text", required, clearable,
-                            outlined, :rules="rules.email", v-model='user.email', @keyup.enter="next",
-                            ref="email", autofocus)
-                v-window-item(:key="1")
-                    v-card-text.px-0
-                        v-text-field(label="输入您的密码", name="password", type="password", autofocus,
-                            outlined, :rules="rules.password", v-model='user.password', ref="password", @keyup.enter="next")
-            v-card-actions.px-0
-                v-btn(outlined, color="info", @click="handleAccount") {{accountText}}
-                v-spacer
-                v-btn(color="info", @click="next") {{nextBtnText}}
-            v-footer#form-footer.grey--text @ 2019 copy right by EchoCow Japoul BugRui
+  center-card#one-login
+    div.flex.flex-column-reverse.tip
+      v-snackbar.rel(v-model="show1", left, :timeout="0", top) test1
+        v-btn(text, @click="show1 = false") close
+      v-snackbar.rel(v-model="show2", left, :timeout="0", top) test2
+        v-btn(text, @click="show2 = false") close
+    v-card#form-card.px-6.pb-7.px-sm-10.pb-sm-9.mx-auto(outlined, :loading="load")
+      v-spacer.pt-6.pt-sm-12
+      v-card-title.justify-center.headline {{welcomeText}}
+      #login-user.pb-2.text-center(style="height:44px")
+        v-btn(v-if="window === 1", outlined, rounded, @click="previous") {{user.email}}
+      v-spacer
+      v-card-subtitle.text-center.subtitle-1.pt-0 {{infoText}}
+      v-spacer
+      v-window(v-model="window", style="min-height:180px")
+        v-window-item(:key="0")
+          v-card-text.px-0
+            v-text-field(label="电子邮件地址", name="email", type="text", required, clearable,
+              outlined, :rules="rules.email", v-model='user.email', @keyup.enter="next",
+              ref="email", autofocus)
+        v-window-item(:key="1")
+          v-card-text.px-0
+            v-text-field(label="输入您的密码", name="password", type="password", autofocus,
+              outlined, :rules="rules.password", v-model='user.password', ref="password", @keyup.enter="next")
+      v-card-actions.px-0
+        v-btn(outlined, color="info", @click="handleAccount") {{accountText}}
+        v-spacer
+        v-btn(color="info", @click="next") {{nextBtnText}}
+      v-footer#form-footer.grey--text @ 2019 copy right by EchoCow Japoul BugRui
 </template>
 
 <script>
@@ -38,6 +43,8 @@ export default {
   },
   data () {
     return {
+      show1: true,
+      show2: true,
       window: 0,
       load: false,
       user: {
@@ -123,5 +130,14 @@ export default {
 </script>
 
 <style scoped lang="stylus">
-    @import "../form.styl"
+@import "../form.styl"
+.tip
+  position fixed
+  top 0
+  left 10px
+  transition all 1s
+  .rel
+    transition all 1s
+    position relative
+    margin-bottom 20px
 </style>
