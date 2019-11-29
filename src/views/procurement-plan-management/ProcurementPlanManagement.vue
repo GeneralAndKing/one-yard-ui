@@ -241,25 +241,28 @@ export default {
     handlePlanApproval (result) {
       if (!this.$refs['description'].validate(true)) return
       if (this.approval.plan.planStatus === 'APPROVAL' && this.approval.plan.approvalStatus === 'APPROVAL_ING') {
-        this.approval.approvalType = 'PROCUREMENT_APPROVAL_ONE'
+        this.approval.approvalType = 'PROCUREMENT_APPROVAL'
         if (result === '审批通过') {
+          this.approval.result = '采购主管审批通过'
           this.approval.plan.planStatus = 'PROCUREMENT_OK'
           this.approval.plan.approvalStatus = 'APPROVAL_ING'
         } else {
+          this.approval.result = '采购主管审批退回'
           this.approval.plan.planStatus = 'FREE'
           this.approval.plan.approvalStatus = 'NO_SUBMIT'
         }
       } else if (this.approval.plan.planStatus === 'PROCUREMENT_OK' && this.approval.plan.approvalStatus === 'APPROVAL_ING') {
-        this.approval.approvalType = 'PROCUREMENT_APPROVAL_TWO'
+        this.approval.approvalType = 'PROCUREMENT_APPROVAL'
         if (result === '审批通过') {
+          this.approval.result = '财务审批通过'
           this.approval.plan.planStatus = 'FINALLY'
           this.approval.plan.approvalStatus = 'APPROVAL_OK'
         } else {
+          this.approval.result = '财务审批退回'
           this.approval.plan.planStatus = 'FREE'
           this.approval.plan.approvalStatus = 'NO_SUBMIT'
         }
       }
-      this.approval.result = result
       this.approval.planId = this.approval.plan.id
       procurementPlanAPI.approvalProcurementPlan(this.approval.plan, this.approval)
         .then(() => {
