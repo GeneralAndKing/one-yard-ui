@@ -1,3 +1,3 @@
-import ProcurementPlanManagement from './ProcurementPlanManagement'
+import ProcurementPlanManagement from './Management'
 
 export default ProcurementPlanManagement

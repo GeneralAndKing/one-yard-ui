@@ -119,17 +119,29 @@ export const MENUS = [
         ]
       }
     ]
+  }, {
+    name: '采购订单',
+    children: [
+      {
+        text: '采购订单创建',
+        to: { name: 'procurementOrderCreate' },
+        icon: 'mdi-file-document',
+        auth: [
+          Role.ROLE_PROCUREMENT_PLANER
+        ]
+      }
+    ]
   }
 ]
 
 /**
  * 生成左侧菜单栏
  * @param menus 总菜单
- * @returns {{children: []}}
+ * @returns {[]}
  */
 export const genMenu = (menus = MENUS) => {
   if (menus === null) {
-    return null
+    return menus
   }
   let result = []
   if (!(menus instanceof Array)) {
