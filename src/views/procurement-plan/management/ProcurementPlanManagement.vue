@@ -6,13 +6,13 @@
         v-container(grid-list-md)
           v-form
             v-layout(wrap, style="width:100%")
-              v-flex(sm12, md6, lg4)
+              v-flex(sm12, md6)
                 v-text-field(v-model="search.name", label="采购计划名称")
-              v-flex(sm12, md6, lg4)
+              //v-flex(sm12, md6, lg4)
                 v-select(v-model="search.planStatus", :items="planStatus", item-value='value', item-text='name', label="需求计划状态")
-              v-flex(sm12, md6, lg4)
+              //v-flex(sm12, md6, lg4)
                 v-select(v-model="search.approvalStatus", :items="approvalStatus", item-value='value', item-text='name', label="审批状态")
-              v-flex(xs12, md6, lg4)
+              v-flex(xs12, md6)
                 v-menu(v-model="dayMenu", :close-on-content-click="false", transition="scale-transition",
                   offset-y, max-width="290px", min-width="290px")
                   template(v-slot:activator="{ on }")
@@ -274,7 +274,7 @@ export default {
     },
     seeApprovalIng () {
       this.desserts = []
-      this.initData()
+      this.initTable()
     },
     seeApprovalEd () {
       this.desserts = []

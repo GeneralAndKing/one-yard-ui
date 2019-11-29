@@ -18,9 +18,9 @@
 </template>
 
 <script>
-import PrintMaterialPlan from '_c/print-material-plan'
-import PrintProcurementPlan from '_c/print-procurement-plan'
-import PrintSummary from '_c/print-summary/PrintSummary'
+import PrintMaterialPlan from '_c/print/material-plan'
+import PrintProcurementPlan from '_c/print/procurement-plan'
+import PrintSummary from '_c/print/summary/PrintSummary'
 export default {
   name: 'Print',
   components: {

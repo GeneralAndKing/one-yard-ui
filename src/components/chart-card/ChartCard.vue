@@ -50,7 +50,7 @@
 <script>
 const gradients = [
   ['#ff4900'],
-  ['#42b3f4'],
+  ['yellow'],
   ['red', 'orange', 'yellow'],
   ['white'],
   ['#00c6ff', '#F0F', '#FF0'],

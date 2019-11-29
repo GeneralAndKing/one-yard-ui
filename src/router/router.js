@@ -117,7 +117,7 @@ export const routes = [
             Role.ROLE_FINANCE_PLANER,
             Role.ROLE_WORKSHOP_PLANER]
         },
-        component: () => import(/* webpackChunkName: "sys-department" */ '_v/material-plan-create')
+        component: () => import(/* webpackChunkName: "sys-department" */ '_v/material-plan/create')
       }, {
         path: 'materialPlanManagement',
         name: 'materialPlanManagement',
@@ -134,7 +134,7 @@ export const routes = [
             Role.ROLE_PRODUCTION_SUPERVISOR
           ]
         },
-        component: () => import(/* webpackChunkName: "sys-department" */ '_v/material-plan-management')
+        component: () => import(/* webpackChunkName: "sys-department" */ '_v/material-plan/management')
       }, {
         path: 'procurementPlanManagement',
         name: 'procurementPlanManagement',
@@ -148,7 +148,7 @@ export const routes = [
             Role.ROLE_FINANCE_SUPERVISOR
           ]
         },
-        component: () => import(/* webpackChunkName: "sys-department" */ '_v/procurement-plan-management')
+        component: () => import(/* webpackChunkName: "sys-department" */ '_v/procurement-plan/management')
       }, {
         path: 'summary',
         name: 'summary',
@@ -158,7 +158,7 @@ export const routes = [
             Role.ROLE_PROCUREMENT_PLANER
           ]
         },
-        component: () => import(/* webpackChunkName: "sys-department" */ '_v/summary')
+        component: () => import(/* webpackChunkName: "sys-department" */ '_v/procurement-plan/summary')
       }, {
         path: 'supplier',
         name: 'supplier',

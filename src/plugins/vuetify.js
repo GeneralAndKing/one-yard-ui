@@ -12,7 +12,7 @@ export default new Vuetify({
       light: {
         primary: colors.blue.darken1,
         secondary: colors.indigo.lighten1,
-        accent: colors.pink.accent1,
+        accent: colors.pink.lighten1,
         error: colors.red.lighten1,
         warning: colors.yellow.darken1,
         info: colors.lightBlue.lighten1,
@@ -21,10 +21,10 @@ export default new Vuetify({
       dark: {
         primary: colors.red.darken1,
         secondary: colors.blue.darken1,
-        accent: colors.cyan,
+        accent: colors.amber.darken1,
         error: colors.red.accent3,
         warning: colors.yellow.darken3,
-        info: colors.lightBlue.darken1,
+        info: colors.blue,
         success: colors.lightGreen.darken1
       }
     }

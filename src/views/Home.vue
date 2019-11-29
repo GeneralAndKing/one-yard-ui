@@ -7,9 +7,9 @@
       v-spacer
       v-btn(icon, @click="handleTheme")
         v-icon.white--text navigation
-      v-badge.one-badge(color="info", overlap, top)
+      v-badge.one-badge(color="accent", overlap, top)
         template(v-slot:badge, v-if="messages[0].items.length > 0")
-          span {{messages[0].items.length}}
+          p.font-weight-medium {{messages[0].items.length}}
         v-btn(icon, @click="notice = true")
           v-icon.white--text mdi-bell
       v-menu(left, offset-y)
@@ -45,15 +45,15 @@
         v-tab(v-for="(item) in messages", :key="`tab-${item.type}`", :href="`#tab-${item.type}`") {{item.type}}
         v-tabs-items(v-model="currentItem")
           v-tab-item(v-for="item in messages", :key="item.type", :value="`tab-${item.type}`")
-            v-list(three-line)
+            v-list(three-line, :dark="theme")
               v-list-item.mb-1(v-if="item.items.length > 0", v-for="message in item.items", :key="message.type",
                 :class="message.status === 'READ'? 'one-read' : 'one-un-read'")
                 v-list-item-content
                   v-list-item-title {{message.name}}
                   v-list-item-subtitle(v-html="message.message")
                   v-list-item-icon.ma-0.justify-end
-                    v-btn(outlined, small, color="info", @click="handleInfo(message)") 详情
-                    v-btn(outlined, small, :color="message.status === 'READ'? 'error' : 'success'", @click="handleChange(message)") {{message.status === 'READ' ? '标为未读' : '标为已读'}}
+                    v-btn(text, small, color="info", @click="handleInfo(message)") 详情
+                    v-btn(text, small, :color="message.status === 'READ'? 'error' : 'success'", @click="handleChange(message)") {{message.status === 'READ' ? '标为未读' : '标为已读'}}
                   span.overline.font-weight-thin.text-right {{message.createTime.replace('T', ' ')}}
               v-list-item(v-if="item.items.length === 0")
                 v-list-item-subtitle.text-center.body-1.font-weight-light 暂无通知信息
@@ -177,8 +177,6 @@ export default {
 <style scoped lang="stylus">
 .one-un-read
   border-left 4px solid #EF5350
-  background rgba(255,235,238,0.2)
 .one-read
   border-left 4px solid #00C853
-  background rgba(241,248,233,0.2)
 </style>
