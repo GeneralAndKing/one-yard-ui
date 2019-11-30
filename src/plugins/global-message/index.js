@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import GlobalMessage from './GlobalMessage.vue'
-const pxAdd = (x, y) => `${parseInt(x) + parseInt(y)}px`
+let listener = { id: -1, pos: -1, message: 1000 }
+let messageId = 2000
+const MessageBox = Vue.extend(GlobalMessage)
 GlobalMessage.install = function (options, type) {
   if (options === undefined || options === null) {
     options = {
@@ -14,24 +16,19 @@ GlobalMessage.install = function (options, type) {
       options.type = type
     }
   }
-  const MessageBox = Vue.extend(GlobalMessage)
-  let name = 'v-snack'
-  if (options.hasOwnProperty('x')) name = `${name} v-snack--${options.x}`
-  else name = `${name} v-snack--right`
-  if (options.hasOwnProperty('y')) name = `${name} v-snack--${options.y}`
-  else name = `${name} v-snack--top`
-  const snacks = document.getElementsByClassName(name)
-  let offset = '8px'
-  for (let i = 0; i < snacks.length; i++) {
-    offset = pxAdd(window.getComputedStyle(snacks[i]).getPropertyValue('height'), offset)
-    offset = pxAdd(offset, '16px')
-  }
-  options.styles = {
-    [`${options.hasOwnProperty('y') ? options.y : 'top'}`]: offset
-  }
+  options.id = messageId += 1
+  options.listener = listener
   let instance = new MessageBox({
-    data: options
+    data: options,
+    destroyed () {
+      listener.id = instance.$data.id
+      listener.pos = -instance.$data.pos
+      listener.message += 1
+    }
   }).$mount()
+  listener.pos = instance.pos
+  listener.id = instance.id
+  listener.message += 1
   document.getElementById('inspire').appendChild(instance.$el)
   Vue.nextTick(() => {
     instance.snackbar = true

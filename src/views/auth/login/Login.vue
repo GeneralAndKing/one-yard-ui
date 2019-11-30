@@ -1,10 +1,5 @@
 <template lang="pug">
   center-card#one-login
-    div.flex.flex-column-reverse.tip
-      v-snackbar.rel(v-model="show1", left, :timeout="0", top) test1
-        v-btn(text, @click="show1 = false") close
-      v-snackbar.rel(v-model="show2", left, :timeout="0", top) test2
-        v-btn(text, @click="show2 = false") close
     v-card#form-card.px-6.pb-7.px-sm-10.pb-sm-9.mx-auto(outlined, :loading="load")
       v-spacer.pt-6.pt-sm-12
       v-card-title.justify-center.headline {{welcomeText}}
@@ -79,6 +74,11 @@ export default {
   },
   created () {
     this.$vuetify.theme.dark = false
+    this.$message({ content: 'left1', timeout: 1000000, y: 'bottom' })
+    this.$message({ content: 'left2', timeout: 10000, y: 'bottom' })
+    // this.$message({ content: 'left2', timeout: 10000, x: 'left' })
+    // this.$message({ content: 'left2', timeout: 10000, x: 'left' })
+    // this.$message({ content: 'left2', timeout: 10000, x: 'left' })
   },
   methods: {
     handleAccount () {
