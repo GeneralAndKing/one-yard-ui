@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import GlobalLoading from './GlobalLoading.vue'
-// TODO 未完成 日他妈的
 GlobalLoading.install = null
 GlobalLoading.config = function (options = {}) {
   console.log('123123')
