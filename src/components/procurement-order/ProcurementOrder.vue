@@ -53,8 +53,8 @@
 </template>
 
 <script>
-import MoreBtn from '_c/more-btn/MoreBtn'
-import DateMenu from '_c/date-menu/DateMenu'
+import MoreBtn from '_c/more-btn'
+import DateMenu from '_c/date-menu'
 import ProcurementMaterial from './ProcurementMaterial'
 import OrderTerms from './OrderTerms'
 import * as RuleAPI from '_u/rule'

@@ -170,7 +170,7 @@
 
 <script>
 import { requiredRules, unionRules, requiredMessageRules } from '_u/rule'
-import MoreBtn from '_c/more-btn/MoreBtn'
+import MoreBtn from '_c/more-btn'
 import * as restAPI from '_api/rest'
 import * as procurementPlanAPI from '_api/procurementPlan'
 import * as planMaterialAPI from '_api/planMaterial'

@@ -45,14 +45,18 @@
           v-btn.mr-4(outlined, color="success", @click="handleAdd") 添加
           v-btn(outlined, color="error", @click="handleDeleteSelect") 删除所选
     procurement-material-edit(v-model="item", ref="add", :materials="materials", @submit="handleSubmit")
+    procurement-plan-select(ref="planSelect", :materials="materials", @select="handlePlanSelect")
+
 </template>
 
 <script>
 import ProcurementMaterialEdit from './ProcurementMaterialEdit'
+import ProcurementPlanSelect from './ProcurementPlanSelect'
 export default {
   name: 'ProcurementMaterial',
   components: {
-    ProcurementMaterialEdit
+    ProcurementMaterialEdit,
+    ProcurementPlanSelect
   },
   props: {
     value: {
@@ -75,7 +79,12 @@ export default {
     selected: [],
     // TODO：需要请求初始化 所有 的物料信息
     materials: [
-      { id: 1, name: `物料1`, code: `编码1`, specifications: '个', size: '大' }
+      { id: 1, name: `物料1`, code: `编码1`, specifications: '个', size: '大' },
+      { id: 2, name: `名称0-物料0`, code: `编码1`, specifications: '个', size: '大' },
+      { id: 3, name: `名称0-物料1`, code: `编码1`, specifications: '个', size: '大' },
+      { id: 4, name: `名称0-物料2`, code: `编码1`, specifications: '个', size: '大' },
+      { id: 5, name: `名称0-物料3`, code: `编码1`, specifications: '个', size: '大' },
+      { id: 6, name: `名称0-物料4`, code: `编码1`, specifications: '个', size: '大' }
     ],
     headers: [
       { text: '物料编码', value: 'materialCode', align: 'start' },
@@ -103,6 +112,10 @@ export default {
   methods: {
     handlePlan () {
       // TODO： 选单事件
+      this.$refs.planSelect.show = true
+    },
+    handlePlanSelect (selectItems) {
+      // TODO：收到选择的物料以后进行处理
     },
     handleAdd () {
       this.item = null
