@@ -175,7 +175,7 @@ export default {
         resourcesLink = `materialDemandPlan/search/byCreateUser?createUser=${this.$store.getters['auth/username']}`
       }
       if (Role.isSupervisor(role)) {
-        resourcesLink = `materialDemandPlan/search/byDepartmentIds?departmentIds=${Role.supervisorList(role)}&approvalStatus=1&planStatus=1`
+        resourcesLink = `materialDemandPlan/search/byDepartmentIds?departmentIds=${Role.supervisorList(role)}`
       }
       restAPI.getRestLink(resourcesLink)
         .then(res => {
@@ -300,19 +300,12 @@ export default {
         })
     },
     seeApprovalIng () {
-      this.materialPlan = []
-      this.initData()
+      this.search.planStatus = 'APPROVAL'
+      this.search.approvalStatus = 'APPROVAL_ING'
     },
     seeApprovalEd () {
-      this.materialPlan = []
-      this.loading = true
-      let _this = this
-      let role = _this.$store.getters['auth/role']
-      restAPI.getRestLink(`materialDemandPlan/search/byDepartmentIds?departmentIds=${Role.supervisorList(role)}&approvalStatus=2&planStatus=2`)
-        .then(res => {
-          _this.materialPlan = res.data.content.filter(d => !d.hasOwnProperty('relTargetType'))
-        })
-        .finally(() => { this.loading = false })
+      this.search.planStatus = 'SUMMARY'
+      this.search.approvalStatus = 'APPROVAL_OK'
     },
     seeApproval () {
       this.search.planStatus = 'APPROVAL'
