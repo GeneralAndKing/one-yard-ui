@@ -23,10 +23,7 @@ export default {
     type: {
       type: String,
       default: 'day',
-      validator: function (value) {
-        // 这个值必须匹配下列字符串中的一个
-        return ['day', 'month'].indexOf(value) !== -1
-      }
+      validator: (value) => ['day', 'month'].indexOf(value) !== -1
     },
     // 是否禁用
     disabled: {
