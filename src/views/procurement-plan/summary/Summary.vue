@@ -324,7 +324,7 @@
 import * as restAPI from '_api/rest'
 import * as procurementPlan from '_api/procurementPlan'
 import * as planMaterialAPI from '_api/planMaterial'
-import MoreBtn from '_c/more-btn/MoreBtn'
+import MoreBtn from '_c/more-btn'
 import { requiredRules, unionRules, requiredMessageRules } from '_u/rule'
 const uuidv4 = require('uuid/v4')
 

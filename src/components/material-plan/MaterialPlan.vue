@@ -178,7 +178,7 @@
 
 <script>
 import { requiredRules, unionRules, requiredMessageRules, maxLengthRules } from '_u/rule'
-import MoreBtn from '_c/more-btn/MoreBtn'
+import MoreBtn from '_c/more-btn'
 import { planTypesSelect } from '_u/status'
 import * as materialPlanAPI from '_api/materialPlan'
 import * as restAPI from '_api/rest'

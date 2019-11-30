@@ -1,3 +1,3 @@
-import MoreBtn from 'MoreBtn'
+import MoreBtn from './MoreBtn'
 
 export default MoreBtn

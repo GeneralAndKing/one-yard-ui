@@ -1,3 +1,3 @@
-import DateMenu from 'DateMenu'
+import DateMenu from './DateMenu'
 
 export default DateMenu

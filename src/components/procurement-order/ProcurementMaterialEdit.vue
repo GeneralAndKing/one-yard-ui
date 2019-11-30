@@ -59,7 +59,7 @@
 
 <script>
 import * as RuleAPI from '_u/rule'
-import DateMenu from '_c/date-menu/DateMenu'
+import DateMenu from '_c/date-menu'
 
 export default {
   name: 'ProcurementMaterialEdit',
