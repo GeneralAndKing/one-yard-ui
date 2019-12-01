@@ -25,20 +25,24 @@
             v-col
               v-card-text
                 v-treeview(v-model="selected", :items="plans", :load-children="loadMaterials", transition,
-                  open-on-click, color="warning",  item-key="name", selectable, return-object)
+                  open-on-click, color="warning",  item-key="id", selectable, return-object)
                   template(v-slot:label="{ item, leaf }")
                     span(v-if="!leaf") {{item.name}} - {{item.planType}}
                     span(v-else) {{item.name}}
             v-divider(vertical)
             v-col(cols="12", md="6", lg="8")
               v-card-text
-                v-data-table(:headers="headers", :items="selected", no-data-text="暂无数据", no-results-text="暂无数据")
+                v-data-table(:headers="headers", :items="select", no-data-text="暂无数据", no-results-text="暂无数据")
                   template(v-slot:item.action="{ item }")
                     v-tooltip(top)
                       template(v-slot:activator="{ on }")
-                        v-btn(outlined, rounded, x-small, fab, color="error", @click="handleDelete(item.name)", v-on="on")
+                        v-btn(outlined, rounded, x-small, fab, color="error", @click="handleDelete(item)", v-on="on")
                           v-icon mdi-delete
                       span 删除
+                  template(v-slot:top)
+                    v-toolbar(flat)
+                      v-spacer
+                      v-btn(outlined, color="error", @click="selected = []") 清除所有
         v-card-actions
           v-spacer
           v-btn(outlined, color="error", @click="handleReset") 重置
@@ -73,6 +77,11 @@ export default {
       { text: '操作', value: 'action', sortable: false, width: '150px', align: 'center' }
     ]
   }),
+  computed: {
+    select () {
+      return this.selected.filter(v => v.hasOwnProperty('code'))
+    }
+  },
   watch: {
     'order.type' (val) {
       let resourceLink = 'procurementPlan/search/byStatus?planStatus=FINALLY&approvalStatus=APPROVAL_OK'
@@ -80,9 +89,13 @@ export default {
         resourceLink = 'procurementPlan/search/byPlanType?planType=紧急采购计划'
       }
       RESTAPI.getRestLink(resourceLink).then(res => {
-        this.plans = res.data.content
-        this.plans.some(value => {
-          value.children = []
+        res.data.content.forEach(value => {
+          this.plans.push(Object.assign({
+            id: 0,
+            name: `名称`,
+            planType: '年度采购计划',
+            children: []
+          }, value))
         })
       }).catch(() => {
         this.plans = []
@@ -99,7 +112,6 @@ export default {
         item.children.push(...res.data.content)
         await item.children.some(value => {
           let material = this._.find(this.materials, { id: value.materialId })
-          console.log(material)
           if (material === undefined) {
             throw Error('undefined', 'material data is undefined')
           }
@@ -112,8 +124,8 @@ export default {
         item.children.length = 0
       }
     },
-    handleDelete (name) {
-      this.selected.splice(this._.indexOf(this.selected, name), 1)
+    handleDelete (item) {
+      this.selected.splice(this._.indexOf(this.selected, item), 1)
     },
     handleSave () {
       this.$emit('select', this.selected)
