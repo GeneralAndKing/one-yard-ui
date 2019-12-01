@@ -1,12 +1,12 @@
 <template lang="pug">
-  v-row.global-confirm
-    v-dialog(ref="dialog" ,v-model="dialog", :max-width="width", persistent)
+  v-row.global-confirm(v-if="show")
+    v-dialog(v-model="dialog", :max-width="width", persistent)
       v-card
         v-card-title(:class="titleClass") {{title}}
         v-card-text(:class="contentClass") {{content}}
         v-card-actions
           v-spacer
-          v-btn(:color="cancelClass", outlined, @click="dialog = false") {{cancelText}}
+          v-btn(:color="cancelClass", outlined, @click="cancel") {{cancelText}}
           v-btn(:color="okClass", outlined, @click="success") {{okText}}
 </template>
 
@@ -20,9 +20,13 @@ export default {
     this.$vuetify = Vuetify.framework
   },
   methods: {
+    cancel () {
+      this.dialog = false
+      setTimeout(() => { this.show = false }, 1000)
+    },
     success () {
       this.ok()
-      this.dialog = false
+      this.cancel()
     }
   }
 }

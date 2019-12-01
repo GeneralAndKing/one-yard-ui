@@ -4,7 +4,6 @@ const ConfirmConstructor = vue.extend(GlobalConfirm)
 
 const confirm = (option, ok = () => { console.log('ok') }) => {
   const defaultOption = {
-    dialog: true,
     width: 290,
     titleClass: '',
     title: '您确定删除吗？',
@@ -16,6 +15,8 @@ const confirm = (option, ok = () => { console.log('ok') }) => {
     okText: '确认'
   }
   option = Object.assign(defaultOption, option)
+  option.show = true
+  option.dialog = true
   const confirmDom = new ConfirmConstructor({
     el: document.createElement('v-row'),
     data: option,
