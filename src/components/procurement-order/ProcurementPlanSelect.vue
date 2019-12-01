@@ -33,12 +33,6 @@
             v-col(cols="12", md="6", lg="8")
               v-card-text
                 v-data-table(:headers="headers", :items="select", no-data-text="暂无数据", no-results-text="暂无数据")
-                  template(v-slot:item.action="{ item }")
-                    v-tooltip(top)
-                      template(v-slot:activator="{ on }")
-                        v-btn(outlined, rounded, x-small, fab, color="error", @click="handleDelete(item)", v-on="on")
-                          v-icon mdi-delete
-                      span 删除
                   template(v-slot:top)
                     v-toolbar(flat)
                       v-spacer
@@ -50,7 +44,7 @@
 </template>
 
 <script>
-import * as RESTAPI from '_api/rest'
+import * as restAPI from '_api/rest'
 export default {
   name: 'ProcurementPlanSelect',
   props: {
@@ -74,7 +68,9 @@ export default {
       { text: '型号', value: 'size', align: 'start' },
       { text: '需求数量', value: 'number', align: 'start' },
       { text: '需求日期', value: 'date', align: 'start' },
-      { text: '操作', value: 'action', sortable: false, width: '150px', align: 'center' }
+      { text: '期望供应商', value: 'expectationSupplier', align: 'start' },
+      { text: '固定供应商', value: 'fixedSupplier', align: 'start' },
+      { text: '需求固存组织', value: 'inventory', align: 'start' }
     ]
   }),
   computed: {
@@ -88,7 +84,7 @@ export default {
       if (val === '紧急订单') {
         resourceLink = 'procurementPlan/search/byPlanType?planType=紧急采购计划'
       }
-      RESTAPI.getRestLink(resourceLink).then(res => {
+      restAPI.getRestLink(resourceLink).then(res => {
         res.data.content.forEach(value => {
           this.plans.push(Object.assign({
             id: 0,
@@ -108,7 +104,7 @@ export default {
     },
     loadMaterials: async function (item) {
       try {
-        let res = await RESTAPI.getRestLink(`planMaterial/search/byProcurementPlanId?procurementPlanId=${item.id}`)
+        let res = await restAPI.getRestLink(`planMaterial/search/byProcurementPlanId?procurementPlanId=${item.id}`)
         item.children.push(...res.data.content)
         await item.children.some(value => {
           let material = this._.find(this.materials, { id: value.materialId })
@@ -124,11 +120,8 @@ export default {
         item.children.length = 0
       }
     },
-    handleDelete (item) {
-      this.selected.splice(this._.indexOf(this.selected, item), 1)
-    },
     handleSave () {
-      this.$emit('select', this.selected)
+      this.$emit('select', this.select)
       this.handleReset()
     },
     handleReset () {
