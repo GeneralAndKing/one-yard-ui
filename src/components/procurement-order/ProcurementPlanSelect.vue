@@ -46,7 +46,7 @@
 </template>
 
 <script>
-
+// import * as RESTAPI from '_api/rest'
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms))
 export default {
   name: 'ProcurementPlanSelect',
@@ -71,7 +71,6 @@ export default {
     ]
   }),
   created () {
-    console.log(this.materials)
     // TODO: 初始化所有符合状态的采购计划数据
     for (let i = 0; i < 5; i++) {
       this.plans.push({
