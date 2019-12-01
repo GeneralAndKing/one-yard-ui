@@ -79,6 +79,7 @@ export default {
   },
   watch: {
     'order.type' (val) {
+      this.plans = []
       let resourceLink = 'procurementPlan/search/byStatus?planStatus=FINALLY&approvalStatus=APPROVAL_OK'
       if (val === '紧急订单') {
         resourceLink = 'procurementPlan/search/byPlanType?planType=紧急采购计划'
@@ -122,6 +123,7 @@ export default {
     },
     handleSave () {
       this.$emit('select', this.select)
+      this.show = false
     },
     handleReset () {
       this.selected = []

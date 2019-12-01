@@ -190,6 +190,11 @@ export default {
       }
     },
     handleMaterialSelect (items) {
+      this.procurementMaterial = this.procurementMaterial.filter(value => {
+        if (value.planMaterialId === undefined) {
+          return value
+        }
+      })
       if (items.length > 0) {
         this.isSelect = true
         for (let item of items) {
@@ -197,7 +202,7 @@ export default {
             continue
           }
           this.procurementMaterial.push({
-            id: item.id,
+            planMaterialId: item.id,
             code: item.code,
             name: item.name,
             materialId: item.materialId,
@@ -221,6 +226,8 @@ export default {
             material: this._.find(this.materials, { id: item.materialId })
           })
         }
+      } else {
+        this.isSelect = false
       }
     }
   }

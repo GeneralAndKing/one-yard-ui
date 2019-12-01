@@ -20,12 +20,12 @@
           span 编辑
         v-tooltip(top)
           template(v-slot:activator="{ on }")
-            v-btn.mr-1(outlined, rounded, x-small, fab, color="info", @click="handleCopy(item)", v-on="on", :disabled="see")
+            v-btn.mr-1(outlined, rounded, x-small, fab, color="info", @click="handleCopy(item)", v-on="on")
               v-icon file_copy
           span 复制
         v-tooltip(top)
           template(v-slot:activator="{ on }")
-            v-btn(outlined, rounded, x-small, fab, color="error", @click="handleDelete(item)", v-on="on", :disabled="see")
+            v-btn(outlined, rounded, x-small, fab, color="error", @click="handleDelete(item)", v-on="on" :disabled="item.planMaterialId!==undefined")
               v-icon mdi-delete
           span 删除
       template(v-slot:top)
@@ -87,7 +87,7 @@ export default {
     search: '',
     selected: [],
     headers: [
-      { text: '物料编码', value: 'materialCode', align: 'start' },
+
       { text: '物料名称', value: 'materialName', align: 'start' },
       { text: '规格', value: 'materialSpecifications', align: 'start' },
       { text: '型号', value: 'materialSize', align: 'start' },
@@ -126,7 +126,17 @@ export default {
     },
     handleDeleteSelect () {
       // TODO： 删除所选事件
-      this.selected.forEach(item => this.value.splice(this._.indexOf(this.value, item), 1))
+      let isPlan = false
+      this.selected.forEach(item => {
+        if (item.planMaterialId === undefined) {
+          this.value.splice(this._.indexOf(this.value, item), 1)
+        } else {
+          isPlan = true
+        }
+      })
+      if (isPlan) {
+        this.$message('采购计划物料请到选单页面删除', 'warning')
+      }
       this.selected = []
     },
     handleDelete (item) {
@@ -134,12 +144,14 @@ export default {
       this.value.splice(this._.indexOf(this.value, item), 1)
     },
     handleEdit (item) {
+      console.log(item)
       this.item = item
       this.$refs.add.handleShow()
     },
     handleCopy (item) {
       let newItem = this._.cloneDeep(item)
       newItem.name = `${new Date().toISOString()}-${item.materialId}-${Math.ceil(Math.random() * 100)}`
+      newItem.planMaterialId = undefined
       this.value.unshift(newItem)
     },
     // 这个事件是添加或者编辑成功以后，添加到表格之中的事件
