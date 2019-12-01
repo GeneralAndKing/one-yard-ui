@@ -8,48 +8,49 @@
           v-btn(icon,  @click="handleClose", color="error")
             v-icon mdi-close
         v-card-text
-          v-form(:ref="formRef")
-            v-layout(wrap, style="width:100%")
-              v-flex(sm12, md6, lg4)
-                v-select(v-model="editItem.materialId", :items="materials", :ref="`${formRef}Material`", clearable,
-                  label="物料", :rules="rules.unionRules(rules.requiredRules('物料'))", item-text="name", item-value="id")
-              v-flex(sm12, md6, lg4)
-                v-text-field(v-model="editItem.procurementUnit" :ref="`${formRef}procurementUnit`", label="采购单位")
-              v-flex(sm12, md6, lg4)
-                v-text-field(v-model="editItem.procurementNumber" :ref="`${formRef}procurementNumber`", label="采购数量",
-                  :rules="rules.unionRules(rules.requiredRules('采购数量'))", type="number")
-              v-flex(sm12, md6, lg4)
-                v-text-field(v-model="editItem.supplier" :ref="`${formRef}supplier`", label="供应商")
-              v-flex(sm12, md6, lg4)
-                v-text-field(v-model="editItem.chargeUnit" :ref="`${formRef}chargeUnit`", label="计价单位")
-              v-flex(sm12, md6, lg4)
-                v-text-field(v-model="editItem.chargeNumber" :ref="`${formRef}chargeNumber`", label="计价数量", type="number")
-              v-flex(sm12, md6, lg4)
-                date-menu(v-model="editItem.deliveryDate", label="交货日期")
-              v-flex(sm12, md6, lg4)
-                v-text-field(v-model="editItem.unitPrice" :ref="`${formRef}unitPrice`", label="单价",
-                  :rules="rules.unionRules(rules.requiredRules('单价'))", suffix="元")
-              v-flex(sm12, md6, lg4)
-                v-text-field(v-model="editItem.taxableUnitPrice" :ref="`${formRef}taxableUnitPrice`", label="含税单价（包含税费的单价）",
-                  :rules="rules.unionRules(rules.requiredRules('含税单价'))")
-              v-flex(sm12, md6, lg4)
-                v-text-field(v-model="editItem.taxRate" :ref="`${formRef}taxRate`", label="税率",
-                  :rules="rules.unionRules(rules.requiredRules('税率'))", suffix="%")
-              v-flex(sm12, md6, lg4)
-                v-text-field(v-model="editItem.taxAmount" :ref="`${formRef}taxRate`", label="税额（总共交多少税）",
-                  :rules="rules.unionRules(rules.requiredRules('税额'))", suffix="元")
-              v-flex(sm12, md6, lg4)
-                v-text-field(v-model="editItem.totalPrice" :ref="`${formRef}unitPrice`", label="总价（不含税）",
-                  :rules="rules.unionRules(rules.requiredRules('总价'))", suffix="元")
-              v-flex(sm12, md6, lg4)
-                v-text-field(v-model="editItem.taxTotalPrice" :ref="`${formRef}taxTotalPrice`", label="含税总价（税费+总价）",
-                  :rules="rules.unionRules(rules.requiredRules('含税总价'))", suffix="元")
-              v-flex(sm12, md6, lg4)
-                v-text-field(v-model="editItem.demandDepartment" :ref="`${formRef}demandDepartment`", label="需求部门")
-              v-flex(sm12, md6, lg4)
-                v-text-field(v-model="editItem.materialReceivingDepartment" :ref="`${formRef}materialReceivingDepartment`", label="收料部门")
-              v-flex(xs12, md6, md4)
-                v-switch(v-model="editItem.isComplimentary", :label="`是否是赠品:${editItem.isComplimentary ? '是': '否'}`")
+          v-container(grid-list-md)
+            v-form(:ref="formRef")
+              v-layout(wrap, style="width:100%")
+                v-flex(sm12, md6, lg4)
+                  v-select(v-model="editItem.materialId", :items="materials", :ref="`${formRef}Material`",
+                    label="物料", :rules="rules.unionRules(rules.requiredRules('物料'))", item-text="name", item-value="id")
+                v-flex(sm12, md6, lg4)
+                  v-text-field(v-model="editItem.procurementUnit" :ref="`${formRef}procurementUnit`", label="采购单位")
+                v-flex(sm12, md6, lg4)
+                  v-text-field(v-model="editItem.procurementNumber" :ref="`${formRef}procurementNumber`", label="采购数量",
+                    :rules="rules.unionRules(rules.requiredRules('采购数量'))", type="number")
+                v-flex(sm12, md6, lg4)
+                  v-text-field(v-model="editItem.supplier" :ref="`${formRef}supplier`", label="供应商")
+                v-flex(sm12, md6, lg4)
+                  v-text-field(v-model="editItem.chargeUnit" :ref="`${formRef}chargeUnit`", label="计价单位")
+                v-flex(sm12, md6, lg4)
+                  v-text-field(v-model="editItem.chargeNumber" :ref="`${formRef}chargeNumber`", label="计价数量", type="number")
+                v-flex(sm12, md6, lg4)
+                  date-menu(v-model="editItem.deliveryDate", label="交货日期")
+                v-flex(sm12, md6, lg4)
+                  v-text-field(v-model="editItem.unitPrice" :ref="`${formRef}unitPrice`", label="单价",
+                    :rules="rules.unionRules(rules.requiredRules('单价'))", suffix="元")
+                v-flex(sm12, md6, lg4)
+                  v-text-field(v-model="editItem.taxableUnitPrice" :ref="`${formRef}taxableUnitPrice`", label="含税单价（包含税费的单价）",
+                    :rules="rules.unionRules(rules.requiredRules('含税单价'))")
+                v-flex(sm12, md6, lg4)
+                  v-text-field(v-model="editItem.taxRate" :ref="`${formRef}taxRate`", label="税率",
+                    :rules="rules.unionRules(rules.requiredRules('税率'))", suffix="%")
+                v-flex(sm12, md6, lg4)
+                  v-text-field(v-model="editItem.taxAmount" :ref="`${formRef}taxRate`", label="税额（总共交多少税）",
+                    :rules="rules.unionRules(rules.requiredRules('税额'))", suffix="元")
+                v-flex(sm12, md6, lg4)
+                  v-text-field(v-model="editItem.totalPrice" :ref="`${formRef}unitPrice`", label="总价（不含税）",
+                    :rules="rules.unionRules(rules.requiredRules('总价'))", suffix="元")
+                v-flex(sm12, md6, lg4)
+                  v-text-field(v-model="editItem.taxTotalPrice" :ref="`${formRef}taxTotalPrice`", label="含税总价（税费+总价）",
+                    :rules="rules.unionRules(rules.requiredRules('含税总价'))", suffix="元")
+                v-flex(sm12, md6, lg4)
+                  v-text-field(v-model="editItem.demandDepartment" :ref="`${formRef}demandDepartment`", label="需求部门")
+                v-flex(sm12, md6, lg4)
+                  v-text-field(v-model="editItem.materialReceivingDepartment" :ref="`${formRef}materialReceivingDepartment`", label="收料部门")
+                v-flex(xs12, md6, md4)
+                  v-switch(v-model="editItem.isComplimentary", :label="`是否是赠品:${editItem.isComplimentary ? '是': '否'}`")
         v-card-actions
           v-spacer
           v-btn(outlined, color="error", @click="handleReset") 重置
@@ -130,11 +131,10 @@ export default {
     },
     handleClose () {
       this.show = false
-      this.editItem = this._.cloneDeep(this.defaultItem)
       this.$refs[this.formRef].resetValidation()
     },
     handleReset () {
-      this.initDate()
+      this.initData()
       this.$refs[this.formRef].resetValidation()
     },
     handleSubmit () {

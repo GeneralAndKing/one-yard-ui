@@ -6,51 +6,52 @@
     v-card
       v-card-title 采购订单{{see? '编辑' : '添加'}}
       v-card-text
-        v-form(ref="base")
-          v-layout(wrap, style="width:100%")
-            v-flex(sm12, md6, lg4)
-              v-select(v-model="order.type", :items="orderType", ref="orderType", :disabled='see||isSelect', @change="generateCode",
-                label="单据类型", :rules="rules.unionRules(rules.requiredRules('单据类型'))")
-            v-flex(sm12, md6, lg4)
-              v-select(v-model="order.supplier" :items="supplier", ref="supplier", :disabled='see', item-text="name", item-value="name",
-                label="供应商", :rules="rules.unionRules(rules.requiredRules('供应商'))")
-            v-flex(sm12, md6, lg4)
-              v-text-field(v-model="order.code" ref="code", label="单据编号", disabled, hint="此字段在选择单据类型后自动生成", persistent-hint,
-                :rules="rules.unionRules(rules.requiredRules('单据编号'))")
-            v-flex(sm12, md6, lg4)
-              date-menu(v-model="order.procurementDate", label="采购日期")
-            v-flex(sm12, md6, lg4)
-              date-menu(v-model="order.deliveryDate", label="交货日期")
-            v-flex(sm12, md6, lg4)
-              v-text-field(v-model="order.procurementDepartment" ref="procurementDepartment", label="采购部门", :disabled='see', clearable,
-                :rules="rules.unionRules(rules.requiredRules('采购部门'))")
-            v-flex(sm12)
-              v-text-field(v-model="order.remark" ref="remark", label="备注", :disabled='see', clearable,
-                :rules="rules.unionRules(rules.maxLengthRules(250))")
-          v-toolbar(flat, color="secondary")
-          v-tabs(v-model="tab", show-arrows)
-            v-tab(v-for="item in tabs", :key="item.id")
-              v-icon(left) {{item.icon}}
-              | {{item.name}}
-            v-tabs-items.overflow-auto.mt-5(v-model="tab")
-              v-tab-item(:key="1")
-                procurement-material(v-model="procurementMaterial", :see="see", :order="order" @select="handleMaterialSelect" :materials="materials")
-              v-tab-item(:key="2")
-                order-terms(v-model="orderTerms", :see="see")
-              v-tab-item(:key="3")
-                v-layout(wrap, style="width:100%")
-                  v-flex(sm12)
-                    p.grey--text 以下内容系统自动生成
-                  v-flex(sm12, md6)
-                    v-text-field(v-model="order.createTime", label="创建时间", disabled)
-                  v-flex(sm12, md6)
-                    v-text-field(v-model="order.createUser", label="创建用户", disabled)
-                  v-flex(sm12, md6)
-                    v-text-field(v-model="order.modifyTime", label="修改时间", disabled)
-                  v-flex(sm12, md6)
-                    v-text-field(v-model="order.modifyUser", label="修改用户", disabled)
-              v-tab-item(:key="4")
-                procurement-approve(:approve="procurementApprove")
+        v-container(grid-list-md)
+          v-form(ref="base")
+            v-layout(wrap, style="width:100%")
+              v-flex(sm12, md6, lg4)
+                v-select(v-model="order.type", :items="orderType", ref="orderType", :disabled='see||isSelect', @change="generateCode",
+                  label="单据类型", :rules="rules.unionRules(rules.requiredRules('单据类型'))")
+              v-flex(sm12, md6, lg4)
+                v-select(v-model="order.supplier" :items="supplier", ref="supplier", :disabled='see', item-text="name", item-value="name",
+                  label="供应商", :rules="rules.unionRules(rules.requiredRules('供应商'))")
+              v-flex(sm12, md6, lg4)
+                v-text-field(v-model="order.code" ref="code", label="单据编号", disabled, hint="此字段在选择单据类型后自动生成", persistent-hint,
+                  :rules="rules.unionRules(rules.requiredRules('单据编号'))")
+              v-flex(sm12, md6, lg4)
+                date-menu(v-model="order.procurementDate", label="采购日期")
+              v-flex(sm12, md6, lg4)
+                date-menu(v-model="order.deliveryDate", label="交货日期")
+              v-flex(sm12, md6, lg4)
+                v-text-field(v-model="order.procurementDepartment" ref="procurementDepartment", label="采购部门", :disabled='see', clearable,
+                  :rules="rules.unionRules(rules.requiredRules('采购部门'))")
+              v-flex(sm12)
+                v-text-field(v-model="order.remark" ref="remark", label="备注", :disabled='see', clearable,
+                  :rules="rules.unionRules(rules.maxLengthRules(250))")
+        v-toolbar(flat, color="secondary")
+        v-tabs(v-model="tab", show-arrows)
+          v-tab(v-for="item in tabs", :key="item.id")
+            v-icon(left) {{item.icon}}
+            | {{item.name}}
+          v-tabs-items.overflow-auto.mt-5(v-model="tab")
+            v-tab-item(:key="1")
+              procurement-material(v-model="procurementMaterial", :see="see", :order="order" @select="handleMaterialSelect" :materials="materials")
+            v-tab-item(:key="2")
+              order-terms(v-model="orderTerms", :see="see")
+            v-tab-item(:key="3")
+              v-layout(wrap, style="width:100%")
+                v-flex(sm12)
+                  p.grey--text 以下内容系统自动生成
+                v-flex(sm12, md6)
+                  v-text-field(v-model="order.createTime", label="创建时间", disabled)
+                v-flex(sm12, md6)
+                  v-text-field(v-model="order.createUser", label="创建用户", disabled)
+                v-flex(sm12, md6)
+                  v-text-field(v-model="order.modifyTime", label="修改时间", disabled)
+                v-flex(sm12, md6)
+                  v-text-field(v-model="order.modifyUser", label="修改用户", disabled)
+            v-tab-item(:key="4")
+              procurement-approve(:approve="procurementApprove")
         v-card-actions
           slot
           v-spacer

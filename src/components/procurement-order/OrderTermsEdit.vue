@@ -8,25 +8,26 @@
           v-btn(icon,  @click="handleClose", color="error")
             v-icon mdi-close
         v-card-text
-          v-form(:ref="formRef")
-            v-layout(wrap, style="width:100%")
-              v-flex(sm12, md6)
-                v-text-field(v-model="editItem.name" :ref="`${formRef}name`", label="条款名称",
-                  :rules="rules.unionRules(rules.requiredRules('条款名称'))")
-              v-flex(sm12, md6)
-                v-text-field(v-model="editItem.code" :ref="`${formRef}code`", label="条款编号",
-                  :rules="rules.unionRules(rules.requiredRules('条款编号'))")
-              v-flex(sm12, md6)
-                v-text-field(v-model="editItem.type" :ref="`${formRef}type`", label="条款类型",
-                  :rules="rules.unionRules(rules.requiredRules('条款类型'))")
-              v-flex(sm12, md6)
-                v-text-field(v-model="editItem.sort" :ref="`${formRef}sort`", label="排序",
-                  :rules="rules.unionRules(rules.requiredRules('排序'))", type="number")
-              v-flex(sm12)
-                v-textarea(v-model="editItem.content", label="条款内容", rows="5", :ref='`${formRef}content`', auto-grow, counter,
-                  :rules="rules.unionRules(rules.requiredRules('条款内容'))")
-              v-flex(sm12)
-                v-textarea(v-model="editItem.description", label="说明", rows="2", :ref='`${formRef}description`', auto-grow, counter)
+          v-container(grid-list-md)
+            v-form(:ref="formRef")
+              v-layout(wrap, style="width:100%")
+                v-flex(sm12, md6)
+                  v-text-field(v-model="editItem.name" :ref="`${formRef}name`", label="条款名称",
+                    :rules="rules.unionRules(rules.requiredRules('条款名称'))")
+                v-flex(sm12, md6)
+                  v-text-field(v-model="editItem.code" :ref="`${formRef}code`", label="条款编号",
+                    :rules="rules.unionRules(rules.requiredRules('条款编号'))")
+                v-flex(sm12, md6)
+                  v-text-field(v-model="editItem.type" :ref="`${formRef}type`", label="条款类型",
+                    :rules="rules.unionRules(rules.requiredRules('条款类型'))")
+                v-flex(sm12, md6)
+                  v-text-field(v-model="editItem.sort" :ref="`${formRef}sort`", label="排序",
+                    :rules="rules.unionRules(rules.requiredRules('排序'))", type="number")
+                v-flex(sm12)
+                  v-textarea(v-model="editItem.content", label="条款内容", rows="5", :ref='`${formRef}content`', auto-grow, counter,
+                    :rules="rules.unionRules(rules.requiredRules('条款内容'))")
+                v-flex(sm12)
+                  v-textarea(v-model="editItem.description", label="说明", rows="2", :ref='`${formRef}description`', auto-grow, counter)
         v-card-actions
           v-spacer
           v-btn(outlined, color="error", @click="handleReset") 重置
@@ -85,7 +86,6 @@ export default {
     },
     handleClose () {
       this.show = false
-      this.editItem = {}
       this.$refs[this.formRef].resetValidation()
     },
     handleReset () {

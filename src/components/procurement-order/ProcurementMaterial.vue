@@ -44,7 +44,7 @@
           v-btn.mr-4(outlined, color="info", @click="handlePlan", :disabled='see') 选单
           v-btn.mr-4(outlined, color="success", @click="handleAdd", :disabled='see') 添加
           v-btn(outlined, color="error", @click="handleDeleteSelect", :disabled='see') 删除所选
-    procurement-material-edit(v-model="item", ref="add", :materials="materials", @submit="andleSubmit")
+    procurement-material-edit(v-model="item", ref="add", :materials="materials", @submit="handleSubmit")
     procurement-plan-select(ref="planSelect", :materials="materials", :order="order" @select="handlePlanSelect")
 
 </template>
