@@ -39,3 +39,21 @@ export const tomorrow = () => {
   tomorrow.setDate(tomorrow.getDate() + 1)
   return tomorrow.toISOString()
 }
+
+/**
+ * 获取当前时间：YYYYMMDDhhmmss
+ * @returns {string}
+ */
+export const getTime = () => {
+  const date = new Date()
+  const MM = date.getMonth() + 1
+  const DD = date.getDate()
+  const hh = date.getHours()
+  const mm = date.getMinutes()
+  const ss = date.getSeconds()
+  return `${date.getFullYear()}${formatNumber(MM)}${formatNumber(DD)}${formatNumber(hh)}${formatNumber(mm)}${formatNumber(ss)}`
+}
+
+const formatNumber = (num) => {
+  return `${num > 9 ? '' : '0'}${num}`
+}

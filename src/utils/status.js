@@ -106,6 +106,18 @@ export const orderType = [ '', '标准采购订单', '框架协议订单', '紧�
  */
 export const orderTypeSelect = [ '标准采购订单', '框架协议订单', '紧急订单' ]
 
+/**
+ * 格式化采购订单类型
+ * @param type
+ * @returns {string|null}
+ */
+export const formatOrderTypeSelect = (type) => {
+  if (type === orderTypeSelect[0]) return 'A'
+  else if (type === orderTypeSelect[1]) return 'B'
+  else if (type === orderTypeSelect[2]) return 'C'
+  else return null
+}
+
 // ----------------------------------------------------------------------------------
 
 /**

@@ -70,7 +70,12 @@ export default {
     load: {
       type: Boolean,
       default: false
+    },
+    order: {
+      type: Object,
+      required: true
     }
+
   },
   data: () => ({
     // 添加的时候为 null, 否则为要编辑的元素
@@ -112,7 +117,11 @@ export default {
   methods: {
     handlePlan () {
       // TODO： 选单事件
-      this.$refs.planSelect.show = true
+      if (!(this.order.type && this.order.supplier)) {
+        this.$message('未选择采购订单类型或供应商', 'error')
+      } else {
+        this.$refs.planSelect.show = true
+      }
     },
     handlePlanSelect (selectItems) {
       // TODO：收到选择的物料以后进行处理

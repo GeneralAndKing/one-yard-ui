@@ -1,6 +1,6 @@
 <template lang="pug">
   v-container.one-managment
-    v-fade-transition(hide-on-leave)
+    v-scroll-y-transition(mode="out-in")
       v-card(v-if="see === null")
         v-card-title 采购订单管理
         v-card-text
@@ -12,7 +12,7 @@
             v-flex(sm12, md6, lg4)
               v-select(v-model="search.approvalStatus", :items="approvalStatus", label="审批状态", item-text="name", item-value="value")
             v-flex(sm12, md6, lg4)
-              v-text-field(v-model="search.supplier", label="供应商")
+              v-select(v-model="search.supplier" :items="supplier", ref="supplier", item-text="name", item-value="name", label="供应商")
             v-flex(sm12, md6, lg4)
               date-menu(v-model="search.procurementDate", label="采购日期", :init="tomorrow")
             v-flex(sm12, md6, lg4)
@@ -40,6 +40,14 @@ export default {
   data: () => ({
     see: null,
     search: {},
+    // TODO:初始化供应商, 此处必须在数组头添加一个id为0,name为 '' 的元素
+    supplier: [
+      { id: 0, name: '' },
+      { id: 1, name: '供应商1' },
+      { id: 2, name: '供应商2' },
+      { id: 3, name: '供应商3' },
+      { id: 4, name: '供应商4' }
+    ],
     orderType: orderType,
     planStatus: procurementOrderPlanStatus,
     approvalStatus: approvalStatus,
