@@ -1,5 +1,6 @@
 <template lang="pug">
   .management-table
+    approve-confirm(v-model="approvalContent", ref="approval", title="采购订单", @submit="handleApproval")
     v-data-table(:headers="headers", :items="value", item-key="id", loading-text="正在加载数据",
       no-data-text="暂无数据", no-results-text="没有匹配的数据", :search="search", :custom-filter="filterSearch")
       template(v-slot:item.planStatus="{ item }")
@@ -19,7 +20,7 @@
           span 提交审批
         v-tooltip(top)
           template(v-slot:activator="{ on }")
-            v-btn.mr-1(outlined, rounded, x-small, fab, color="info", v-on="on", @click="handleApproval(item)")
+            v-btn.mr-1(outlined, rounded, x-small, fab, color="info", v-on="on", @click="$refs.approval.dialog = true")
               v-icon mdi-book-open-variant
           span 审批
         v-tooltip(top)
@@ -36,9 +37,13 @@
 
 <script>
 import { procurementOrderPlanStatus, approvalStatus } from '_u/status'
+import ApproveConfirm from '_c/approve-confirm'
 
 export default {
   name: 'ManagementTable',
+  components: {
+    ApproveConfirm
+  },
   props: {
     value: {
       type: Array,
@@ -50,6 +55,7 @@ export default {
     }
   },
   data: () => ({
+    approvalContent: '',
     headers: [
       { text: '订单类型', value: 'type', align: 'start' },
       { text: '单据编号', value: 'code', align: 'start' },
@@ -87,9 +93,6 @@ export default {
           // TODO:提交审批事件
         })
     },
-    handleApproval (item) {
-      // TODO:审批事件
-    },
     handleRevoke (item) {
       this.$confirm({ title: '您确认撤回吗？' },
         () => {
@@ -102,6 +105,15 @@ export default {
           // TODO:删除事件
           this.value.splice(this._.indexOf(this.value, item), 1)
         })
+    },
+    handleApproval (flag) {
+      if (flag) {
+        // TODO：审批通过, 处理完毕以后记得要使用 this.approvalContent = '' 清空
+        console.log('OK:' + this.approvalContent)
+      } else {
+        // TODO：审批拒绝, 处理完毕以后记得要使用 this.approvalContent = '' 清空
+        console.log('FAIL:' + this.approvalContent)
+      }
     }
   }
 }

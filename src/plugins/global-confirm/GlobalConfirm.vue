@@ -2,8 +2,8 @@
   v-row.global-confirm(v-if="show")
     v-dialog(v-model="dialog", :max-width="width", persistent)
       v-card
-        v-card-title(:class="titleClass") {{title}}
-        v-card-text(:class="contentClass") {{content}}
+        v-card-title(:class="titleClass", v-html="title")
+        v-card-text(:class="contentClass", v-html="content")
         v-card-actions
           v-spacer
           v-btn(:color="cancelClass", outlined, @click="cancel") {{cancelText}}
