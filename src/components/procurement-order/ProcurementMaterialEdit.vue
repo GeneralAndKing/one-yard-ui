@@ -90,7 +90,7 @@ export default {
       supplier: '',
       chargeUnit: '',
       chargeNumber: 0,
-      deliveryDate: null,
+      deliveryDate: '',
       unitPrice: 0,
       taxableUnitPrice: 0.00,
       taxRate: 0,
@@ -130,7 +130,7 @@ export default {
     },
     handleClose () {
       this.show = false
-      this.editItem = {}
+      this.editItem = this._.cloneDeep(this.defaultItem)
       this.$refs[this.formRef].resetValidation()
     },
     handleReset () {

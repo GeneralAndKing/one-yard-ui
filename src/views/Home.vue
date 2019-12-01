@@ -66,7 +66,7 @@
           v-spacer
           v-btn(outlined, color="info", @click="handleRead") 已读
     v-content
-      v-scroll-y-transition(hide-on-leave, mode="out-in")
+      v-scroll-y-transition(mode="out-in")
         router-view
 </template>
 

@@ -9,14 +9,14 @@
         v-form(ref="base")
           v-layout(wrap, style="width:100%")
             v-flex(sm12, md6, lg4)
-              v-select(v-model="order.type", :items="orderType", ref="orderType", :disabled='see', @change="generateCode", clearable,
+              v-select(v-model="order.type", :items="orderType", ref="orderType", :disabled='see', @change="generateCode",
                 label="单据类型", :rules="rules.unionRules(rules.requiredRules('单据类型'))")
             v-flex(sm12, md6, lg4)
-              v-select(v-model="order.supplier" :items="supplier", ref="supplier", :disabled='see', clearable,
+              v-select(v-model="order.supplier" :items="supplier", ref="supplier", :disabled='see', item-text="name", item-value="name",
                 label="供应商", :rules="rules.unionRules(rules.requiredRules('供应商'))")
             v-flex(sm12, md6, lg4)
               v-text-field(v-model="order.code" ref="code", label="单据编号", disabled, hint="此字段在选择单据类型后自动生成", persistent-hint,
-                :rules="rules.unionRules(rules.requiredRules('单据编号'))", clearable,)
+                :rules="rules.unionRules(rules.requiredRules('单据编号'))")
             v-flex(sm12, md6, lg4)
               date-menu(v-model="order.procurementDate", label="采购日期")
             v-flex(sm12, md6, lg4)
@@ -61,7 +61,8 @@ import MoreBtn from '_c/more-btn'
 import DateMenu from '_c/date-menu'
 import ProcurementMaterial from './ProcurementMaterial'
 import OrderTerms from './OrderTerms'
-import { orderTypeSelect } from '_u/status'
+import { orderTypeSelect, formatOrderTypeSelect } from '_u/status'
+import { getTime } from '_u/util'
 import * as RuleAPI from '_u/rule'
 
 export default {
@@ -84,6 +85,7 @@ export default {
     tab: 0,
     see: false,
     orderType: orderTypeSelect,
+    // TODO:初始化供应商
     supplier: [
       { id: 1, name: '供应商1' },
       { id: 2, name: '供应商2' },
@@ -165,7 +167,8 @@ export default {
       // TODO: 打印
     },
     generateCode () {
-      // TODO: 生成订单号
+      const type = formatOrderTypeSelect(this.order.type)
+      this.order.code = `${type}${getTime()}${Math.floor(Math.random() * (9999 - 100000) + 100000)}`
     },
     handleSave () {
       if (this.see) {
