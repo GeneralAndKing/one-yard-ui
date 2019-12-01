@@ -8,8 +8,36 @@ export const planStatus = [
   { name: '提交审批', value: 'APPROVAL' },
   { name: '提交至汇总', value: 'SUMMARY' },
   { name: '已删除', value: 'DELETED' },
+  { name: '进入采购订单阶段', value: 'FINALLY' }
+]
+
+/**
+ * 用作采购计划搜索的时候选择
+ * @type {*[]}
+ */
+export const procurementPlanStatus = [
+  { name: '', value: '' },
+  { name: '自由', value: 'FREE' },
+  { name: '提交审批', value: 'APPROVAL' },
+  { name: '已删除', value: 'DELETED' },
   { name: '采购主管审批通过', value: 'PROCUREMENT_OK' },
-  { name: '已终止', value: 'FINALLY' }
+  { name: '进入采购订单阶段', value: 'FINALLY' }
+]
+
+/**
+ * 用作采购订单搜索的时候选择
+ * @type {*[]}
+ */
+export const procurementOrderPlanStatus = [
+  { name: '', value: '' },
+  { name: '未提交', value: 'NO_SUBMIT' },
+  { name: '提交审批', value: 'APPROVAL' },
+  { name: '已关闭', value: 'CLOSE' },
+  { name: '未完成', value: 'UNFINISHED' },
+  { name: '已完成', value: 'FINISHED' },
+  { name: '已变更', value: 'CHANGED' },
+  { name: '已生效', value: 'EFFECTIVE' },
+  { name: '已作废', value: 'CANCEL' }
 ]
 
 /**

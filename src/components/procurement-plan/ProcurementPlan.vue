@@ -174,7 +174,7 @@ import MoreBtn from '_c/more-btn'
 import * as restAPI from '_api/rest'
 import * as procurementPlanAPI from '_api/procurementPlan'
 import * as planMaterialAPI from '_api/planMaterial'
-import { planStatusSelect, approvalStatusSelect } from '_u/status'
+import { procurementPlanStatus, approvalStatusSelect } from '_u/status'
 const uuidv4 = require('uuid/v4')
 
 export default {
@@ -204,7 +204,7 @@ export default {
     },
     procurementPlan: {},
     desserts: [],
-    planStatus: planStatusSelect,
+    planStatus: procurementPlanStatus,
     approvalStatus: approvalStatusSelect,
     needDate: new Date().toISOString().substr(0, 10),
     purchaseDate: new Date().toISOString().substr(0, 10),
