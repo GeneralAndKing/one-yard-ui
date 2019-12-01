@@ -9,24 +9,29 @@
       template(v-slot:item.action="{ item }")
         v-tooltip(top)
           template(v-slot:activator="{ on }")
-            v-btn.mr-2(outlined, rounded, x-small, fab, color="success", v-on="on", @click="handleSee(item)")
+            v-btn.mr-1(outlined, rounded, x-small, fab, color="success", v-on="on", @click="handleSee(item)")
               v-icon remove_red_eye
           span 查看
         v-tooltip(top)
           template(v-slot:activator="{ on }")
-            v-btn.mr-2(outlined, rounded, x-small, fab, color="teal darken-1", v-on="on", @click="handleSubmit(item)")
+            v-btn.mr-1(outlined, rounded, x-small, fab, color="teal darken-1", v-on="on", @click="handleSubmit(item)")
               v-icon mdi-format-wrap-inline
           span 提交审批
         v-tooltip(top)
           template(v-slot:activator="{ on }")
-            v-btn.mr-2(outlined, rounded, x-small, fab, color="info", v-on="on", @click="handleApproval(item)")
+            v-btn.mr-1(outlined, rounded, x-small, fab, color="info", v-on="on", @click="handleApproval(item)")
               v-icon mdi-book-open-variant
           span 审批
         v-tooltip(top)
           template(v-slot:activator="{ on }")
-            v-btn.mr-2(outlined, rounded, x-small, fab, color="warning", v-on="on", @click="handleRevoke(item)")
+            v-btn.mr-1(outlined, rounded, x-small, fab, color="warning", v-on="on", @click="handleRevoke(item)")
               v-icon mdi-backup-restore
           span 撤回
+        v-tooltip(top)
+          template(v-slot:activator="{ on }")
+            v-btn(outlined, rounded, x-small, fab, color="error", v-on="on", @click="handleDelete(item)")
+              v-icon mdi-delete
+          span 删除
 </template>
 
 <script>
@@ -54,7 +59,7 @@ export default {
       { text: '交货日期', value: 'deliveryDate', align: 'start' },
       { text: '计划状态', value: 'planStatus', align: 'start' },
       { text: '审批状态', value: 'approvalStatus', align: 'start' },
-      { text: '操作', value: 'action', sortable: false, width: '200px', align: 'center' }
+      { text: '操作', value: 'action', sortable: false, width: '210px', align: 'center' }
     ]
   }),
   methods: {
@@ -77,13 +82,26 @@ export default {
       this.$emit('see', item)
     },
     handleSubmit (item) {
-      // TODO:提交审批事件
+      this.$confirm({ title: '您确认提交审批吗？' },
+        () => {
+          // TODO:提交审批事件
+        })
     },
     handleApproval (item) {
       // TODO:审批事件
     },
     handleRevoke (item) {
-      // TODO:撤回事件
+      this.$confirm({ title: '您确认撤回吗？' },
+        () => {
+          // TODO:撤回事件
+        })
+    },
+    handleDelete (item) {
+      this.$confirm({ title: '您确认删除吗？' },
+        () => {
+          // TODO:删除事件
+          this.value.splice(this._.indexOf(this.value, item), 1)
+        })
     }
   }
 }
