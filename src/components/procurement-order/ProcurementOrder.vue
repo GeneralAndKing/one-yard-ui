@@ -9,7 +9,7 @@
         v-form(ref="base")
           v-layout(wrap, style="width:100%")
             v-flex(sm12, md6, lg4)
-              v-select(v-model="order.type", :items="orderType", ref="orderType", :disabled='see', @change="generateCode",
+              v-select(v-model="order.type", :items="orderType", ref="orderType", :disabled='see||isSelect', @change="generateCode",
                 label="单据类型", :rules="rules.unionRules(rules.requiredRules('单据类型'))")
             v-flex(sm12, md6, lg4)
               v-select(v-model="order.supplier" :items="supplier", ref="supplier", :disabled='see', item-text="name", item-value="name",
@@ -34,7 +34,7 @@
               | {{item.name}}
             v-tabs-items.overflow-auto.mt-5(v-model="tab")
               v-tab-item(:key="1")
-                procurement-material(v-model="procurementMaterial", :see="see", :order="order")
+                procurement-material(v-model="procurementMaterial", :see="see", :order="order" @select="handleMaterialSelect" :materials="materials")
               v-tab-item(:key="2")
                 order-terms(v-model="orderTerms", :see="see")
               v-tab-item(:key="3")
@@ -54,8 +54,7 @@
         v-card-actions
           slot
           v-spacer
-          v-btn(v-if="!see", outlined, color="success", @click="handleSave") 保存
-          v-btn(v-else, outlined, color="success", @click="handleSave") 编辑
+          v-btn(outlined, color="success", @click="handleSave") {{see?'编辑':'保存'}}
 </template>
 
 <script>
@@ -87,10 +86,12 @@ export default {
   data: () => ({
     // 是否是查看
     tab: 0,
+    isSelect: false,
     see: false,
     orderType: orderTypeSelect,
     // TODO:初始化供应商
     supplier: [],
+    materials: [],
     order: {
       id: 1,
       name: '',
@@ -135,6 +136,8 @@ export default {
     try {
       let res = await RestAPI.getAll('supplier')
       this.supplier.push(...res.data.content)
+      res = await RestAPI.getAll('material')
+      this.materials.push(...res.data.content)
     } catch (e) {
     }
 
@@ -183,6 +186,40 @@ export default {
         // TODO:编辑事件
       } else {
         // TODO：保存事件
+      }
+    },
+    handleMaterialSelect (items) {
+      if (items.length > 0) {
+        this.isSelect = true
+        for (let item of items) {
+          if (this._.find(this.procurementMaterial, { id: item.id })) {
+            continue
+          }
+          this.procurementMaterial.push({
+            id: item.id,
+            code: item.code,
+            name: item.name,
+            materialId: item.materialId,
+            procurementUnit: item.unit,
+            procurementNumber: item.number,
+            supplier: '啊啊啊',
+            chargeUnit: '',
+            chargeNumber: '',
+            deliveryDate: '',
+            unitPrice: '',
+            taxableUnitPrice: '',
+            taxRate: '',
+            taxAmount: '',
+            totalPrice: '',
+            taxTotalPrice: '',
+            isComplimentary: false,
+            demandDepartment: '',
+            materialReceivingDepartment: '',
+            status: '',
+            sort: 1,
+            material: this._.find(this.materials, { id: item.materialId })
+          })
+        }
       }
     }
   }

@@ -52,7 +52,6 @@
 <script>
 import ProcurementMaterialEdit from './ProcurementMaterialEdit'
 import ProcurementPlanSelect from './ProcurementPlanSelect'
-import * as RESTAPI from '_api/rest'
 export default {
   name: 'ProcurementMaterial',
   components: {
@@ -75,6 +74,10 @@ export default {
     order: {
       type: Object,
       required: true
+    },
+    materials: {
+      type: Array,
+      required: true
     }
 
   },
@@ -83,8 +86,6 @@ export default {
     item: null,
     search: '',
     selected: [],
-    // TODO：需要请求初始化 所有 的物料信息
-    materials: [],
     headers: [
       { text: '物料编码', value: 'materialCode', align: 'start' },
       { text: '物料名称', value: 'materialName', align: 'start' },
@@ -105,15 +106,6 @@ export default {
       { text: '操作', value: 'action', sortable: false, width: '150px', align: 'center' }
     ]
   }),
-  async created () {
-    try {
-      let res = await RESTAPI.getAll('material')
-      this.materials.push(...res.data.content)
-      await this.value.forEach(v => { v.material = this._.find(this.materials, { id: v.materialId }) })
-    } catch (e) {
-      this.$message('初始化失败', 'error')
-    }
-  },
   methods: {
     handlePlan () {
       // TODO： 选单事件
@@ -124,6 +116,8 @@ export default {
       }
     },
     handlePlanSelect (selectItems) {
+      this.$emit('select', selectItems)
+      console.log(selectItems)
       // TODO：收到选择的物料以后进行处理
     },
     handleAdd () {

@@ -62,7 +62,6 @@ export default {
     plans: [],
     selected: [],
     headers: [
-      { text: '物料编码', value: 'code', align: 'start' },
       { text: '物料名称', value: 'name', align: 'start' },
       { text: '规格', value: 'specifications', align: 'start' },
       { text: '型号', value: 'size', align: 'start' },
@@ -115,6 +114,7 @@ export default {
           value.code = material.code
           value.specifications = material.specifications
           value.size = material.size
+          value.unit = material.unit
         })
       } catch (e) {
         item.children.length = 0
@@ -122,7 +122,6 @@ export default {
     },
     handleSave () {
       this.$emit('select', this.select)
-      this.handleReset()
     },
     handleReset () {
       this.selected = []
