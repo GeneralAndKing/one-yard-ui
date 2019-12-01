@@ -45,13 +45,14 @@
           v-btn.mr-4(outlined, color="success", @click="handleAdd", :disabled='see') 添加
           v-btn(outlined, color="error", @click="handleDeleteSelect", :disabled='see') 删除所选
     procurement-material-edit(v-model="item", ref="add", :materials="materials", @submit="handleSubmit")
-    procurement-plan-select(ref="planSelect", :materials="materials", @select="handlePlanSelect")
+    procurement-plan-select(ref="planSelect", :materials="materials", :order="order" @select="handlePlanSelect")
 
 </template>
 
 <script>
 import ProcurementMaterialEdit from './ProcurementMaterialEdit'
 import ProcurementPlanSelect from './ProcurementPlanSelect'
+import * as RESTAPI from '_api/rest'
 export default {
   name: 'ProcurementMaterial',
   components: {
@@ -83,14 +84,7 @@ export default {
     search: '',
     selected: [],
     // TODO：需要请求初始化 所有 的物料信息
-    materials: [
-      { id: 1, name: `物料1`, code: `编码1`, specifications: '个', size: '大' },
-      { id: 2, name: `名称0-物料0`, code: `编码1`, specifications: '个', size: '大' },
-      { id: 3, name: `名称0-物料1`, code: `编码1`, specifications: '个', size: '大' },
-      { id: 4, name: `名称0-物料2`, code: `编码1`, specifications: '个', size: '大' },
-      { id: 5, name: `名称0-物料3`, code: `编码1`, specifications: '个', size: '大' },
-      { id: 6, name: `名称0-物料4`, code: `编码1`, specifications: '个', size: '大' }
-    ],
+    materials: [],
     headers: [
       { text: '物料编码', value: 'materialCode', align: 'start' },
       { text: '物料名称', value: 'materialName', align: 'start' },
@@ -112,13 +106,19 @@ export default {
     ]
   }),
   async created () {
-    await this.value.forEach(v => { v.material = this._.find(this.materials, { id: v.materialId }) })
+    try {
+      let res = await RESTAPI.getAll('material')
+      this.materials.push(...res.data.content)
+      await this.value.forEach(v => { v.material = this._.find(this.materials, { id: v.materialId }) })
+    } catch (e) {
+      this.$message('初始化失败', 'error')
+    }
   },
   methods: {
     handlePlan () {
       // TODO： 选单事件
-      if (!(this.order.type && this.order.supplier)) {
-        this.$message('未选择采购订单类型或供应商', 'error')
+      if (!(this.order.type)) {
+        this.$message('未选择采购订单类型', 'error')
       } else {
         this.$refs.planSelect.show = true
       }

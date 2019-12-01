@@ -130,28 +130,28 @@ export default {
       this.see = true
     }
     for (let i = 0; i < 5; i++) {
-      this.procurementMaterial.push({
-        id: i,
-        name: `name-${i}`,
-        materialId: 1,
-        procurementUnit: '个',
-        procurementNumber: i + 5,
-        supplier: '啊啊啊',
-        chargeUnit: '包',
-        chargeNumber: i + 1,
-        deliveryDate: `2019-01-2${i}`,
-        unitPrice: i,
-        taxableUnitPrice: i + 3.33,
-        taxRate: `${i + 5}%`,
-        taxAmount: i + 0.22,
-        totalPrice: i + 10.11,
-        taxTotalPrice: i + 12.22,
-        isComplimentary: false,
-        demandDepartment: '采购部门',
-        materialReceivingDepartment: '采购部门',
-        status: '',
-        sort: 1
-      })
+      // this.procurementMaterial.push({
+      //   id: i,
+      //   name: `name-${i}`,
+      //   materialId: 1,
+      //   procurementUnit: '个',
+      //   procurementNumber: i + 5,
+      //   supplier: '啊啊啊',
+      //   chargeUnit: '包',
+      //   chargeNumber: i + 1,
+      //   deliveryDate: `2019-01-2${i}`,
+      //   unitPrice: i,
+      //   taxableUnitPrice: i + 3.33,
+      //   taxRate: `${i + 5}%`,
+      //   taxAmount: i + 0.22,
+      //   totalPrice: i + 10.11,
+      //   taxTotalPrice: i + 12.22,
+      //   isComplimentary: false,
+      //   demandDepartment: '采购部门',
+      //   materialReceivingDepartment: '采购部门',
+      //   status: '',
+      //   sort: 1
+      // })
       this.orderTerms.push({
         name: `${i}条款名称`,
         code: `${i}条款编号`,

@@ -30,7 +30,7 @@
                     span(v-if="!leaf") {{item.name}} - {{item.planType}}
                     span(v-else) {{item.name}}
             v-divider(vertical)
-            v-col(cols="12", md="6", lg="9")
+            v-col(cols="12", md="6", lg="8")
               v-card-text
                 v-data-table(:headers="headers", :items="selected", no-data-text="暂无数据", no-results-text="暂无数据")
                   template(v-slot:item.action="{ item }")
@@ -46,13 +46,16 @@
 </template>
 
 <script>
-// import * as RESTAPI from '_api/rest'
-const pause = ms => new Promise(resolve => setTimeout(resolve, ms))
+import * as RESTAPI from '_api/rest'
 export default {
   name: 'ProcurementPlanSelect',
   props: {
     materials: {
       type: Array,
+      required: true
+    },
+    order: {
+      type: Object,
       required: true
     }
   },
@@ -70,17 +73,19 @@ export default {
       { text: '操作', value: 'action', sortable: false, width: '150px', align: 'center' }
     ]
   }),
-  created () {
-    // TODO: 初始化所有符合状态的采购计划数据
-    for (let i = 0; i < 5; i++) {
-      this.plans.push({
-        id: i,
-        name: `名称${i}`,
-        planType: '年度采购计划',
-        createTime: `2019-11-20 19:26:0${i}`,
-        createUser: `创建用户${i}`,
-        // TODO：获取到数据以后，要给所有的数据添加一个 children 属性！！！
-        children: []
+  watch: {
+    'order.type' (val) {
+      let resourceLink = 'procurementPlan/search/byStatus?planStatus=FINALLY&approvalStatus=APPROVAL_OK'
+      if (val === '紧急订单') {
+        resourceLink = 'procurementPlan/search/byPlanType?planType=紧急采购计划'
+      }
+      RESTAPI.getRestLink(resourceLink).then(res => {
+        this.plans = res.data.content
+        this.plans.some(value => {
+          value.children = []
+        })
+      }).catch(() => {
+        this.plans = []
       })
     }
   },
@@ -88,23 +93,23 @@ export default {
     handleClose () {
       this.show = false
     },
-    async loadMaterials (item) {
-      await pause(1500)
-      // TODO：异步加载当前所选采购计划下的物料信息
-      for (let i = 0; i < 5; i++) {
-        item.children.push({
-          id: 1,
-          name: `${item.name}-物料${i}`,
-          code: `编码1`,
-          specifications: '个',
-          size: '大',
-          // TODO：以下字段是物料表里面没有的，从 plan_material 得到的
-          // 所以我们需要先根据采购计划 id 查找到 plan_material，然后把以下属性填充进物料里面去
-          // 但是不能够修改 this.materials 因为他是父组件传递过来的
-          // 在这里请求到的数据要
-          number: 1,
-          date: '2019-01-25'
+    loadMaterials: async function (item) {
+      try {
+        let res = await RESTAPI.getRestLink(`planMaterial/search/byProcurementPlanId?procurementPlanId=${item.id}`)
+        item.children.push(...res.data.content)
+        await item.children.some(value => {
+          let material = this._.find(this.materials, { id: value.materialId })
+          console.log(material)
+          if (material === undefined) {
+            throw Error('undefined', 'material data is undefined')
+          }
+          value.name = material.name
+          value.code = material.code
+          value.specifications = material.specifications
+          value.size = material.size
         })
+      } catch (e) {
+        item.children.length = 0
       }
     },
     handleDelete (name) {
