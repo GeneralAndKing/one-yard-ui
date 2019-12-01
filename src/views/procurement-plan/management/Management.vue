@@ -61,7 +61,7 @@
                 span 审批
               v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
                 template(v-slot:activator="{ on }")
-                  v-btn.mr-2(outlined, rounded, x-small, fab, color="warning",
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="error",
                     v-per="Role.ROLE_PROCUREMENT_PLANER", @click="handleRevoke(item)", v-on="on")
                     v-icon mdi-backup-restore
                 span 撤回
