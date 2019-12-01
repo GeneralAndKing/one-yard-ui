@@ -1,5 +1,5 @@
 <template lang="pug">
-  .one-order-terms.mt-5
+  .one-order-terms
     v-data-table(v-model="selected", :headers="headers", :items="value", no-data-text="暂无数据", no-results-text="暂无数据",
       :mobile-breakpoint="900", show-select, item-key="code", :search="search")
       template(v-slot:item.action="{ item }")

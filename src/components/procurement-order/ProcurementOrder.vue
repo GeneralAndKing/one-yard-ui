@@ -32,13 +32,13 @@
             v-tab(v-for="item in tabs", :key="item.id")
               v-icon(left) {{item.icon}}
               | {{item.name}}
-            v-tabs-items.overflow-auto(v-model="tab")
+            v-tabs-items.overflow-auto.mt-5(v-model="tab")
               v-tab-item(:key="1")
                 procurement-material(v-model="procurementMaterial", :see="see", :order="order")
               v-tab-item(:key="2")
                 order-terms(v-model="orderTerms", :see="see")
               v-tab-item(:key="3")
-                v-layout.mt-5(wrap, style="width:100%")
+                v-layout(wrap, style="width:100%")
                   v-flex(sm12)
                     p.grey--text 以下内容系统自动生成
                   v-flex(sm12, md6)
@@ -49,11 +49,13 @@
                     v-text-field(v-model="order.modifyTime", label="修改时间", disabled)
                   v-flex(sm12, md6)
                     v-text-field(v-model="order.modifyUser", label="修改用户", disabled)
-      v-card-actions
-        slot
-        v-spacer
-        v-btn(v-if="!see", outlined, color="success", @click="handleSave") 保存
-        v-btn(v-else, outlined, color="success", @click="handleSave") 编辑
+              v-tab-item(:key="4")
+                procurement-approve(:approve="procurementApprove")
+        v-card-actions
+          slot
+          v-spacer
+          v-btn(v-if="!see", outlined, color="success", @click="handleSave") 保存
+          v-btn(v-else, outlined, color="success", @click="handleSave") 编辑
 </template>
 
 <script>
@@ -61,6 +63,7 @@ import MoreBtn from '_c/more-btn'
 import DateMenu from '_c/date-menu'
 import ProcurementMaterial from './ProcurementMaterial'
 import OrderTerms from './OrderTerms'
+import ProcurementApprove from './ProcurementApprove'
 import { orderTypeSelect, formatOrderTypeSelect } from '_u/status'
 import { getTime } from '_u/util'
 import * as RuleAPI from '_u/rule'
@@ -71,7 +74,8 @@ export default {
     MoreBtn,
     DateMenu,
     ProcurementMaterial,
-    OrderTerms
+    OrderTerms,
+    ProcurementApprove
   },
   props: {
     // 如果是编辑，那么 seeItem 不为 null
@@ -109,10 +113,12 @@ export default {
     tabs: [
       { id: 1, icon: 'mdi-account', name: '明细信息' },
       { id: 2, icon: 'mdi-account', name: '订单条款' },
-      { id: 3, icon: 'mdi-account', name: '系统信息' }
+      { id: 3, icon: 'mdi-account', name: '系统信息' },
+      { id: 4, icon: 'mdi-account', name: '审批信息' }
     ],
     procurementMaterial: [],
-    orderTerms: []
+    orderTerms: [],
+    procurementApprove: []
   }),
   computed: {
     rules () {
@@ -133,6 +139,13 @@ export default {
     }
 
     for (let i = 0; i < 5; i++) {
+      this.procurementApprove.push({
+        id: i,
+        result: `结果${i}`,
+        description: `描述${i}`,
+        createTime: `创建时间${i}`,
+        createUser: `创建用户${i}`
+      })
       // this.procurementMaterial.push({
       //   id: i,
       //   name: `name-${i}`,
