@@ -34,7 +34,7 @@
               | {{item.name}}
             v-tabs-items.overflow-auto(v-model="tab")
               v-tab-item(:key="1")
-                procurement-material(v-model="procurementMaterial", :see="see")
+                procurement-material(v-model="procurementMaterial", :see="see", :order="order")
               v-tab-item(:key="2")
                 order-terms(v-model="orderTerms", :see="see")
               v-tab-item(:key="3")
