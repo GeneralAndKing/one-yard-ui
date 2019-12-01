@@ -76,6 +76,7 @@ class HttpRequest {
     // 响应拦截器
     instance.interceptors.response.use(res => {
       this.destroy(url)
+      if (!(res.data.content === null || res.data.content === undefined)) { res.data.content = res.data.content.filter(d => !d.hasOwnProperty('relTargetType')) }
       return res
     }, error => {
       this.destroy(url)

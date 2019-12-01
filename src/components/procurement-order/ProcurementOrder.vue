@@ -64,7 +64,7 @@ import OrderTerms from './OrderTerms'
 import { orderTypeSelect, formatOrderTypeSelect } from '_u/status'
 import { getTime } from '_u/util'
 import * as RuleAPI from '_u/rule'
-
+import * as RestAPI from '_api/rest'
 export default {
   name: 'ProcurementOrder',
   components: {
@@ -86,12 +86,7 @@ export default {
     see: false,
     orderType: orderTypeSelect,
     // TODO:初始化供应商
-    supplier: [
-      { id: 1, name: '供应商1' },
-      { id: 2, name: '供应商2' },
-      { id: 3, name: '供应商3' },
-      { id: 4, name: '供应商4' }
-    ],
+    supplier: [],
     order: {
       id: 1,
       name: '',
@@ -128,7 +123,15 @@ export default {
     if (this.seeItem !== null) {
       // 编辑的时候，只能让他查看！
       this.see = true
+      let res = await RestAPI.getRestLink(`orderTerms/search/byOrderId?orderId=${this.seeItem.id}`)
+      this.orderTerms.push(...res.data.content)
     }
+    try {
+      let res = await RestAPI.getAll('supplier')
+      this.supplier.push(...res.data.content)
+    } catch (e) {
+    }
+
     for (let i = 0; i < 5; i++) {
       // this.procurementMaterial.push({
       //   id: i,
@@ -152,14 +155,6 @@ export default {
       //   status: '',
       //   sort: 1
       // })
-      this.orderTerms.push({
-        name: `${i}条款名称`,
-        code: `${i}条款编号`,
-        type: `${i}条款类型`,
-        content: `${i}条款内容`,
-        description: `${i}说明`,
-        sort: i
-      })
     }
   },
   methods: {
