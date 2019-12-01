@@ -232,6 +232,17 @@ export const routes = [
           ]
         },
         component: () => import(/* webpackChunkName: "sys-department" */ '_v/procurement-order/create')
+      },
+      {
+        path: 'procurementOrderManagement',
+        name: 'procurementOrderManagement',
+        meta: {
+          meta: '采购订单管理',
+          auth: [
+            Role.ROLE_PROCUREMENT_PLANER
+          ]
+        },
+        component: () => import(/* webpackChunkName: "sys-department" */ '_v/procurement-order/management')
       }
     ]
   },

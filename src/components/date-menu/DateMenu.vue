@@ -2,7 +2,7 @@
   v-menu.one-data-menu(v-model="dateMenu", :close-on-content-click="false", transition="scale-transition",
     offset-y, max-width="290px", min-width="290px")
     template(v-slot:activator="{ on }")
-      v-text-field(v-model="date", v-on="on", :label="label", readonly,
+      v-text-field(v-model="value", v-on="on", :label="label", readonly,
         :rules="requiredRule", :disabled="disabled")
     v-date-picker(v-model="initDate", no-title, @input="dateMenu = false", locale="zh-cn")
 
@@ -14,6 +14,10 @@ import { requiredRules, unionRules } from '_u/rule'
 export default {
   name: 'DateMenu',
   props: {
+    value: {
+      type: String,
+      required: true
+    },
     // 标签
     label: {
       type: String,
@@ -39,11 +43,15 @@ export default {
     formatDate: {
       type: Function,
       default: (date) => date
+    },
+    // 初始化时间
+    init: {
+      type: String,
+      default: null
     }
   },
   data: () => ({
     dateMenu: false,
-    date: '',
     rules: {
       required: requiredRules,
       union: unionRules
@@ -58,11 +66,11 @@ export default {
   watch: {
     initDate (val) {
       if (!val) return
-      this.date = this.formatDate(val)
-      this.$emit('input', this.date)
+      this.$emit('input', this.formatDate(val))
     }
   },
   created () {
+    if (this.init !== null) this.initDate = this.init
     if (this.type === 'day') this.initDate = this.initDate.substring(0, 10)
     else if (this.type === 'month') this.initDate = this.initDate.substring(0, 7)
   }

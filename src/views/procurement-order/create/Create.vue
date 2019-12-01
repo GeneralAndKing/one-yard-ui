@@ -1,6 +1,7 @@
 <template lang="pug">
   #one-order-create
-    procurement-order
+    v-container
+      procurement-order
 
 </template>
 

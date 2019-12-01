@@ -129,6 +129,14 @@ export const MENUS = [
         auth: [
           Role.ROLE_PROCUREMENT_PLANER
         ]
+      },
+      {
+        text: '采购订单管理',
+        to: { name: 'procurementOrderManagement' },
+        icon: 'mdi-file-multiple',
+        auth: [
+          Role.ROLE_PROCUREMENT_PLANER
+        ]
       }
     ]
   }

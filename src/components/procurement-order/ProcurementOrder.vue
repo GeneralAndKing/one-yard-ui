@@ -1,6 +1,6 @@
 <template lang="pug">
-  v-container#one-order
-    more-btn(v-if="seeId > 0")
+  #one-order
+    more-btn(v-if="see")
       v-btn(fab, small, color="green", dark, @click="print")
         v-icon mdi-printer-settings
     v-card
@@ -10,7 +10,7 @@
           v-layout(wrap, style="width:100%")
             v-flex(sm12, md6, lg4)
               v-select(v-model="order.type", :items="orderType", ref="orderType", :disabled='see', @change="generateCode", clearable,
-                label="单据类型", :rules="rules.unionRules(rules.requiredRules('单据类型'))", item-text="name", item-value="value")
+                label="单据类型", :rules="rules.unionRules(rules.requiredRules('单据类型'))")
             v-flex(sm12, md6, lg4)
               v-select(v-model="order.supplier" :items="supplier", ref="supplier", :disabled='see', clearable,
                 label="供应商", :rules="rules.unionRules(rules.requiredRules('供应商'))")
@@ -20,9 +20,11 @@
             v-flex(sm12, md6, lg4)
               date-menu(v-model="order.procurementDate", label="采购日期")
             v-flex(sm12, md6, lg4)
+              date-menu(v-model="order.deliveryDate", label="交货日期")
+            v-flex(sm12, md6, lg4)
               v-text-field(v-model="order.procurementDepartment" ref="procurementDepartment", label="采购部门", :disabled='see', clearable,
                 :rules="rules.unionRules(rules.requiredRules('采购部门'))")
-            v-flex(sm12, md6, lg4)
+            v-flex(sm12)
               v-text-field(v-model="order.remark" ref="remark", label="备注", :disabled='see', clearable,
                 :rules="rules.unionRules(rules.maxLengthRules(250))")
           v-toolbar(flat, color="secondary")
@@ -48,8 +50,10 @@
                   v-flex(sm12, md6)
                     v-text-field(v-model="order.modifyUser", label="修改用户", disabled)
       v-card-actions
+        slot
         v-spacer
-        v-btn(outlined, color="success", @click="handleSave") 保存
+        v-btn(v-if="!see", outlined, color="success", @click="handleSave") 保存
+        v-btn(v-else, outlined, color="success", @click="handleSave") 编辑
 </template>
 
 <script>
@@ -57,6 +61,7 @@ import MoreBtn from '_c/more-btn'
 import DateMenu from '_c/date-menu'
 import ProcurementMaterial from './ProcurementMaterial'
 import OrderTerms from './OrderTerms'
+import { orderTypeSelect } from '_u/status'
 import * as RuleAPI from '_u/rule'
 
 export default {
@@ -68,21 +73,17 @@ export default {
     OrderTerms
   },
   props: {
-    // 如果是编辑，那么 seeId 不为 0
-    seeId: {
-      type: Number,
-      default: 0
+    // 如果是编辑，那么 seeItem 不为 null
+    seeItem: {
+      type: Object,
+      default: null
     }
   },
   data: () => ({
     // 是否是查看
     tab: 0,
     see: false,
-    orderType: [
-      { name: '标准采购订单', value: 'CG1001' },
-      { name: '框架协议订单', value: 'CG1002' },
-      { name: '紧急订单', value: 'CG1003' }
-    ],
+    orderType: orderTypeSelect,
     supplier: [
       { id: 1, name: '供应商1' },
       { id: 2, name: '供应商2' },
@@ -97,9 +98,11 @@ export default {
       supplier: '',
       procurementDepartment: '',
       procurementDate: '',
+      deliveryDate: '',
       // TODO：订单初始化的时候需要指定以下两个状态
-      planStatus: 0,
-      approvalStatus: 0,
+      // 这两个类型已经写在了 util/status.js 里面了
+      planStatus: 'NO_SUBMIT',
+      approvalStatus: 'NO_SUBMIT',
       createTime: '',
       createUser: '',
       modifyTime: '',
@@ -120,8 +123,8 @@ export default {
     }
   },
   async created () {
-    // 编辑的时候
-    if (this.seeId !== 0) {
+    if (this.seeItem !== null) {
+      // 编辑的时候，只能让他查看！
       this.see = true
     }
     for (let i = 0; i < 5; i++) {
@@ -165,7 +168,11 @@ export default {
       // TODO: 生成订单号
     },
     handleSave () {
-      // TODO：保存事件
+      if (this.see) {
+        // TODO:编辑事件
+      } else {
+        // TODO：保存事件
+      }
     }
   }
 }

@@ -29,3 +29,13 @@ export const to = (promise) => {
   })
     .catch(err => [err])
 }
+
+/**
+ * 获取明天日期
+ * @returns {string}
+ */
+export const tomorrow = () => {
+  const tomorrow = new Date(new Date())
+  tomorrow.setDate(tomorrow.getDate() + 1)
+  return tomorrow.toISOString()
+}
