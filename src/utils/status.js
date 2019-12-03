@@ -8,7 +8,8 @@ export const planStatus = [
   { name: '提交审批', value: 'APPROVAL' },
   { name: '提交至汇总', value: 'SUMMARY' },
   { name: '已删除', value: 'DELETED' },
-  { name: '进入采购订单阶段', value: 'FINALLY' }
+  { name: '采购主管审批通过', value: 'PROCUREMENT_OK' },
+  { name: '已终止', value: 'FINALLY' }
 ]
 
 /**

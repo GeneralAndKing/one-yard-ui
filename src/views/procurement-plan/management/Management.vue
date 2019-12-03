@@ -21,11 +21,11 @@
               v-flex.text-right(xs12)
                 v-btn.mr-4(outlined, color="light-blue",
                   v-per="[Role.ROLE_PROCUREMENT_SUPERVISOR, Role.ROLE_FINANCE]",
-                  @click="seeApprovalIng" ) 查看待审批的计划
+                  @click="seeApprovalIng" ) 加载待审批的计划
                 v-btn.mr-4(outlined, color="light-blue",
                   v-per="[Role.ROLE_PROCUREMENT_SUPERVISOR, Role.ROLE_FINANCE]",
-                  @click="seeApprovalEd" ) 查看审批通过的计划
-                v-btn(outlined, color="light-blue", @click="seeReset") 重置条件
+                  @click="seeApprovalEd" ) 加载审批通过的计划
+                v-btn(outlined, color="orange", @click="seeReset") 重置条件
           v-data-table(:headers="headers", :items="desserts", :loading="loading", loading-text="加载中......",
             item-key="id", :mobile-breakpoint="800",  :custom-filter="filterSearch", :search="searchValue",
             no-data-text="暂无数据", no-results-text="暂无数据")
@@ -144,6 +144,7 @@ export default {
   },
   methods: {
     initTable () {
+      this.search.name = ''
       this.loading = true
       let _this = this
       let role = _this.$store.getters['auth/role']
@@ -217,9 +218,11 @@ export default {
         new Date(item.createTime.split('T')[0]).getTime() < new Date(condition[3]).getTime()
     },
     formatPlanStatus (planStatus) {
+      console.log(planStatus)
       return this._.find(this.planStatus, { value: planStatus })
     },
     formatApprovalStatus (approvalStatus) {
+      console.log(approvalStatus)
       return this._.find(this.approvalStatus, { value: approvalStatus })
     },
     handleSee (item) {
@@ -280,6 +283,7 @@ export default {
     seeApprovalEd () {
       this.desserts = []
       this.loading = true
+      this.search.name = ''
       let _this = this
       let role = _this.$store.getters['auth/role']
       let resourcesLink = null
