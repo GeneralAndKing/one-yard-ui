@@ -14,7 +14,7 @@ export default new Vuetify({
         secondary: colors.indigo.lighten1,
         accent: colors.pink.lighten1,
         error: colors.red.lighten1,
-        warning: colors.yellow.darken1,
+        warning: colors.orange.lighten1,
         info: colors.lightBlue.lighten1,
         success: colors.lightGreen.lighten1
       },
@@ -23,7 +23,7 @@ export default new Vuetify({
         secondary: colors.blue.darken1,
         accent: colors.amber.darken1,
         error: colors.red.accent3,
-        warning: colors.yellow.darken3,
+        warning: colors.orange.darken3,
         info: colors.blue,
         success: colors.lightGreen.darken1
       }

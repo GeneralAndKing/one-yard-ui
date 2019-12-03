@@ -65,7 +65,6 @@ export default {
       }
     },
     'listener.message': function () {
-      console.log(this.listener.message)
       if (Math.abs(this.listener.pos) === this.pos) {
         if (this.listener.pos > 0) {
           if (this.listener.id > this.id) {

@@ -2,7 +2,6 @@ import Vue from 'vue'
 import GlobalLoading from './GlobalLoading.vue'
 GlobalLoading.install = null
 GlobalLoading.config = function (options = {}) {
-  console.log('123123')
   Vue.component(GlobalLoading.name, GlobalLoading)
   const Component = Vue.extend(GlobalLoading)
   // 拿到自定义的属性

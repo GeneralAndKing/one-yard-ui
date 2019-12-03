@@ -104,7 +104,6 @@ export default {
     },
     handleDelete (flag) {
       if (!flag) return
-      // "http://localhost:8080/api/rest/sysLog/search/deleteByCreateTime{?createTime}"
       restAPI.getRestLink(`sysLog/search/deleteByCreateTime?createTime=${this.date}`)
         .then((res) => {
           this.$message(`操作成功，操作总条数${res.data}`, 'success')

@@ -35,7 +35,7 @@
                 v-btn.mr-4(outlined, color="light-blue",
                   v-per="[Role.ROLE_PRODUCTION_PLANER,Role.ROLE_WORKSHOP_PLANER,Role.ROLE_WAREHOUSE_PLANER,Role.ROLE_FINANCE_PLANER]",
                   @click="seeNotApproval") 查看未提交计划
-                v-btn(outlined, color="light-blue", @click="seeReset") 重置条件
+                v-btn(outlined, color="warning", @click="seeReset") 重置条件
           v-data-table.mt-8(:headers="headers", :items="materialPlan", :loading="loading", loading-text="加载中......",
             item-key="id", :mobile-breakpoint="900",  :custom-filter="filterSearch", :search="searchValue",
             no-data-text="暂无数据", no-results-text="暂无数据")

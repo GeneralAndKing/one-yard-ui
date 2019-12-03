@@ -140,7 +140,6 @@ export default {
       }
       this.socket.onmessage = mess => {
         this.messages[0].items.unshift(JSON.parse(mess.data))
-        console.log(JSON.parse(mess.data))
       }
       this.socket.onclose = () => {
         console.log('连接关闭')

@@ -65,7 +65,6 @@ export default {
       d.id = id
       id += 1
     })
-    console.log(this.list)
   }
 }
 </script>
