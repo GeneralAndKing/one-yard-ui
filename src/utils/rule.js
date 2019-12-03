@@ -14,6 +14,9 @@ export let imageRequiredRules = (name, size) => {
 export let maxLengthRules = (maxLength) => {
   return v => !v || v.length < maxLength || `长度不能大于${maxLength}位`
 }
+export let integerRules = [
+  v => /^[0-9]*[1-9][0-9]*$/.test(v) || '不能输入非正整数'
+]
 
 export let phoneRules = [
   v => !!v || '电话号码不能为空',

@@ -68,6 +68,7 @@ import { orderTypeSelect, formatOrderTypeSelect } from '_u/status'
 import { getTime } from '_u/util'
 import * as RuleAPI from '_u/rule'
 import * as RestAPI from '_api/rest'
+import * as procurementOrderAPI from '_api/procurementOrder'
 export default {
   name: 'ProcurementOrder',
   components: {
@@ -133,6 +134,16 @@ export default {
       this.see = true
       let res = await RestAPI.getRestLink(`orderTerms/search/byOrderId?orderId=${this.seeItem.id}`)
       this.orderTerms.push(...res.data.content)
+      // TODO 获取审批信息
+      for (let i = 0; i < 5; i++) {
+        this.procurementApprove.push({
+          id: i,
+          result: `结果${i}`,
+          description: `描述${i}`,
+          createTime: `创建时间${i}`,
+          createUser: `创建用户${i}`
+        })
+      }
     }
     try {
       let res = await RestAPI.getAll('supplier')
@@ -140,38 +151,6 @@ export default {
       res = await RestAPI.getAll('material')
       this.materials.push(...res.data.content)
     } catch (e) {
-    }
-
-    for (let i = 0; i < 5; i++) {
-      this.procurementApprove.push({
-        id: i,
-        result: `结果${i}`,
-        description: `描述${i}`,
-        createTime: `创建时间${i}`,
-        createUser: `创建用户${i}`
-      })
-      // this.procurementMaterial.push({
-      //   id: i,
-      //   name: `name-${i}`,
-      //   materialId: 1,
-      //   procurementUnit: '个',
-      //   procurementNumber: i + 5,
-      //   supplier: '啊啊啊',
-      //   chargeUnit: '包',
-      //   chargeNumber: i + 1,
-      //   deliveryDate: `2019-01-2${i}`,
-      //   unitPrice: i,
-      //   taxableUnitPrice: i + 3.33,
-      //   taxRate: `${i + 5}%`,
-      //   taxAmount: i + 0.22,
-      //   totalPrice: i + 10.11,
-      //   taxTotalPrice: i + 12.22,
-      //   isComplimentary: false,
-      //   demandDepartment: '采购部门',
-      //   materialReceivingDepartment: '采购部门',
-      //   status: '',
-      //   sort: 1
-      // })
     }
   },
   methods: {
@@ -186,6 +165,13 @@ export default {
       if (this.see) {
         // TODO:编辑事件
       } else {
+        this.
+        procurementOrderAPI.submit(this.order, this.procurementMaterial, this.orderTerms).then(res => {
+          this.$message(res.data, 'success')
+          this.order = []
+          this.procurementMaterial = []
+          this.orderTerms = []
+        })
         // TODO：保存事件
       }
     },
@@ -208,7 +194,6 @@ export default {
             materialId: item.materialId,
             procurementUnit: item.unit,
             procurementNumber: item.number,
-            supplier: '啊啊啊',
             chargeUnit: '',
             chargeNumber: '',
             deliveryDate: '',
@@ -223,6 +208,7 @@ export default {
             materialReceivingDepartment: '',
             status: '',
             sort: 1,
+            isSelect: true,
             material: this._.find(this.materials, { id: item.materialId })
           })
         }

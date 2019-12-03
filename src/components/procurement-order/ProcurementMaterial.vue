@@ -25,7 +25,7 @@
           span 复制
         v-tooltip(top)
           template(v-slot:activator="{ on }")
-            v-btn(outlined, rounded, x-small, fab, color="error", @click="handleDelete(item)", v-on="on" :disabled="item.planMaterialId!==undefined")
+            v-btn(outlined, rounded, x-small, fab, color="error", @click="handleDelete(item)", v-on="on" :disabled="item.isSelect!==undefined")
               v-icon mdi-delete
           span 删除
       template(v-slot:top)
@@ -128,7 +128,7 @@ export default {
       // TODO： 删除所选事件
       let isPlan = false
       this.selected.forEach(item => {
-        if (item.planMaterialId === undefined) {
+        if (item.isSelect === undefined) {
           this.value.splice(this._.indexOf(this.value, item), 1)
         } else {
           isPlan = true
@@ -152,6 +152,7 @@ export default {
       let newItem = this._.cloneDeep(item)
       newItem.name = `${new Date().toISOString()}-${item.materialId}-${Math.ceil(Math.random() * 100)}`
       newItem.planMaterialId = undefined
+      newItem.isSelect = undefined
       this.value.unshift(newItem)
     },
     // 这个事件是添加或者编辑成功以后，添加到表格之中的事件
