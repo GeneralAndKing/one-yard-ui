@@ -251,11 +251,12 @@ export default {
           const data = this._.cloneDeep(this.editedItem)
           data.roles = []
           data.password = md5(Base64.encode(data.password))
+          data.icon = 'http://q0zlaui5t.bkt.clouddn.com/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195'
           this.editedItem.roles.forEach(role => data.roles.push(_this._.find(role.links, { rel: 'self' }).href))
           restAPI.addOne('sysUser', data).then((res) => {
             res.data.password = 'xxxxxxxxxxxxxxxxxx'
             res.data.roles = this.editedItem.roles
-            this.desserts.push(res.data)
+            this.desserts.unshift(res.data)
             this.close()
             this.$message('添加成功！', 'success')
           }).finally(() => { this.submitLoading = false })

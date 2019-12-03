@@ -1,6 +1,6 @@
 <template lang="pug">
   .management-table
-    approve-confirm(v-model="approvalContent", ref="approval", title="采购订单", @submit="handleApproval")
+    approve-confirm(v-model="approvalContent", ref="approval", title="采购订单审批", @submit="handleApproval")
     v-data-table(:headers="headers", :items="value", item-key="id", loading-text="正在加载数据",
       no-data-text="暂无数据", no-results-text="没有匹配的数据", :search="search", :custom-filter="filterSearch")
       template(v-slot:item.planStatus="{ item }")

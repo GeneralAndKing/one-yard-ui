@@ -3,6 +3,8 @@
     v-card
       v-card-text
         table-card-sheet(title="系统日志", description="您可以在这里查看当前系统访问情况等信息", color="info")
+        approve-confirm(title="删除所选", ref="confirm", @submit="handleDelete", okText="确认", cancelText="取消")
+          date-menu(v-model="date", label="选择日期")
         v-skeleton-loader(:loading="loading", type="table", transition="slide-y-transition")
           v-data-table(:headers="headers", :items="logs", item-key="id", :search="search")
             template(v-slot:item.name="{ item }")
@@ -35,19 +37,25 @@
                   single-line,
                   hide-details
                 )
+                v-btn.ml-5(outlined, color="error", @click="$refs.confirm.dialog = true") 删除指定日期
 </template>
 
 <script>
 import * as restAPI from '_api/rest'
 import TableCardSheet from '_c/table-card-sheet'
+import ApproveConfirm from '_c/approve-confirm'
+import DateMenu from '_c/date-menu'
 
 export default {
   name: 'SysLog',
   components: {
-    TableCardSheet
+    TableCardSheet,
+    ApproveConfirm,
+    DateMenu
   },
   data: () => ({
     search: '',
+    date: '',
     loading: true,
     logs: [],
     headers: [
@@ -63,14 +71,18 @@ export default {
     ]
   }),
   async created () {
-    try {
-      const res = await restAPI.getAll('sysLog')
-      this.logs = res.data.content
-    } finally {
-      this.loading = false
-    }
+    await this.initData()
   },
   methods: {
+    async initData () {
+      try {
+        this.logs = []
+        const res = await restAPI.getAll('sysLog')
+        this.logs = res.data.content
+      } finally {
+        this.loading = false
+      }
+    },
     formatData (data) {
       if (!data) return ''
       return data.length > 15 ? `${data.substring(0, 15)}...` : data
@@ -89,6 +101,16 @@ export default {
     formatDate (date) {
       if (!date) return ''
       return date.replace('T', ' ')
+    },
+    handleDelete (flag) {
+      if (!flag) return
+      // "http://localhost:8080/api/rest/sysLog/search/deleteByCreateTime{?createTime}"
+      restAPI.getRestLink(`sysLog/search/deleteByCreateTime?createTime=${this.date}`)
+        .then((res) => {
+          this.$message(`操作成功，操作总条数${res.data}`, 'success')
+          this.loading = true
+          this.initData()
+        })
     }
   }
 }
