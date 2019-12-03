@@ -165,7 +165,30 @@ export default {
       if (this.see) {
         // TODO:编辑事件
       } else {
-        this.
+        if (!this.$refs.base.validate(true)) {
+          this.$message('请填写完订单属性后再进行保存', 'error')
+          return
+        }
+        if (this.procurementMaterial.length === 0) {
+          this.$message('物料为空不能保存订单', 'error')
+          return
+        }
+        for (let value of this.procurementMaterial) {
+          if (value.chargeUnit === '' ||
+            value.chargeNumber === '' ||
+            value.deliveryDate === '' ||
+            value.unitPrice === '' ||
+            value.taxableUnitPrice === '' ||
+            value.taxRate === '' ||
+            value.taxAmount === '' ||
+            value.totalPrice === '' ||
+            value.taxTotalPrice === '' ||
+            value.demandDepartment === '' ||
+            value.materialReceivingDepartment === '') {
+            this.$message('请填写完整物料信息后再进行保存', 'error')
+            return
+          }
+        }
         procurementOrderAPI.submit(this.order, this.procurementMaterial, this.orderTerms).then(res => {
           this.$message(res.data, 'success')
           this.order = []
