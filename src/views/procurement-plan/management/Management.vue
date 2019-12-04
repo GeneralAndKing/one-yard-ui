@@ -8,23 +8,35 @@
             v-layout(wrap, style="width:100%")
               v-flex(sm12, md6)
                 v-text-field(v-model="search.name", label="采购计划名称")
-              //v-flex(sm12, md6, lg4)
+              v-flex(sm12, md6)
+                v-text-field(v-model="search.type", label="采购计划类型")
+              v-flex(sm12, md6, v-per="Role.ROLE_PROCUREMENT_PLANER")
                 v-select(v-model="search.planStatus", :items="planStatus", item-value='value', item-text='name', label="需求计划状态")
-              //v-flex(sm12, md6, lg4)
+              v-flex(sm12, md6, v-per="Role.ROLE_PROCUREMENT_PLANER")
                 v-select(v-model="search.approvalStatus", :items="approvalStatus", item-value='value', item-text='name', label="审批状态")
-              v-flex(xs12, md6)
+              v-flex(sm12, md6)
                 v-menu(v-model="dayMenu", :close-on-content-click="false", transition="scale-transition",
                   offset-y, max-width="290px", min-width="290px")
                   template(v-slot:activator="{ on }")
-                    v-text-field(v-model="search.createTime", v-on="on", label="创建日期", readonly)
+                    v-text-field(v-model="search.createTime", v-on="on", label="创建于（日期）之前", readonly)
                   v-date-picker(v-model="search.createTime", no-title, @input="dayMenu = false", locale="zh-cn")
               v-flex.text-right(xs12)
+                template(v-per="Role.ROLE_PROCUREMENT_PLANER")
+                  v-btn.mr-4(outlined, color="light-blue",
+                    v-per="[Role.ROLE_PROCUREMENT_SUPERVISOR,Role.ROLE_FINANCE]",
+                    @click="initTable()" ) 加载自己创建的采购计划
                 v-btn.mr-4(outlined, color="light-blue",
-                  v-per="[Role.ROLE_PROCUREMENT_SUPERVISOR, Role.ROLE_FINANCE]",
-                  @click="seeApprovalIng" ) 加载待审批的计划
+                  v-per="Role.ROLE_PROCUREMENT_SUPERVISOR",
+                  @click="seeApprovalIng(true)" ) (采购主管)加载待审批的计划
                 v-btn.mr-4(outlined, color="light-blue",
-                  v-per="[Role.ROLE_PROCUREMENT_SUPERVISOR, Role.ROLE_FINANCE]",
-                  @click="seeApprovalEd" ) 加载审批通过的计划
+                  v-per="Role.ROLE_PROCUREMENT_SUPERVISOR",
+                  @click="seeApprovalEd(true)" ) (采购主管)加载审批通过的计划
+                v-btn.mr-4(outlined, color="light-blue",
+                  v-per="Role.ROLE_FINANCE",
+                  @click="seeApprovalIng(false)" ) (财务)加载待审批的计划
+                v-btn.mr-4(outlined, color="light-blue",
+                  v-per="Role.ROLE_FINANCE",
+                  @click="seeApprovalEd(false)" ) (财务)加载审批通过的计划
                 v-btn(outlined, color="warning", @click="seeReset") 重置条件
           v-data-table(:headers="headers", :items="desserts", :loading="loading", loading-text="加载中......",
             item-key="id", :mobile-breakpoint="800",  :custom-filter="filterSearch", :search="searchValue",
@@ -49,19 +61,19 @@
                 span 提交审批
               v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
                 template(v-slot:activator="{ on }")
-                  v-btn.mr-2(outlined, rounded, x-small, fab, color="info", v-on="on",
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="info", v-on="on", v-if="approvalTag",
                     v-per="Role.ROLE_PROCUREMENT_SUPERVISOR", @click="handleApproval(item)")
                     v-icon mdi-book-open-variant
                 span 审批
               v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'PROCUREMENT_OK'")
                 template(v-slot:activator="{ on }")
-                  v-btn.mr-2(outlined, rounded, x-small, fab, color="info", v-on="on",
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="info", v-on="on", v-if="approvalTag",
                     v-per="Role.ROLE_FINANCE", @click="handleApproval(item)")
                     v-icon mdi-book-open-variant
                 span 审批
               v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
                 template(v-slot:activator="{ on }")
-                  v-btn.mr-2(outlined, rounded, x-small, fab, color="error",
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="error", v-if="backTag",
                     v-per="Role.ROLE_PROCUREMENT_PLANER", @click="handleRevoke(item)", v-on="on")
                     v-icon mdi-backup-restore
                 span 撤回
@@ -91,7 +103,7 @@
 import * as restAPI from '_api/rest'
 import * as procurementPlanAPI from '_api/procurementPlan'
 import ProcurementPlan from '_c/procurement-plan'
-import { planStatus, approvalStatus } from '_u/status'
+import { procurementPlanStatus, approvalStatus } from '_u/status'
 import { requiredRules, unionRules, requiredMessageRules } from '_u/rule'
 import { Role } from '_u/role'
 
@@ -102,7 +114,9 @@ export default {
   },
   data: () => ({
     see: 0,
-    planStatus: planStatus,
+    approvalTag: false,
+    backTag: false,
+    planStatus: procurementPlanStatus,
     approvalStatus: approvalStatus,
     revokeSnackbar: false,
     dayMenu: false,
@@ -129,6 +143,7 @@ export default {
     const date = new Date()
     this.search = {
       name: '',
+      type: '',
       planStatus: '',
       approvalStatus: '',
       createTime: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate() + 1}`
@@ -149,14 +164,20 @@ export default {
       let _this = this
       let role = _this.$store.getters['auth/role']
       let resourcesLink = null
-      if (role.includes(Role.ROLE_PROCUREMENT_PLANER)) {
-        resourcesLink = `procurementPlan/search/byCreateUser?createUser=${this.$store.getters['auth/username']}`
+      if (role.includes(Role.ROLE_FINANCE) || role.includes(Role.ROLE_FINANCE_PLANER) || role.includes(Role.ROLE_FINANCE_SUPERVISOR)) {
+        resourcesLink = `procurementPlan/search/byStatus?planStatus=PROCUREMENT_OK&approvalStatus=APPROVAL_ING`
+        this.approvalTag = true
+        this.backTag = false
       }
       if (role.includes(Role.ROLE_PROCUREMENT_SUPERVISOR)) {
         resourcesLink = `procurementPlan/search/byStatus?planStatus=APPROVAL&approvalStatus=APPROVAL_ING`
+        this.approvalTag = true
+        this.backTag = false
       }
-      if (role.includes(Role.ROLE_FINANCE) || role.includes(Role.ROLE_FINANCE_PLANER) || role.includes(Role.ROLE_FINANCE_SUPERVISOR)) {
-        resourcesLink = `procurementPlan/search/byStatus?planStatus=PROCUREMENT_OK&approvalStatus=APPROVAL_ING`
+      if (role.includes(Role.ROLE_PROCUREMENT_PLANER)) {
+        resourcesLink = `procurementPlan/search/byCreateUser?createUser=${this.$store.getters['auth/username']}`
+        this.approvalTag = false
+        this.backTag = true
       }
       restAPI.getRestLink(resourcesLink)
         .then(res => {
@@ -273,33 +294,55 @@ export default {
           this.initTable()
         })
     },
-    seeApprovalIng () {
-      // TODO 不对
-      this.desserts = []
-      this.initTable()
-    },
-    seeApprovalEd () {
+    // type: true 采购主管 false 财务
+    seeApprovalIng (type) {
+      this.seeReset()
+      this.search.approvalStatus = 'APPROVAL_ING'
       this.desserts = []
       this.loading = true
-      this.search.name = ''
-      let _this = this
-      let role = _this.$store.getters['auth/role']
       let resourcesLink = null
-      if (role.includes(Role.ROLE_PROCUREMENT_SUPERVISOR)) {
+      if (type) {
+        this.search.planStatus = 'APPROVAL'
+        resourcesLink = `procurementPlan/search/byStatus?planStatus=APPROVAL&approvalStatus=APPROVAL_ING`
+      } else {
+        this.search.planStatus = 'PROCUREMENT_OK'
         resourcesLink = `procurementPlan/search/byStatus?planStatus=PROCUREMENT_OK&approvalStatus=APPROVAL_ING`
-      }
-      if (role.includes(Role.ROLE_FINANCE) || role.includes(Role.ROLE_FINANCE_PLANER) || role.includes(Role.ROLE_FINANCE_SUPERVISOR)) {
-        resourcesLink = `procurementPlan/search/byStatus?planStatus=FINALLY&approvalStatus=APPROVAL_OK`
       }
       restAPI.getRestLink(resourcesLink)
         .then(res => {
           this.desserts = res.data.content.filter(d => !d.hasOwnProperty('relTargetType'))
         })
         .finally(() => { this.loading = false })
+      this.approvalTag = true
+      this.backTag = false
+    },
+    // type: true 采购主管 false 财务
+    seeApprovalEd (type) {
+      this.seeReset()
+      this.desserts = []
+      this.loading = true
+      let resourcesLink = null
+      if (type) {
+        this.search.planStatus = 'PROCUREMENT_OK'
+        this.search.approvalStatus = 'APPROVAL_ING'
+        resourcesLink = `procurementPlan/search/byStatus?planStatus=PROCUREMENT_OK&approvalStatus=APPROVAL_ING`
+      } else {
+        this.search.planStatus = 'FINALLY'
+        this.search.approvalStatus = 'APPROVAL_OK'
+        resourcesLink = `procurementPlan/search/byStatus?planStatus=FINALLY&approvalStatus=APPROVAL_OK`
+      }
+      restAPI.getRestLink(resourcesLink)
+        .then(res => {
+          this.desserts = res.data.content.filter(d => !d.hasOwnProperty('relTargetType'))
+          this.approvalTag = true
+          this.backTag = false
+        })
+        .finally(() => { this.loading = false })
     },
     seeReset () {
       this.search = {
         name: '',
+        type: '',
         planStatus: '',
         approvalStatus: '',
         createTime: ''

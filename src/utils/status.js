@@ -1,5 +1,5 @@
 /**
- * 用作搜索的时候选择
+ * 用作需求计划搜索的时候选择
  * @type {*[]}
  */
 export const planStatus = [
@@ -8,7 +8,6 @@ export const planStatus = [
   { name: '提交审批', value: 'APPROVAL' },
   { name: '提交至汇总', value: 'SUMMARY' },
   { name: '已删除', value: 'DELETED' },
-  { name: '采购主管审批通过', value: 'PROCUREMENT_OK' },
   { name: '已终止', value: 'FINALLY' }
 ]
 
@@ -21,7 +20,6 @@ export const planStatusSelect = [
   { name: '提交审批', value: 'APPROVAL' },
   { name: '提交至汇总', value: 'SUMMARY' },
   { name: '已删除', value: 'DELETED' },
-  { name: '采购主管审批通过', value: 'PROCUREMENT_OK' },
   { name: '已终止', value: 'FINALLY' }
 ]
 
@@ -32,9 +30,8 @@ export const planStatusSelect = [
 export const procurementPlanStatus = [
   { name: '', value: '' },
   { name: '自由', value: 'FREE' },
-  { name: '提交审批', value: 'APPROVAL' },
-  { name: '已删除', value: 'DELETED' },
-  { name: '采购主管审批通过', value: 'PROCUREMENT_OK' },
+  { name: '待采购主管审批', value: 'APPROVAL' },
+  { name: '待财务进行审批', value: 'PROCUREMENT_OK' },
   { name: '进入采购订单阶段', value: 'FINALLY' }
 ]
 
