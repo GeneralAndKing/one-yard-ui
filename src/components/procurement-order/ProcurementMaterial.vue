@@ -20,12 +20,12 @@
           span 编辑
         v-tooltip(top)
           template(v-slot:activator="{ on }")
-            v-btn.mr-1(outlined, rounded, x-small, fab, color="info", @click="handleCopy(item)", v-on="on")
+            v-btn.mr-1(outlined, rounded, x-small, fab, color="info", @click="handleCopy(item)", v-on="on" :disabled="see")
               v-icon file_copy
           span 复制
         v-tooltip(top)
           template(v-slot:activator="{ on }")
-            v-btn(outlined, rounded, x-small, fab, color="error", @click="handleDelete(item)", v-on="on" :disabled="item.isSelect!==undefined")
+            v-btn(outlined, rounded, x-small, fab, color="error", @click="handleDelete(item)", v-on="on" :disabled="see||item.isSelect!==undefined")
               v-icon mdi-delete
           span 删除
       template(v-slot:top)

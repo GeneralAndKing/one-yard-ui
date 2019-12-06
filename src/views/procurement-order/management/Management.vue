@@ -31,6 +31,7 @@ import ManagementTable from './ManagementTable'
 import DateMenu from '_c/date-menu'
 import ProcurementOrder from '_c/procurement-order'
 import { tomorrow } from '_u/util'
+import * as RestAPI from '_api/rest'
 export default {
   name: 'Management',
   components: {
@@ -64,21 +65,7 @@ export default {
   },
   created () {
     this.handleReset()
-    // TODO：初始化采购订单数据
-    for (let i = 0; i < 5; i++) {
-      this.orders.push({
-        id: i,
-        name: `订单${i}`,
-        code: `编号${i}`,
-        type: `订单类型${i}`,
-        supplier: `供应商${i}`,
-        procurementDepartment: `采购部门${i}`,
-        procurementDate: '2019-10-11',
-        deliveryDate: '2019-10-11',
-        planStatus: 'NO_SUBMIT',
-        approvalStatus: 'NO_SUBMIT'
-      })
-    }
+    this.initData()
   },
   methods: {
     handleReset () {
@@ -94,10 +81,17 @@ export default {
     handleSee (item) {
       // 点击查看的时候，跳转过去
       this.see = item
+      console.log(this.see)
+    },
+    initData () {
+      this.orders.length = 0
+      RestAPI.getAll('procurementOrder').then(res => {
+        this.orders.push(...res.data.content)
+      })
     },
     handleBack () {
       this.see = null
-      // TODO：返回回来以后，需要重新初始化一下表格数据，以防更新不及时
+      this.initData()
     }
   }
 }

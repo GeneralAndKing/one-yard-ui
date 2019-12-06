@@ -19,9 +19,9 @@
                 v-text-field(v-model="order.code" ref="code", label="单据编号", disabled, hint="此字段在选择单据类型后自动生成", persistent-hint,
                   :rules="rules.unionRules(rules.requiredRules('单据编号'))")
               v-flex(sm12, md6, lg4)
-                date-menu(v-model="order.procurementDate", label="采购日期")
+                date-menu(v-model="order.procurementDate", label="采购日期" :disabled="see")
               v-flex(sm12, md6, lg4)
-                date-menu(v-model="order.deliveryDate", label="交货日期")
+                date-menu(v-model="order.deliveryDate", label="交货日期" :disabled="see")
               v-flex(sm12, md6, lg4)
                 v-text-field(v-model="order.procurementDepartment" ref="procurementDepartment", label="采购部门", :disabled='see', clearable,
                   :rules="rules.unionRules(rules.requiredRules('采购部门'))")
@@ -69,6 +69,7 @@ import { getTime } from '_u/util'
 import * as RuleAPI from '_u/rule'
 import * as RestAPI from '_api/rest'
 import * as procurementOrderAPI from '_api/procurementOrder'
+
 export default {
   name: 'ProcurementOrder',
   components: {
@@ -129,28 +130,27 @@ export default {
     }
   },
   async created () {
+    try {
+      let res = await RestAPI.getAll('supplier')
+      this.supplier = res.data.content
+      res = await RestAPI.getAll('material')
+      this.materials = res.data.content
+    } catch (e) {
+    }
     if (this.seeItem !== null) {
       // 编辑的时候，只能让他查看！
       this.see = true
+      this.order = this.seeItem
       let res = await RestAPI.getRestLink(`orderTerms/search/byOrderId?orderId=${this.seeItem.id}`)
-      this.orderTerms.push(...res.data.content)
-      // TODO 获取审批信息
-      for (let i = 0; i < 5; i++) {
-        this.procurementApprove.push({
-          id: i,
-          result: `结果${i}`,
-          description: `描述${i}`,
-          createTime: `创建时间${i}`,
-          createUser: `创建用户${i}`
-        })
-      }
-    }
-    try {
-      let res = await RestAPI.getAll('supplier')
-      this.supplier.push(...res.data.content)
-      res = await RestAPI.getAll('material')
-      this.materials.push(...res.data.content)
-    } catch (e) {
+      this.orderTerms = res.data.content
+      res = await RestAPI.getRestLink(`approval/search/byPlanIdAndApprovalType?approvalType=PROCUREMENT_ORDER_APPROVAL&planId=${this.seeItem.id}`)
+      this.procurementApprove = res.data.content
+      res = await RestAPI.getRestLink(`procurementMaterial/search/byOrderId?orderId=${this.seeItem.id}`)
+      console.log(res)
+      this.procurementMaterial = res.data.content
+      this.procurementMaterial.some(value => {
+        value.material = this._.find(this.materials, { id: value.materialId })
+      })
     }
   },
   methods: {
@@ -163,6 +163,7 @@ export default {
     },
     handleSave () {
       if (this.see) {
+        this.see = false
         // TODO:编辑事件
       } else {
         if (!this.$refs.base.validate(true)) {
@@ -174,26 +175,23 @@ export default {
           return
         }
         for (let value of this.procurementMaterial) {
-          if (value.chargeUnit === '' ||
-            value.chargeNumber === '' ||
+          if (
             value.deliveryDate === '' ||
-            value.unitPrice === '' ||
-            value.taxableUnitPrice === '' ||
-            value.taxRate === '' ||
-            value.taxAmount === '' ||
-            value.totalPrice === '' ||
-            value.taxTotalPrice === '' ||
-            value.demandDepartment === '' ||
-            value.materialReceivingDepartment === '') {
+              value.unitPrice === '' ||
+              value.taxableUnitPrice === '' ||
+              value.taxRate === '' ||
+              value.taxAmount === '' ||
+              value.totalPrice === '' ||
+              value.taxTotalPrice === '' ||
+              value.demandDepartment === '' ||
+              value.materialReceivingDepartment === '') {
             this.$message('请填写完整物料信息后再进行保存', 'error')
             return
           }
         }
         procurementOrderAPI.submit(this.order, this.procurementMaterial, this.orderTerms).then(res => {
           this.$message(res.data, 'success')
-          this.order = []
-          this.procurementMaterial = []
-          this.orderTerms = []
+          this.see = true
         })
         // TODO：保存事件
       }
