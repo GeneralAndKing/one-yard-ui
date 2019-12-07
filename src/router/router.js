@@ -243,6 +243,17 @@ export const routes = [
           ]
         },
         component: () => import(/* webpackChunkName: "sys-department" */ '_v/procurement-order/management')
+      },
+      {
+        path: 'procurementOrderChangeHistory',
+        name: 'procurementOrderChangeHistory',
+        meta: {
+          meta: '采购订单变更历史',
+          auth: [
+            Role.ROLE_PROCUREMENT_PLANER
+          ]
+        },
+        component: () => import(/* webpackChunkName: "sys-department" */ '_c/procurement-order/change-history')
       }
     ]
   },

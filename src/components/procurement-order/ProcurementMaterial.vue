@@ -1,6 +1,6 @@
 <template lang="pug">
   .one-info
-    v-data-table(v-model="selected", :headers="headers", :items="value", :loading="load",  no-data-text="暂无数据", no-results-text="暂无数据",
+    v-data-table(v-model="selected", :headers="headers", :items="value", :loading="loading",  no-data-text="暂无数据", no-results-text="暂无数据",
       :mobile-breakpoint="900", show-select, item-key="name", :search="search")
       template(v-slot:item.materialCode="{ item }")
         span {{item.material.code}}
@@ -67,7 +67,7 @@ export default {
       type: Boolean,
       required: true
     },
-    load: {
+    loading: {
       type: Boolean,
       default: false
     },
@@ -87,7 +87,6 @@ export default {
     search: '',
     selected: [],
     headers: [
-
       { text: '物料名称', value: 'materialName', align: 'start' },
       { text: '规格', value: 'materialSpecifications', align: 'start' },
       { text: '型号', value: 'materialSize', align: 'start' },

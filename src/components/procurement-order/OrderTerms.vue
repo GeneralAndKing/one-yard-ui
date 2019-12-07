@@ -1,7 +1,7 @@
 <template lang="pug">
   .one-order-terms
     v-data-table(v-model="selected", :headers="headers", :items="value", no-data-text="暂无数据", no-results-text="暂无数据",
-      :mobile-breakpoint="900", show-select, item-key="code", :search="search")
+      :mobile-breakpoint="900", show-select, item-key="code", :search="search", :loading="loading")
       template(v-slot:item.action="{ item }")
         v-tooltip(top)
           template(v-slot:activator="{ on }")
@@ -47,7 +47,7 @@ export default {
       type: Boolean,
       required: true
     },
-    load: {
+    loading: {
       type: Boolean,
       default: false
     }

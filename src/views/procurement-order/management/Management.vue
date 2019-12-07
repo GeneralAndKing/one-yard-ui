@@ -20,7 +20,7 @@
                 date-menu(v-model="search.deliveryDate", label="交货日期", :init="tomorrow")
               v-flex.text-right(sm12)
                 v-btn(outlined, color="secondary", @click="handleReset") 重置条件
-          management-table.mt-5(v-model="orders", :search="searchValue", @see="handleSee")
+          management-table.mt-5(v-model="orders", :search="searchValue", :loading="load.table", @see="handleSee")
       procurement-order(v-else, :seeItem="see")
         v-btn(outlined, color="warning", @click="handleBack") 返回
 </template>
@@ -54,7 +54,10 @@ export default {
     planStatus: procurementOrderPlanStatus,
     approvalStatus: approvalStatus,
     orders: [],
-    tomorrow: tomorrow()
+    tomorrow: tomorrow(),
+    load: {
+      table: false
+    }
   }),
   computed: {
     searchValue () {
@@ -85,9 +88,10 @@ export default {
     },
     initData () {
       this.orders.length = 0
+      this.load.table = true
       RestAPI.getAll('procurementOrder').then(res => {
         this.orders.push(...res.data.content)
-      })
+      }).finally(() => { this.load.table = false })
     },
     handleBack () {
       this.see = null

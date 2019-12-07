@@ -25,9 +25,12 @@
               v-flex(sm12, md6, lg4)
                 v-text-field(v-model="order.procurementDepartment" ref="procurementDepartment", label="采购部门", :disabled='see', clearable,
                   :rules="rules.unionRules(rules.requiredRules('采购部门'))")
-              v-flex(sm12)
+              v-flex(sm12, md6, lg8)
                 v-text-field(v-model="order.remark" ref="remark", label="备注", :disabled='see', clearable,
                   :rules="rules.unionRules(rules.maxLengthRules(250))")
+              v-flex.text-right.mt-4(sm12, md6, lg4, v-if="seeItem !== null")
+                v-btn.mr-4(outlined, color="secondary", @click="$refs.history.show = true") 变更历史
+                v-btn(outlined, color="secondary") 库存查询
         v-toolbar(flat, color="secondary")
         v-tabs(v-model="tab", show-arrows)
           v-tab(v-for="item in tabs", :key="item.id")
@@ -35,9 +38,10 @@
             | {{item.name}}
           v-tabs-items.overflow-auto.mt-5(v-model="tab")
             v-tab-item(:key="1")
-              procurement-material(v-model="procurementMaterial", :see="see", :order="order" @select="handleMaterialSelect" :materials="materials")
+              procurement-material(v-model="procurementMaterial", :see="see", :order="order", :loading="load.table",
+                @select="handleMaterialSelect" :materials="materials")
             v-tab-item(:key="2")
-              order-terms(v-model="orderTerms", :see="see")
+              order-terms(v-model="orderTerms", :see="see", :loading="load.table")
             v-tab-item(:key="3")
               v-layout(wrap, style="width:100%")
                 v-flex(sm12)
@@ -56,6 +60,7 @@
           slot
           v-spacer
           v-btn(outlined, color="success", @click="handleSave") {{see?'编辑':'保存'}}
+    change-history(v-if="seeItem !== null", ref="history", :materials="materials")
 </template>
 
 <script>
@@ -64,6 +69,7 @@ import DateMenu from '_c/date-menu'
 import ProcurementMaterial from './ProcurementMaterial'
 import OrderTerms from './OrderTerms'
 import ProcurementApprove from './ProcurementApprove'
+import ChangeHistory from '_c/procurement-order/change-history'
 import { orderTypeSelect, formatOrderTypeSelect } from '_u/status'
 import { getTime } from '_u/util'
 import * as RuleAPI from '_u/rule'
@@ -77,7 +83,8 @@ export default {
     DateMenu,
     ProcurementMaterial,
     OrderTerms,
-    ProcurementApprove
+    ProcurementApprove,
+    ChangeHistory
   },
   props: {
     // 如果是编辑，那么 seeItem 不为 null
@@ -89,6 +96,12 @@ export default {
   data: () => ({
     // 是否是查看
     tab: 0,
+    tabs: [
+      { id: 1, icon: 'mdi-account', name: '明细信息' },
+      { id: 2, icon: 'mdi-account', name: '订单条款' },
+      { id: 3, icon: 'mdi-account', name: '系统信息' },
+      { id: 4, icon: 'mdi-account', name: '审批信息' }
+    ],
     isSelect: false,
     see: false,
     orderType: orderTypeSelect,
@@ -114,15 +127,13 @@ export default {
       modifyUser: '',
       remark: ''
     },
-    tabs: [
-      { id: 1, icon: 'mdi-account', name: '明细信息' },
-      { id: 2, icon: 'mdi-account', name: '订单条款' },
-      { id: 3, icon: 'mdi-account', name: '系统信息' },
-      { id: 4, icon: 'mdi-account', name: '审批信息' }
-    ],
     procurementMaterial: [],
     orderTerms: [],
-    procurementApprove: []
+    procurementApprove: [],
+    history: false,
+    load: {
+      table: false
+    }
   }),
   computed: {
     rules () {
@@ -130,15 +141,14 @@ export default {
     }
   },
   async created () {
+    let res = await RestAPI.getAll('supplier')
+    this.supplier = res.data.content
+    res = await RestAPI.getAll('material')
+    this.materials = res.data.content
+    if (!this.seeItem) return
     try {
-      let res = await RestAPI.getAll('supplier')
-      this.supplier = res.data.content
-      res = await RestAPI.getAll('material')
-      this.materials = res.data.content
-    } catch (e) {
-    }
-    if (this.seeItem !== null) {
       // 编辑的时候，只能让他查看！
+      this.load.table = true
       this.see = true
       this.order = this.seeItem
       let res = await RestAPI.getRestLink(`orderTerms/search/byOrderId?orderId=${this.seeItem.id}`)
@@ -146,11 +156,12 @@ export default {
       res = await RestAPI.getRestLink(`approval/search/byPlanIdAndApprovalType?approvalType=PROCUREMENT_ORDER_APPROVAL&planId=${this.seeItem.id}`)
       this.procurementApprove = res.data.content
       res = await RestAPI.getRestLink(`procurementMaterial/search/byOrderId?orderId=${this.seeItem.id}`)
-      console.log(res)
       this.procurementMaterial = res.data.content
       this.procurementMaterial.some(value => {
         value.material = this._.find(this.materials, { id: value.materialId })
       })
+    } finally {
+      this.load.table = false
     }
   },
   methods: {
@@ -210,8 +221,7 @@ export default {
           }
           this.procurementMaterial.push({
             planMaterialId: item.id,
-            code: item.code,
-            name: item.name,
+            name: `${new Date().toISOString()}-${item.materialId}-${Math.ceil(Math.random() * 100)}`,
             materialId: item.materialId,
             procurementUnit: item.unit,
             procurementNumber: item.number,
@@ -236,6 +246,9 @@ export default {
       } else {
         this.isSelect = false
       }
+    },
+    handleChange () {
+      this.history = true
     }
   }
 }

@@ -1,7 +1,7 @@
 <template lang="pug">
   div
     div(v-for="(menu,index) in router" :key="index")
-      v-list.py-1(v-if="!menu.children")
+      v-list-item-group.py-1(v-if="!menu.children", color="primary")
         v-list-item(:to="menu.to", :key="index", link)
           v-list-item-action
             v-icon {{ menu.icon }}
