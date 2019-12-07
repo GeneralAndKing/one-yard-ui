@@ -15,11 +15,11 @@
                   v-select(v-model="editItem.materialId", :items="materials", :ref="`${formRef}Material`",
                     label="物料", :rules="rules.unionRules(rules.requiredRules('物料'))", item-text="name", item-value="id" :disabled="editItem.planMaterialId!==undefined")
                 v-flex(sm12, md6, lg4)
-                  v-text-field(v-model="editItem.procurementUnit" :ref="`${formRef}procurementUnit`", label="采购单位" :disabled="editItem.planMaterialId!==undefined"
+                  v-text-field(v-model="editItem.procurementUnit" :ref="`${formRef}procurementUnit`", label="采购单位" :disabled="editItem.planMaterialId!==undefined &&!change"
                     :rules="rules.unionRules(rules.requiredRules('采购单位'))")
                 v-flex(sm12, md6, lg4)
                   v-text-field(v-model="editItem.procurementNumber" :ref="`${formRef}procurementNumber`", label="采购数量",
-                    :rules="rules.unionRules(rules.requiredRules('采购数量'),rules.integerRules)", type="number" :disabled="editItem.planMaterialId!==undefined")
+                    :rules="rules.unionRules(rules.requiredRules('采购数量'),rules.integerRules)", type="number" :disabled="editItem.planMaterialId!==undefined &&!change")
                 v-flex(sm12, md6, lg4)
                   v-text-field(v-model="editItem.demandDepartment" :ref="`${formRef}demandDepartment`", label="需求部门"
                     :rules="rules.unionRules(rules.requiredRules('需求部门'))")
@@ -72,6 +72,10 @@ export default {
     value: {
       type: Object,
       default: () => null
+    },
+    change: {
+      type: Boolean,
+      required: true
     },
     materials: {
       type: Array,

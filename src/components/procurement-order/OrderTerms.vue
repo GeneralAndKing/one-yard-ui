@@ -5,12 +5,12 @@
       template(v-slot:item.action="{ item }")
         v-tooltip(top)
           template(v-slot:activator="{ on }")
-            v-btn.mr-1(outlined, rounded, x-small, fab, color="info", @click="handleEdit(item)", v-on="on", :disabled="see")
+            v-btn.mr-1(outlined, rounded, x-small, fab, color="info", @click="handleEdit(item)", v-on="on", :disabled="see" v-if="!change")
               v-icon mdi-pencil
           span 编辑
         v-tooltip(top)
           template(v-slot:activator="{ on }")
-            v-btn(outlined, rounded, x-small, fab, color="error", @click="handleDelete(item)", v-on="on", :disabled="see")
+            v-btn(outlined, rounded, x-small, fab, color="error", @click="handleDelete(item)", v-on="on", :disabled="see" v-if="!change")
               v-icon mdi-delete
           span 删除
       template(v-slot:top)
@@ -26,8 +26,8 @@
             hide-details,
             style="display: block ruby;"
           )
-          v-btn.mr-4(outlined, color="success", @click="handleAdd", :disabled='see') 添加
-          v-btn(outlined, color="error", @click="handleDeleteSelect", :disabled='see') 删除所选
+          v-btn.mr-4(outlined, color="success", @click="handleAdd", :disabled='see' v-if="!change") 添加
+          v-btn(outlined, color="error", @click="handleDeleteSelect", :disabled='see' v-if="!change") 删除所选
     order-terms-edit(ref="add", v-model="item", @submit="handleSubmit")
 </template>
 
@@ -44,6 +44,10 @@ export default {
       required: true
     },
     see: {
+      type: Boolean,
+      required: true
+    },
+    change: {
       type: Boolean,
       required: true
     },

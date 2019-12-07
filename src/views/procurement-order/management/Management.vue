@@ -23,7 +23,7 @@
                     date-menu(v-model="search.deliveryDate", label="交货日期", :init="tomorrow")
                   v-flex.text-right(sm12)
                     v-btn(outlined, color="secondary", @click="handleReset") 重置条件
-              management-table.mt-5(v-model="orders", :search="searchValue", :loading="load.table", @see="handleSee")
+              management-table.mt-5(v-model="orders", :search="searchValue", :loading="load.table", @see="handleSee" @change="handleChange")
       procurement-order(v-else, :seeItem="see")
         v-btn(outlined, color="warning", @click="handleBack") 返回
 </template>
@@ -82,6 +82,11 @@ export default {
     },
     handleSee (item) {
       // 点击查看的时候，跳转过去
+      item.isChange = false
+      this.see = item
+    },
+    handleChange (item) {
+      item.isChange = true
       this.see = item
     },
     initData () {

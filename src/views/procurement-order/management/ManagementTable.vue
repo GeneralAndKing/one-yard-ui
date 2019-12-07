@@ -15,6 +15,11 @@
           span 查看
         v-tooltip(top)
           template(v-slot:activator="{ on }")
+            v-btn.mr-1(outlined, rounded, x-small, fab, color="success", v-on="on", @click="handleChange(item)")
+              v-icon remove_red_eye
+          span 变更
+        v-tooltip(top)
+          template(v-slot:activator="{ on }")
             v-btn.mr-1(outlined, rounded, x-small, fab, color="teal darken-1", v-on="on", @click="handleSubmit(item)")
               v-icon mdi-format-wrap-inline
           span 提交审批
@@ -92,6 +97,9 @@ export default {
     },
     handleSee (item) {
       this.$emit('see', item)
+    },
+    handleChange (item) {
+      this.$emit('change', item)
     },
     handleSubmit (item) {
       this.$confirm({ title: '您确认提交审批吗？' },

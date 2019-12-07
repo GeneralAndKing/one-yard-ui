@@ -48,7 +48,7 @@ export default {
   }),
   created () {
     let _this = this
-    restAPI.getRestLink(`/changeHistory/search/byOrderId?orderId=${this.item.id}`)
+    restAPI.getRestLink(`changeHistory/search/byOrderId?orderId=${this.item.id}`)
       .then(res => {
         res.data.content.some(value => {
           value.procurementMaterial = _this._.find(_this.procurementMaterial, { id: value.procurementMaterialId })

@@ -13,23 +13,23 @@
               v-form(ref="base")
                 v-layout(wrap, style="width:100%")
                   v-flex(sm12, md6, lg4)
-                    v-select(v-model="order.type", :items="orderType", ref="orderType", :disabled='see||isSelect', @change="generateCode",
+                    v-select(v-model="order.type", :items="orderType", ref="orderType", :disabled='see||isSelect||change', @change="generateCode",
                       label="单据类型", :rules="rules.unionRules(rules.requiredRules('单据类型'))")
                   v-flex(sm12, md6, lg4)
-                    v-select(v-model="order.supplier" :items="supplier", ref="supplier", :disabled='see', item-text="name", item-value="name",
+                    v-select(v-model="order.supplier" :items="supplier", ref="supplier", :disabled='see||change', item-text="name", item-value="name",
                       label="供应商", :rules="rules.unionRules(rules.requiredRules('供应商'))")
                   v-flex(sm12, md6, lg4)
                     v-text-field(v-model="order.code" ref="code", label="单据编号", disabled, hint="此字段在选择单据类型后自动生成", persistent-hint,
                       :rules="rules.unionRules(rules.requiredRules('单据编号'))")
                   v-flex(sm12, md6, lg4)
-                    date-menu(v-model="order.procurementDate", label="采购日期" :disabled="see")
+                    date-menu(v-model="order.procurementDate", label="采购日期" :disabled="see ||change")
                   v-flex(sm12, md6, lg4)
-                    date-menu(v-model="order.deliveryDate", label="交货日期" :disabled="see")
+                    date-menu(v-model="order.deliveryDate", label="交货日期" :disabled="see ||change")
                   v-flex(sm12, md6, lg4)
-                    v-text-field(v-model="order.procurementDepartment" ref="procurementDepartment", label="采购部门", :disabled='see', clearable,
+                    v-text-field(v-model="order.procurementDepartment" ref="procurementDepartment", label="采购部门", :disabled='see||change', clearable,
                       :rules="rules.unionRules(rules.requiredRules('采购部门'))")
                   v-flex(sm12, md6, lg8)
-                    v-text-field(v-model="order.remark" ref="remark", label="备注", :disabled='see', clearable,
+                    v-text-field(v-model="order.remark" ref="remark", label="备注", :disabled='see||change', clearable,
                       :rules="rules.unionRules(rules.maxLengthRules(250))")
                   v-flex.text-right.mt-4(sm12, md6, lg4, v-if="seeItem !== null")
                     v-btn.mr-4(outlined, color="secondary", @click="$refs.history.show = true", v-if="change") 变更历史
@@ -42,9 +42,9 @@
               v-tabs-items.overflow-auto.mt-5(v-model="tab")
                 v-tab-item(:key="1")
                   procurement-material(v-model="procurementMaterial", :see="see", :order="order", :loading="load.table",
-                    @select="handleMaterialSelect" :materials="materials")
+                    @select="handleMaterialSelect" :materials="materials" :change="change")
                 v-tab-item(:key="2")
-                  order-terms(v-model="orderTerms", :see="see", :loading="load.table")
+                  order-terms(v-model="orderTerms", :see="see", :loading="load.table" :change="change")
                 v-tab-item(:key="3")
                   v-layout(wrap, style="width:100%")
                     v-flex(sm12)
@@ -160,6 +160,8 @@ export default {
       if (!this.seeItem) return
       this.load.table = true
       this.see = true
+      this.change = this._.get(this.seeItem, 'isChange', false)
+      if (this.change) this.see = false
       this.order = this.seeItem
       let res = await RestAPI.getRestLink(`orderTerms/search/byOrderId?orderId=${this.seeItem.id}`)
       this.orderTerms = res.data.content
@@ -170,7 +172,6 @@ export default {
       await this.procurementMaterial.some(value => {
         value.material = this._.find(this.materials, { id: value.materialId })
       })
-      this.change = true
     } finally {
       this.load.table = false
       this.skeletonLoader = false

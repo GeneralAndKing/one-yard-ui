@@ -20,12 +20,12 @@
           span 编辑
         v-tooltip(top)
           template(v-slot:activator="{ on }")
-            v-btn.mr-1(outlined, rounded, x-small, fab, color="info", @click="handleCopy(item)", v-on="on" :disabled="see")
+            v-btn.mr-1(outlined, rounded, x-small, fab, color="info", @click="handleCopy(item)", v-on="on" :disabled="see" v-if="!change")
               v-icon file_copy
           span 复制
         v-tooltip(top)
           template(v-slot:activator="{ on }")
-            v-btn(outlined, rounded, x-small, fab, color="error", @click="handleDelete(item)", v-on="on" :disabled="see||item.isSelect!==undefined")
+            v-btn(outlined, rounded, x-small, fab, color="error", @click="handleDelete(item)", v-on="on" :disabled="see||item.isSelect!==undefined" v-if="!change")
               v-icon mdi-delete
           span 删除
       template(v-slot:top)
@@ -41,10 +41,10 @@
             hide-details,
             style="display: block ruby;"
           )
-          v-btn.mr-4(outlined, color="info", @click="handlePlan", :disabled='see') 选单
-          v-btn.mr-4(outlined, color="success", @click="handleAdd", :disabled='see') 添加
-          v-btn(outlined, color="error", @click="handleDeleteSelect", :disabled='see') 删除所选
-    procurement-material-edit(v-model="item", ref="add", :materials="materials", @submit="handleSubmit")
+          v-btn.mr-4(outlined, color="info", @click="handlePlan", :disabled='see' v-if="!change") 选单
+          v-btn.mr-4(outlined, color="success", @click="handleAdd", :disabled='see' v-if="!change") 添加
+          v-btn(outlined, color="error", @click="handleDeleteSelect", :disabled='see' v-if="!change") 删除所选
+    procurement-material-edit(v-model="item", ref="add", :materials="materials", @submit="handleSubmit" :change="change")
     procurement-plan-select(ref="planSelect", :materials="materials", :order="order" @select="handlePlanSelect")
 
 </template>
@@ -64,6 +64,10 @@ export default {
       required: true
     },
     see: {
+      type: Boolean,
+      required: true
+    },
+    change: {
       type: Boolean,
       required: true
     },
