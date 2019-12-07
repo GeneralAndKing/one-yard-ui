@@ -4,62 +4,65 @@
       v-btn(fab, small, color="green", dark, @click="print")
         v-icon mdi-printer-settings
     v-card
-      v-card-title 采购订单{{see? '编辑' : '添加'}}
-      v-card-text
-        v-container(grid-list-md)
-          v-form(ref="base")
-            v-layout(wrap, style="width:100%")
-              v-flex(sm12, md6, lg4)
-                v-select(v-model="order.type", :items="orderType", ref="orderType", :disabled='see||isSelect', @change="generateCode",
-                  label="单据类型", :rules="rules.unionRules(rules.requiredRules('单据类型'))")
-              v-flex(sm12, md6, lg4)
-                v-select(v-model="order.supplier" :items="supplier", ref="supplier", :disabled='see', item-text="name", item-value="name",
-                  label="供应商", :rules="rules.unionRules(rules.requiredRules('供应商'))")
-              v-flex(sm12, md6, lg4)
-                v-text-field(v-model="order.code" ref="code", label="单据编号", disabled, hint="此字段在选择单据类型后自动生成", persistent-hint,
-                  :rules="rules.unionRules(rules.requiredRules('单据编号'))")
-              v-flex(sm12, md6, lg4)
-                date-menu(v-model="order.procurementDate", label="采购日期" :disabled="see")
-              v-flex(sm12, md6, lg4)
-                date-menu(v-model="order.deliveryDate", label="交货日期" :disabled="see")
-              v-flex(sm12, md6, lg4)
-                v-text-field(v-model="order.procurementDepartment" ref="procurementDepartment", label="采购部门", :disabled='see', clearable,
-                  :rules="rules.unionRules(rules.requiredRules('采购部门'))")
-              v-flex(sm12, md6, lg8)
-                v-text-field(v-model="order.remark" ref="remark", label="备注", :disabled='see', clearable,
-                  :rules="rules.unionRules(rules.maxLengthRules(250))")
-              v-flex.text-right.mt-4(sm12, md6, lg4, v-if="seeItem !== null")
-                v-btn.mr-4(outlined, color="secondary", @click="$refs.history.show = true", v-if="change") 变更历史
-                v-btn(outlined, color="secondary", @click="$refs.materials.show = true") 库存查询
-        v-toolbar(flat, color="secondary")
-        v-tabs(v-model="tab", show-arrows)
-          v-tab(v-for="item in tabs", :key="item.id")
-            v-icon(left) {{item.icon}}
-            | {{item.name}}
-          v-tabs-items.overflow-auto.mt-5(v-model="tab")
-            v-tab-item(:key="1")
-              procurement-material(v-model="procurementMaterial", :see="see", :order="order", :loading="load.table",
-                @select="handleMaterialSelect" :materials="materials")
-            v-tab-item(:key="2")
-              order-terms(v-model="orderTerms", :see="see", :loading="load.table")
-            v-tab-item(:key="3")
-              v-layout(wrap, style="width:100%")
-                v-flex(sm12)
-                  p.grey--text 以下内容系统自动生成
-                v-flex(sm12, md6)
-                  v-text-field(v-model="order.createTime", label="创建时间", disabled)
-                v-flex(sm12, md6)
-                  v-text-field(v-model="order.createUser", label="创建用户", disabled)
-                v-flex(sm12, md6)
-                  v-text-field(v-model="order.modifyTime", label="修改时间", disabled)
-                v-flex(sm12, md6)
-                  v-text-field(v-model="order.modifyUser", label="修改用户", disabled)
-            v-tab-item(:key="4")
-              procurement-approve(:approve="procurementApprove")
-        v-card-actions
-          slot
-          v-spacer
-          v-btn(outlined, color="success", @click="handleSave") {{see?'编辑':'保存'}}
+      v-slide-y-transition(mode="out-in")
+        skeleton-loader(v-if="skeletonLoader")
+        div(v-else)
+          v-card-title 采购订单{{see? '编辑' : '添加'}}
+          v-card-text
+            v-container(grid-list-md)
+              v-form(ref="base")
+                v-layout(wrap, style="width:100%")
+                  v-flex(sm12, md6, lg4)
+                    v-select(v-model="order.type", :items="orderType", ref="orderType", :disabled='see||isSelect', @change="generateCode",
+                      label="单据类型", :rules="rules.unionRules(rules.requiredRules('单据类型'))")
+                  v-flex(sm12, md6, lg4)
+                    v-select(v-model="order.supplier" :items="supplier", ref="supplier", :disabled='see', item-text="name", item-value="name",
+                      label="供应商", :rules="rules.unionRules(rules.requiredRules('供应商'))")
+                  v-flex(sm12, md6, lg4)
+                    v-text-field(v-model="order.code" ref="code", label="单据编号", disabled, hint="此字段在选择单据类型后自动生成", persistent-hint,
+                      :rules="rules.unionRules(rules.requiredRules('单据编号'))")
+                  v-flex(sm12, md6, lg4)
+                    date-menu(v-model="order.procurementDate", label="采购日期" :disabled="see")
+                  v-flex(sm12, md6, lg4)
+                    date-menu(v-model="order.deliveryDate", label="交货日期" :disabled="see")
+                  v-flex(sm12, md6, lg4)
+                    v-text-field(v-model="order.procurementDepartment" ref="procurementDepartment", label="采购部门", :disabled='see', clearable,
+                      :rules="rules.unionRules(rules.requiredRules('采购部门'))")
+                  v-flex(sm12, md6, lg8)
+                    v-text-field(v-model="order.remark" ref="remark", label="备注", :disabled='see', clearable,
+                      :rules="rules.unionRules(rules.maxLengthRules(250))")
+                  v-flex.text-right.mt-4(sm12, md6, lg4, v-if="seeItem !== null")
+                    v-btn.mr-4(outlined, color="secondary", @click="$refs.history.show = true", v-if="change") 变更历史
+                    v-btn(outlined, color="secondary", @click="$refs.materials.show = true") 库存查询
+            v-toolbar(flat, color="secondary")
+            v-tabs(v-model="tab", show-arrows)
+              v-tab(v-for="item in tabs", :key="item.id")
+                v-icon(left) {{item.icon}}
+                | {{item.name}}
+              v-tabs-items.overflow-auto.mt-5(v-model="tab")
+                v-tab-item(:key="1")
+                  procurement-material(v-model="procurementMaterial", :see="see", :order="order", :loading="load.table",
+                    @select="handleMaterialSelect" :materials="materials")
+                v-tab-item(:key="2")
+                  order-terms(v-model="orderTerms", :see="see", :loading="load.table")
+                v-tab-item(:key="3")
+                  v-layout(wrap, style="width:100%")
+                    v-flex(sm12)
+                      p.grey--text 以下内容系统自动生成
+                    v-flex(sm12, md6)
+                      v-text-field(v-model="order.createTime", label="创建时间", disabled)
+                    v-flex(sm12, md6)
+                      v-text-field(v-model="order.createUser", label="创建用户", disabled)
+                    v-flex(sm12, md6)
+                      v-text-field(v-model="order.modifyTime", label="修改时间", disabled)
+                    v-flex(sm12, md6)
+                      v-text-field(v-model="order.modifyUser", label="修改用户", disabled)
+                v-tab-item(:key="4")
+                  procurement-approve(:approve="procurementApprove")
+            v-card-actions
+              slot
+              v-spacer
+              v-btn(outlined, color="success", @click="handleSave") {{see?'编辑':'保存'}}
     change-history(v-if="change", :item="seeItem", ref="history", :procurementMaterial="procurementMaterial")
     check-inventory(v-if="seeItem !== null", :material="materials", ref="materials")
 </template>
@@ -72,6 +75,7 @@ import OrderTerms from './OrderTerms'
 import ProcurementApprove from './ProcurementApprove'
 import ChangeHistory from '_c/procurement-order/change-history'
 import CheckInventory from '_c/procurement-order/check-inventory'
+import SkeletonLoader from '_c/skeleton-loader'
 import { orderTypeSelect, formatOrderTypeSelect } from '_u/status'
 import { getTime } from '_u/util'
 import * as RuleAPI from '_u/rule'
@@ -87,7 +91,8 @@ export default {
     OrderTerms,
     ProcurementApprove,
     ChangeHistory,
-    CheckInventory
+    CheckInventory,
+    SkeletonLoader
   },
   props: {
     // 如果是编辑，那么 seeItem 不为 null
@@ -107,6 +112,7 @@ export default {
     ],
     isSelect: false,
     see: false,
+    skeletonLoader: true,
     change: false,
     orderType: orderTypeSelect,
     // TODO:初始化供应商
@@ -149,9 +155,9 @@ export default {
     this.supplier = res.data.content
     res = await RestAPI.getAll('material')
     this.materials = res.data.content
-    if (!this.seeItem) return
     try {
       // 编辑的时候，只能让他查看！
+      if (!this.seeItem) return
       this.load.table = true
       this.see = true
       this.order = this.seeItem
@@ -167,6 +173,7 @@ export default {
       this.change = true
     } finally {
       this.load.table = false
+      this.skeletonLoader = false
     }
   },
   methods: {
