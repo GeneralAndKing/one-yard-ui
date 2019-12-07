@@ -3,174 +3,178 @@
     more-btn
       v-btn(fab, small, color="green", dark, @click="print")
         v-icon mdi-printer-settings
-    v-card-title {{see ? '查看' : '编辑'}}
-    v-card-text
-      v-container.mb-4(grid-list-md)
-        v-form
-          v-layout(wrap, style="width:100%")
-            v-flex(sm12, md6, lg4)
-              v-text-field(v-model="procurementPlan.name", label="采购计划名称", :disabled="see")
-            v-flex(sm12, md6, lg4)
-              v-select(v-model="procurementPlan.planStatus", :items="planStatus", item-value='value',
-                item-text='name', label="计划状态", disabled)
-            v-flex(sm12, md6, lg4)
-              v-select(v-model="procurementPlan.approvalStatus", :items="approvalStatus", item-value='value',
-                item-text='name', label="审批状态", disabled)
-            v-flex(sm12, md6, lg4)
-              v-text-field(v-model="procurementPlan.planType", label="计划类型", disabled,
-                persistent-hint, hint="此字段为自动生成")
-            v-flex(sm12, md6, lg4)
-              v-text-field(v-model="procurementPlan.createTime", label="创建时间", disabled)
-            v-flex(sm12, md6, lg4)
-              v-text-field(v-model="procurementPlan.modifyTime", label="创建用户", disabled)
-      v-data-table(:headers="headers", :items="desserts", :loading="load.table", loading-text="加载中......", show-select,
-        style="width:100%", item-key="id", :mobile-breakpoint="1200", no-data-text="暂无数据", no-results-text="暂无数据")
-        template(v-slot:top)
-          v-toolbar(flat)
-            v-spacer
-            v-btn(color="success", outlined, :disabled="see", @click="handleAdd") 添加
-        template(v-slot:item.isSourceGoods="{ item }")
-          span {{item.isSourceGoods?'是':'否'}}
-        template(v-slot:item.supplyNumber="{ item }")
-          span {{item.supplyMode === '采购' ?item.supplyNumber :'无'}}
-        template(v-slot:item.purchaseDate="{ item }")
-          span {{item.supplyMode === '采购'? item.purchaseDate :'无'}}
-        template(v-slot:item.status="{ item }")
-        template(v-slot:item.action="{ item }")
-          v-tooltip(top)
-            template(v-slot:activator="{ on }")
-              v-btn.mr-2(outlined, rounded, x-small, fab, color="success", v-on="on", @click="handleSee(item)")
-                v-icon remove_red_eye
-            span 查看
-          v-tooltip(top, v-if="item.new || item.departmentName === '采购部门'")
-            template(v-slot:activator="{ on }")
-              v-btn.mr-2(outlined, rounded, x-small, fab, color="success", @click="handleEdit(item)", v-on="on", :disabled="see")
-                v-icon mdi-pencil
-            span 编辑
-          v-tooltip(top, v-if="item.new && item.status==='INIT'")
-            template(v-slot:activator="{ on }")
-              v-btn.mr-2(outlined, rounded, x-small, fab, color="warning", @click="handleDelete(item)", v-on="on", :disabled="see")
-                v-icon delete
-            span 删除
-          v-tooltip(top, v-if="item.departmentName !== '采购部' && item.planId !== null && !item.new ")
-            template(v-slot:activator="{ on }")
-              v-btn.mr-2(outlined, rounded, x-small, fab, color="error", @click="handleReturn(item)", v-on="on", :disabled="see")
-                v-icon mdi-backburger
-            span 需求退回
-      v-dialog(v-model="returnDialog", max-width="500px", persistent)
-        v-card(tile)
-          v-card-title.pa-0
-            v-toolbar(flat, dark, color="info")
-              v-toolbar-title 需求退回
-              v-spacer
-              v-btn(icon, dark, @click="handleCloseReturn")
-                v-icon mdi-close
-          v-card-text
-            v-radio-group(v-model="returnMethod")
-              template(v-slot:label)
-                div 请选择您的需求退回方式：
-              v-radio(:value="true")
-                template(v-slot:label)
-                  div 退回
-                    strong.success--text 物资所在需求计划
-              v-radio(:value="false")
-                template(v-slot:label)
-                  div 退回
-                    strong.primary--text 当前需求物资
-            v-textarea(v-model="returnDescription", label="审批意见", hint="请输入您的审批意见", :rules="rules.union(rules.required('审批意见'))",
-              rows="5", ref='description', auto-grow, counter)
-            br
-            strong 注意：此操作会立即生效且不可逆，请谨慎操作！
-          v-card-actions
-            v-spacer
-            v-btn(outlined, color="success", @click="handleReturnSubmit") 确认退回
-      v-dialog(v-model="dialog", max-width="800px", persistent)
-        v-card(tile)
-          v-card-title.pa-0
-            v-toolbar(flat, dark, color="info")
-              v-toolbar-title 添加
-              v-spacer
-              v-btn(icon, dark, @click="handleClose")
-                v-icon mdi-close
-          v-card-text
-            v-container.mb-4(grid-list-md)
-              v-form(ref="edit")
-                v-layout(wrap, style="width:100%")
-                  v-flex(xs12, md6, md4)
-                    v-select(v-model="editedItem.materialType", label="物料分类", :items="materialTypes", @change="materialTypeSelect",
-                      item-text="name", return-object, :rules="rules.union(rules.required('物料分类'))", :disabled="seeOne")
-                  v-flex(xs12, md6, md4)
-                    v-select(v-model="editedItem.material", label="物料", :items="materials", @change="materialSelect", item-text="name",
-                      return-object, :rules="rules.union(rules.required('物料'))", no-data-text="未选择物料分类或当前分类下无物料信息", :disabled="seeOne")
-                  v-flex(xs12, md6, md4)
-                    v-text-field(v-model="editedItem.lowNumber", label="最低库存", :rules="rules.union(rules.required('最低库存'))",
-                      readonly, hint="当前物料最低库存", :disabled="seeOne")
-                  v-flex(xs12, md6, md4)
-                    v-text-field(v-model="editedItem.specifications", label="规格", :rules="rules.union(rules.required('规格'))",
-                      readonly, hint="当前物料规格", :disabled="seeOne")
-                  v-flex(xs12, md6, md4)
-                    v-text-field(v-model="editedItem.size", label="型号", :rules="rules.union(rules.required('型号'))",
-                      readonly, hint="当前物料型号", :disabled="seeOne")
-                  v-flex(xs12, md6, md4)
-                    v-text-field(v-model="editedItem.unit", label="计量单位", :rules="rules.union(rules.required('计量单位'))",
-                      readonly, hint="当前物料计量单位", :disabled="seeOne")
-                  v-flex(xs12, md6, md4)
-                    v-text-field(v-model="editedItem.inTransitNum", label="在途数量", readonly, hint="当前物料在途数量", v-if="seeOne", disabled)
-                  v-flex(xs12, md6, md4)
-                    v-text-field(v-model="editedItem.availableNum", label="可用库存", readonly, hint="当前物料可用库存", v-if="seeOne", disabled)
-                  v-flex(xs12, md6, md4)
-                    v-text-field(v-model="editedItem.occupiedNum", label="已占库存", readonly, hint="当前物料已占库存", v-if="seeOne", disabled)
-                  v-flex(xs12, md6, md4)
-                    v-text-field(v-model="editedItem.number", label="需求数量", type="number", :rules="rules.union(rules.requiredMessage('需求数量'))",
-                      hint="当前物料所需数量", :disabled="seeOne")
-                  v-flex(xs12, md6, md4)
-                    v-menu(v-model="dayMenu", :close-on-content-click="false", transition="scale-transition",
-                      offset-y, max-width="290px", min-width="290px")
-                      template(v-slot:activator="{ on }")
-                        v-text-field(v-model="editedItem.date", v-on="on", label="需求日期", readonly,
-                          :rules="rules.union(rules.required('需求日期'))", :disabled="seeOne")
-                      v-date-picker(v-model="needDate", no-title, @input="dayMenu = false", locale="zh-cn")
-                  v-flex(xs12, md6, md4)
-                    v-select(v-model="editedItem.supplyMode", label="供应方式", :rules="rules.union(rules.requiredMessage('供应方式'))",
-                      hint="供应方式", :items="supplyMode", :disabled="seeOne", @change="handleSupplyModeSelect")
-                  v-flex(xs12, md6, md4)
-                    v-text-field(v-model="editedItem.supplyNumber", label="供应数量", type="number", :rules="rules.union(rules.requiredMessage('供应数量'))",
-                      hint="当前物料供应数量", :disabled="seeOne", :readonly="editedItem.supplyMode==='采购'")
-                  v-flex(xs12, md6, md4, v-if="editedItem.supplyMode === '采购'")
-                    v-menu(v-model="purchaseMenu", :close-on-content-click="false", transition="scale-transition",
-                      offset-y, max-width="290px", min-width="290px")
-                      template(v-slot:activator="{ on }")
-                        v-text-field(v-model="editedItem.purchaseDate", v-on="on", label="采购日期", readonly,
-                          :rules="rules.union(rules.required('采购日期'))", :disabled="seeOne")
-                      v-date-picker(v-model="purchaseDate", no-title, @input="purchaseMenu = false", locale="zh-cn")
-                  v-flex(xs12, md6, md4)
-                    v-select(v-model="editedItem.expectationSupplier", label="期望供应商", :items="suppliers",
-                      item-text="name", item-value="name", :disabled="seeOne")
-                  v-flex(xs12, md6, md4)
-                    v-select(v-model="editedItem.fixedSupplier", label="固定供应商", :items="suppliers",
-                      item-text="name", item-value="name", :disabled="seeOne")
-                  v-flex(xs12, md6, md4)
-                    v-select(v-model="editedItem.inventory", label="需求库存组织", :items="inventory",
-                      item-text="name", item-value="name", :disabled="seeOne")
-                  v-flex(xs12, md6, md4)
-                    v-text-field(:value="editedItem.materialTrackingCode", label="物料追踪码", readonly,
-                      hint="此项为随机生成，请勿修改", persistent-hint, :disabled="seeOne")
-                  v-flex(xs12, md6, md4)
-                    v-switch(v-model="editedItem.isSourceGoods", :disabled="seeOne", :label="`货源是否确定:${editedItem.isSourceGoods ? '是': '否'}`")
-          v-card-actions(v-if="!seeOne")
-            v-spacer
-            v-btn(outlined, color="error", @click="handleReset") 重置
-            v-btn(outlined, color="success", @click="handleActionOne") {{editIndex < 0 ? '添加' : '保存修改'}}
-    v-card-actions
-      slot
-      v-spacer
-      v-btn(color='info', v-if="procurementPlan.planStatus === 'FREE' && !see", @click="handleSave(true)", outlined) 保存并提交审批
-      v-btn(color="info", v-if="procurementPlan.planStatus === 'FREE'", @click="handleSave(false)", outlined) {{ see ? '编辑' : '保存' }}
+    v-slide-y-transition(mode="out-in")
+      skeleton-loader(v-if="skeletonLoader")
+      div(v-else)
+        v-card-title {{see ? '查看' : '编辑'}}
+        v-card-text
+          v-container.mb-4(grid-list-md)
+            v-form
+              v-layout(wrap, style="width:100%")
+                v-flex(sm12, md6, lg4)
+                  v-text-field(v-model="procurementPlan.name", label="采购计划名称", :disabled="see")
+                v-flex(sm12, md6, lg4)
+                  v-select(v-model="procurementPlan.planStatus", :items="planStatus", item-value='value',
+                    item-text='name', label="计划状态", disabled)
+                v-flex(sm12, md6, lg4)
+                  v-select(v-model="procurementPlan.approvalStatus", :items="approvalStatus", item-value='value',
+                    item-text='name', label="审批状态", disabled)
+                v-flex(sm12, md6, lg4)
+                  v-text-field(v-model="procurementPlan.planType", label="计划类型", disabled,
+                    persistent-hint, hint="此字段为自动生成")
+                v-flex(sm12, md6, lg4)
+                  v-text-field(v-model="procurementPlan.createTime", label="创建时间", disabled)
+                v-flex(sm12, md6, lg4)
+                  v-text-field(v-model="procurementPlan.modifyTime", label="创建用户", disabled)
+          v-data-table(:headers="headers", :items="desserts", :loading="load.table", loading-text="加载中......", show-select,
+            style="width:100%", item-key="id", :mobile-breakpoint="1200", no-data-text="暂无数据", no-results-text="暂无数据")
+            template(v-slot:top)
+              v-toolbar(flat)
+                v-spacer
+                v-btn(color="success", outlined, :disabled="see", @click="handleAdd") 添加
+            template(v-slot:item.isSourceGoods="{ item }")
+              span {{item.isSourceGoods?'是':'否'}}
+            template(v-slot:item.supplyNumber="{ item }")
+              span {{item.supplyMode === '采购' ?item.supplyNumber :'无'}}
+            template(v-slot:item.purchaseDate="{ item }")
+              span {{item.supplyMode === '采购'? item.purchaseDate :'无'}}
+            template(v-slot:item.status="{ item }")
+            template(v-slot:item.action="{ item }")
+              v-tooltip(top)
+                template(v-slot:activator="{ on }")
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="success", v-on="on", @click="handleSee(item)")
+                    v-icon remove_red_eye
+                span 查看
+              v-tooltip(top, v-if="item.new || item.departmentName === '采购部门'")
+                template(v-slot:activator="{ on }")
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="success", @click="handleEdit(item)", v-on="on", :disabled="see")
+                    v-icon mdi-pencil
+                span 编辑
+              v-tooltip(top, v-if="item.new && item.status==='INIT'")
+                template(v-slot:activator="{ on }")
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="warning", @click="handleDelete(item)", v-on="on", :disabled="see")
+                    v-icon delete
+                span 删除
+              v-tooltip(top, v-if="item.departmentName !== '采购部' && item.planId !== null && !item.new ")
+                template(v-slot:activator="{ on }")
+                  v-btn.mr-2(outlined, rounded, x-small, fab, color="error", @click="handleReturn(item)", v-on="on", :disabled="see")
+                    v-icon mdi-backburger
+                span 需求退回
+          v-dialog(v-model="returnDialog", max-width="500px", persistent)
+            v-card(tile)
+              v-card-title.pa-0
+                v-toolbar(flat, dark, color="info")
+                  v-toolbar-title 需求退回
+                  v-spacer
+                  v-btn(icon, dark, @click="handleCloseReturn")
+                    v-icon mdi-close
+              v-card-text
+                v-radio-group(v-model="returnMethod")
+                  template(v-slot:label)
+                    div 请选择您的需求退回方式：
+                  v-radio(:value="true")
+                    template(v-slot:label)
+                      div 退回
+                        strong.success--text 物资所在需求计划
+                  v-radio(:value="false")
+                    template(v-slot:label)
+                      div 退回
+                        strong.primary--text 当前需求物资
+                v-textarea(v-model="returnDescription", label="审批意见", hint="请输入您的审批意见", :rules="rules.union(rules.required('审批意见'))",
+                  rows="5", ref='description', auto-grow, counter)
+                br
+                strong 注意：此操作会立即生效且不可逆，请谨慎操作！
+              v-card-actions
+                v-spacer
+                v-btn(outlined, color="success", @click="handleReturnSubmit") 确认退回
+          v-dialog(v-model="dialog", max-width="800px", persistent)
+            v-card(tile)
+              v-card-title.pa-0
+                v-toolbar(flat, dark, color="info")
+                  v-toolbar-title 添加
+                  v-spacer
+                  v-btn(icon, dark, @click="handleClose")
+                    v-icon mdi-close
+              v-card-text
+                v-container.mb-4(grid-list-md)
+                  v-form(ref="edit")
+                    v-layout(wrap, style="width:100%")
+                      v-flex(xs12, md6, md4)
+                        v-select(v-model="editedItem.materialType", label="物料分类", :items="materialTypes", @change="materialTypeSelect",
+                          item-text="name", return-object, :rules="rules.union(rules.required('物料分类'))", :disabled="seeOne")
+                      v-flex(xs12, md6, md4)
+                        v-select(v-model="editedItem.material", label="物料", :items="materials", @change="materialSelect", item-text="name",
+                          return-object, :rules="rules.union(rules.required('物料'))", no-data-text="未选择物料分类或当前分类下无物料信息", :disabled="seeOne")
+                      v-flex(xs12, md6, md4)
+                        v-text-field(v-model="editedItem.lowNumber", label="最低库存", :rules="rules.union(rules.required('最低库存'))",
+                          readonly, hint="当前物料最低库存", :disabled="seeOne")
+                      v-flex(xs12, md6, md4)
+                        v-text-field(v-model="editedItem.specifications", label="规格", :rules="rules.union(rules.required('规格'))",
+                          readonly, hint="当前物料规格", :disabled="seeOne")
+                      v-flex(xs12, md6, md4)
+                        v-text-field(v-model="editedItem.size", label="型号", :rules="rules.union(rules.required('型号'))",
+                          readonly, hint="当前物料型号", :disabled="seeOne")
+                      v-flex(xs12, md6, md4)
+                        v-text-field(v-model="editedItem.unit", label="计量单位", :rules="rules.union(rules.required('计量单位'))",
+                          readonly, hint="当前物料计量单位", :disabled="seeOne")
+                      v-flex(xs12, md6, md4)
+                        v-text-field(v-model="editedItem.inTransitNum", label="在途数量", readonly, hint="当前物料在途数量", v-if="seeOne", disabled)
+                      v-flex(xs12, md6, md4)
+                        v-text-field(v-model="editedItem.availableNum", label="可用库存", readonly, hint="当前物料可用库存", v-if="seeOne", disabled)
+                      v-flex(xs12, md6, md4)
+                        v-text-field(v-model="editedItem.occupiedNum", label="已占库存", readonly, hint="当前物料已占库存", v-if="seeOne", disabled)
+                      v-flex(xs12, md6, md4)
+                        v-text-field(v-model="editedItem.number", label="需求数量", type="number", :rules="rules.union(rules.requiredMessage('需求数量'))",
+                          hint="当前物料所需数量", :disabled="seeOne")
+                      v-flex(xs12, md6, md4)
+                        v-menu(v-model="dayMenu", :close-on-content-click="false", transition="scale-transition",
+                          offset-y, max-width="290px", min-width="290px")
+                          template(v-slot:activator="{ on }")
+                            v-text-field(v-model="editedItem.date", v-on="on", label="需求日期", readonly,
+                              :rules="rules.union(rules.required('需求日期'))", :disabled="seeOne")
+                          v-date-picker(v-model="needDate", no-title, @input="dayMenu = false", locale="zh-cn")
+                      v-flex(xs12, md6, md4)
+                        v-select(v-model="editedItem.supplyMode", label="供应方式", :rules="rules.union(rules.requiredMessage('供应方式'))",
+                          hint="供应方式", :items="supplyMode", :disabled="seeOne", @change="handleSupplyModeSelect")
+                      v-flex(xs12, md6, md4)
+                        v-text-field(v-model="editedItem.supplyNumber", label="供应数量", type="number", :rules="rules.union(rules.requiredMessage('供应数量'))",
+                          hint="当前物料供应数量", :disabled="seeOne", :readonly="editedItem.supplyMode==='采购'")
+                      v-flex(xs12, md6, md4, v-if="editedItem.supplyMode === '采购'")
+                        v-menu(v-model="purchaseMenu", :close-on-content-click="false", transition="scale-transition",
+                          offset-y, max-width="290px", min-width="290px")
+                          template(v-slot:activator="{ on }")
+                            v-text-field(v-model="editedItem.purchaseDate", v-on="on", label="采购日期", readonly,
+                              :rules="rules.union(rules.required('采购日期'))", :disabled="seeOne")
+                          v-date-picker(v-model="purchaseDate", no-title, @input="purchaseMenu = false", locale="zh-cn")
+                      v-flex(xs12, md6, md4)
+                        v-select(v-model="editedItem.expectationSupplier", label="期望供应商", :items="suppliers",
+                          item-text="name", item-value="name", :disabled="seeOne")
+                      v-flex(xs12, md6, md4)
+                        v-select(v-model="editedItem.fixedSupplier", label="固定供应商", :items="suppliers",
+                          item-text="name", item-value="name", :disabled="seeOne")
+                      v-flex(xs12, md6, md4)
+                        v-select(v-model="editedItem.inventory", label="需求库存组织", :items="inventory",
+                          item-text="name", item-value="name", :disabled="seeOne")
+                      v-flex(xs12, md6, md4)
+                        v-text-field(:value="editedItem.materialTrackingCode", label="物料追踪码", readonly,
+                          hint="此项为随机生成，请勿修改", persistent-hint, :disabled="seeOne")
+                      v-flex(xs12, md6, md4)
+                        v-switch(v-model="editedItem.isSourceGoods", :disabled="seeOne", :label="`货源是否确定:${editedItem.isSourceGoods ? '是': '否'}`")
+              v-card-actions(v-if="!seeOne")
+                v-spacer
+                v-btn(outlined, color="error", @click="handleReset") 重置
+                v-btn(outlined, color="success", @click="handleActionOne") {{editIndex < 0 ? '添加' : '保存修改'}}
+        v-card-actions
+          slot
+          v-spacer
+          v-btn(color='info', v-if="procurementPlan.planStatus === 'FREE' && !see", @click="handleSave(true)", outlined) 保存并提交审批
+          v-btn(color="info", v-if="procurementPlan.planStatus === 'FREE'", @click="handleSave(false)", outlined) {{ see ? '编辑' : '保存' }}
 </template>
 
 <script>
 import { requiredRules, unionRules, requiredMessageRules } from '_u/rule'
 import MoreBtn from '_c/more-btn'
+import SkeletonLoader from '_c/skeleton-loader'
 import * as restAPI from '_api/rest'
 import * as procurementPlanAPI from '_api/procurementPlan'
 import * as planMaterialAPI from '_api/planMaterial'
@@ -180,7 +184,8 @@ const uuidv4 = require('uuid/v4')
 export default {
   name: 'ProcurementPlan',
   components: {
-    MoreBtn
+    MoreBtn,
+    SkeletonLoader
   },
   props: {
     seeId: {
@@ -190,6 +195,7 @@ export default {
   },
   data: () => ({
     dayMenu: false,
+    skeletonLoader: true,
     returnDescription: '',
     purchaseMenu: false,
     returnMethod: true,
@@ -258,7 +264,10 @@ export default {
           if (pm.departmentName === null && pm.remark === null) pm.departmentName = '采购部'
           if (pm.departmentName === null && pm.remark != null) pm.departmentName = pm.remark
         })
-      }).finally(() => { this.load.table = false })
+      }).finally(() => {
+        this.load.table = false
+        this.skeletonLoader = false
+      })
   },
   watch: {
     needDate (val) {

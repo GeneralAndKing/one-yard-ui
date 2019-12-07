@@ -1,100 +1,103 @@
 <template lang="pug">
   v-container.one-plan-mangement(v-if="see < 1")
     v-card
-      v-card-title 计划表管理
-      v-card-text
-        v-container(grid-list-md)
-          v-form
-            v-layout(wrap, style="width:100%")
-              v-flex(sm12, md6, lg4)
-                v-text-field(v-model="search.name", label="需求计划名称")
-              v-flex(sm12, md6, lg4)
-                v-select(v-model="search.planType", :items="planTypes", label="需求计划类型")
-              v-flex(sm12, md6, lg4)
-                v-text-field(v-model="search.needPeople", label="需求人员")
-              v-flex(sm12, md6, lg4)
-                v-select(v-model="search.planStatus", :items="planStatus", item-value='value', item-text='name', label="需求计划状态")
-              v-flex(sm12, md6, lg4)
-                v-select(v-model="search.approvalStatus", :items="approvalStatus", item-value='value', item-text='name', label="需求计划审批状态")
-              v-flex(xs12, md6, lg4)
-                v-menu(v-model="dayMenu", :close-on-content-click="false", transition="scale-transition",
-                  offset-y, max-width="290px", min-width="290px")
-                  template(v-slot:activator="{ on }")
-                    v-text-field(v-model="search.createTime", v-on="on", label="需求日期", readonly)
-                  v-date-picker(v-model="search.createTime", no-title, @input="dayMenu = false", locale="zh-cn")
-              v-flex.text-right(xs12)
-                div(v-per="[Role.ROLE_PRODUCTION_SUPERVISOR,Role.ROLE_WORKSHOP_SUPERVISOR,Role.ROLE_WAREHOUSE_SUPERVISOR,Role.ROLE_FINANCE_SUPERVISOR]")
-                  v-btn.mr-4(outlined, color="light-blue",
-                    v-per="[Role.ROLE_PRODUCTION_PLANER,Role.ROLE_WORKSHOP_PLANER,Role.ROLE_WAREHOUSE_PLANER,Role.ROLE_FINANCE_PLANER]",
-                    @click="initData()" ) 加载自己创建的需求计划
-                  v-btn.mr-4(outlined, color="light-blue",
-                    @click="seeApprovalIng()" ) (部门主管)查看待审批的需求计划
-                  v-btn.mr-4(outlined, color="light-blue",
-                    @click="seeApprovalEd()" ) (部门主管)查看审批通过的需求计划
-                v-btn(outlined, color="warning", @click="seeReset") 重置条件
-          v-data-table.mt-8(:headers="headers", :items="materialPlan", :loading="loading", loading-text="加载中......",
-            item-key="id", :mobile-breakpoint="900",  :custom-filter="filterSearch", :search="searchValue",
-            no-data-text="暂无数据", no-results-text="暂无数据")
-            template(v-slot:item.planStatus="{ item }")
-              span {{ formatPlanStatus(item.planStatus).name }}
-            template(v-slot:item.approvalStatus="{ item }")
-              span {{ formatApprovalStatus(item.approvalStatus).name }}
-            template(v-slot:item.planType="{ item }")
-              v-chip(:color="item.planType === '紧急计划' ? 'error' : 'blue'", dark) {{item.planType}}
-            template(v-slot:item.createTime="{ item }")
-              p(v-html="dateFormat(item.createTime)")
-            template(v-slot:item.action="{ item }")
-              v-tooltip(top)
-                template(v-slot:activator="{ on }")
-                  v-btn.mr-2(outlined, rounded, x-small, fab, color="success", @click="handleSee(item)", v-on="on")
-                    v-icon remove_red_eye
-                span 查看
-              v-tooltip(top, v-if="item.planStatus === 'FREE'")
-                template(v-slot:activator="{ on }")
-                  v-btn.mr-2(outlined, rounded, x-small, fab, color="success",
-                    v-per="[Role.ROLE_PRODUCTION_PLANER,Role.ROLE_WORKSHOP_PLANER,Role.ROLE_WAREHOUSE_PLANER,Role.ROLE_FINANCE_PLANER]",
-                    @click="handleSubmit(item)", v-on="on")
-                    v-icon mdi-chevron-double-up
-                span 提交审批
-              v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
-                template(v-slot:activator="{ on }")
-                  v-btn.mr-2(outlined, rounded, x-small, fab, color="info", v-if="approvalTag"
-                    v-per="[Role.ROLE_PRODUCTION_SUPERVISOR,Role.ROLE_WORKSHOP_SUPERVISOR,Role.ROLE_WAREHOUSE_SUPERVISOR,Role.ROLE_FINANCE_SUPERVISOR]",
-                    @click="handleApproval(item)", v-on="on")
-                    v-icon mdi-book-open-variant
-                span 审批
-              v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
-                template(v-slot:activator="{ on }")
-                  v-btn.mr-2(outlined, rounded, x-small, fab, color="error", v-if="backTag"
-                    v-per="[Role.ROLE_PRODUCTION_PLANER,Role.ROLE_WORKSHOP_PLANER,Role.ROLE_WAREHOUSE_PLANER,Role.ROLE_FINANCE_PLANER]",
-                    @click="handleRevoke(item)", v-on="on")
-                    v-icon mdi-backup-restore
-                span 撤回
-              v-tooltip(top, v-if="item.planStatus === 'FREE'")
-                template(v-slot:activator="{ on }")
-                  v-btn.mr-2(outlined, rounded, x-small, fab, color="error",
-                    v-per="[Role.ROLE_PRODUCTION_PLANER,Role.ROLE_WORKSHOP_PLANER,Role.ROLE_WAREHOUSE_PLANER,Role.ROLE_FINANCE_PLANER]",
-                    @click="handleDelete(item)", v-on="on")
-                    v-icon mdi-delete
-                span 删除
-          v-snackbar(v-model="revokeSnackbar", vertical, :timeout="0") 您确定撤回吗？
-            v-row.justify-end
-              v-btn.ma-3(color="error", outlined, @click="revokeSnackbar = false") 取消
-              v-btn.ma-3(color="info", outlined, @click="revokeOk") 确定
-          v-dialog(v-model="approval.show", max-width="350px")
-            v-card
-              v-card-title.headline
-                span.title 计划审批
-                v-spacer
-                v-btn(text, color="error", icon, @click="initApproval")
-                  v-icon mdi-close
-              v-card-text
-                v-textarea(v-model="approval.description", label="审批意见", hint="请输入您的审批意见", :rules="rules.union(rules.required('审批意见'))",
-                  rows="5", ref='description', auto-grow, counter)
-              v-card-actions
-                v-spacer
-                v-btn(outlined, color="error", @click="handlePlanApproval('FREE', 'APPROVAL_NO', '审批退回')") 需求退回
-                v-btn(outlined, color="success", @click="handlePlanApproval('SUMMARY', 'APPROVAL_OK', '部门主管审批通过')") 需求通过
+      v-slide-y-transition(mode="out-in")
+        skeleton-loader(v-if="skeletonLoader")
+        div(v-else)
+          v-card-title 计划表管理
+          v-card-text
+            v-container(grid-list-md)
+              v-form
+                v-layout(wrap, style="width:100%")
+                  v-flex(sm12, md6, lg4)
+                    v-text-field(v-model="search.name", label="需求计划名称")
+                  v-flex(sm12, md6, lg4)
+                    v-select(v-model="search.planType", :items="planTypes", label="需求计划类型")
+                  v-flex(sm12, md6, lg4)
+                    v-text-field(v-model="search.needPeople", label="需求人员")
+                  v-flex(sm12, md6, lg4)
+                    v-select(v-model="search.planStatus", :items="planStatus", item-value='value', item-text='name', label="需求计划状态")
+                  v-flex(sm12, md6, lg4)
+                    v-select(v-model="search.approvalStatus", :items="approvalStatus", item-value='value', item-text='name', label="需求计划审批状态")
+                  v-flex(xs12, md6, lg4)
+                    v-menu(v-model="dayMenu", :close-on-content-click="false", transition="scale-transition",
+                      offset-y, max-width="290px", min-width="290px")
+                      template(v-slot:activator="{ on }")
+                        v-text-field(v-model="search.createTime", v-on="on", label="需求日期", readonly)
+                      v-date-picker(v-model="search.createTime", no-title, @input="dayMenu = false", locale="zh-cn")
+                  v-flex.text-right(xs12)
+                    div(v-per="[Role.ROLE_PRODUCTION_SUPERVISOR,Role.ROLE_WORKSHOP_SUPERVISOR,Role.ROLE_WAREHOUSE_SUPERVISOR,Role.ROLE_FINANCE_SUPERVISOR]")
+                      v-btn.mr-4(outlined, color="light-blue",
+                        v-per="[Role.ROLE_PRODUCTION_PLANER,Role.ROLE_WORKSHOP_PLANER,Role.ROLE_WAREHOUSE_PLANER,Role.ROLE_FINANCE_PLANER]",
+                        @click="initData()" ) 加载自己创建的需求计划
+                      v-btn.mr-4(outlined, color="light-blue",
+                        @click="seeApprovalIng()" ) (部门主管)查看待审批的需求计划
+                      v-btn.mr-4(outlined, color="light-blue",
+                        @click="seeApprovalEd()" ) (部门主管)查看审批通过的需求计划
+                    v-btn(outlined, color="warning", @click="seeReset") 重置条件
+              v-data-table.mt-8(:headers="headers", :items="materialPlan", :loading="loading", loading-text="加载中......",
+                item-key="id", :mobile-breakpoint="900",  :custom-filter="filterSearch", :search="searchValue",
+                no-data-text="暂无数据", no-results-text="暂无数据")
+                template(v-slot:item.planStatus="{ item }")
+                  span {{ formatPlanStatus(item.planStatus).name }}
+                template(v-slot:item.approvalStatus="{ item }")
+                  span {{ formatApprovalStatus(item.approvalStatus).name }}
+                template(v-slot:item.planType="{ item }")
+                  v-chip(:color="item.planType === '紧急计划' ? 'error' : 'blue'", dark) {{item.planType}}
+                template(v-slot:item.createTime="{ item }")
+                  p(v-html="dateFormat(item.createTime)")
+                template(v-slot:item.action="{ item }")
+                  v-tooltip(top)
+                    template(v-slot:activator="{ on }")
+                      v-btn.mr-2(outlined, rounded, x-small, fab, color="success", @click="handleSee(item)", v-on="on")
+                        v-icon remove_red_eye
+                    span 查看
+                  v-tooltip(top, v-if="item.planStatus === 'FREE'")
+                    template(v-slot:activator="{ on }")
+                      v-btn.mr-2(outlined, rounded, x-small, fab, color="success",
+                        v-per="[Role.ROLE_PRODUCTION_PLANER,Role.ROLE_WORKSHOP_PLANER,Role.ROLE_WAREHOUSE_PLANER,Role.ROLE_FINANCE_PLANER]",
+                        @click="handleSubmit(item)", v-on="on")
+                        v-icon mdi-chevron-double-up
+                    span 提交审批
+                  v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
+                    template(v-slot:activator="{ on }")
+                      v-btn.mr-2(outlined, rounded, x-small, fab, color="info", v-if="approvalTag"
+                        v-per="[Role.ROLE_PRODUCTION_SUPERVISOR,Role.ROLE_WORKSHOP_SUPERVISOR,Role.ROLE_WAREHOUSE_SUPERVISOR,Role.ROLE_FINANCE_SUPERVISOR]",
+                        @click="handleApproval(item)", v-on="on")
+                        v-icon mdi-book-open-variant
+                    span 审批
+                  v-tooltip(top, v-if="item.approvalStatus === 'APPROVAL_ING' && item.planStatus === 'APPROVAL'")
+                    template(v-slot:activator="{ on }")
+                      v-btn.mr-2(outlined, rounded, x-small, fab, color="error", v-if="backTag"
+                        v-per="[Role.ROLE_PRODUCTION_PLANER,Role.ROLE_WORKSHOP_PLANER,Role.ROLE_WAREHOUSE_PLANER,Role.ROLE_FINANCE_PLANER]",
+                        @click="handleRevoke(item)", v-on="on")
+                        v-icon mdi-backup-restore
+                    span 撤回
+                  v-tooltip(top, v-if="item.planStatus === 'FREE'")
+                    template(v-slot:activator="{ on }")
+                      v-btn.mr-2(outlined, rounded, x-small, fab, color="error",
+                        v-per="[Role.ROLE_PRODUCTION_PLANER,Role.ROLE_WORKSHOP_PLANER,Role.ROLE_WAREHOUSE_PLANER,Role.ROLE_FINANCE_PLANER]",
+                        @click="handleDelete(item)", v-on="on")
+                        v-icon mdi-delete
+                    span 删除
+              v-snackbar(v-model="revokeSnackbar", vertical, :timeout="0") 您确定撤回吗？
+                v-row.justify-end
+                  v-btn.ma-3(color="error", outlined, @click="revokeSnackbar = false") 取消
+                  v-btn.ma-3(color="info", outlined, @click="revokeOk") 确定
+              v-dialog(v-model="approval.show", max-width="350px")
+                v-card
+                  v-card-title.headline
+                    span.title 计划审批
+                    v-spacer
+                    v-btn(text, color="error", icon, @click="initApproval")
+                      v-icon mdi-close
+                  v-card-text
+                    v-textarea(v-model="approval.description", label="审批意见", hint="请输入您的审批意见", :rules="rules.union(rules.required('审批意见'))",
+                      rows="5", ref='description', auto-grow, counter)
+                  v-card-actions
+                    v-spacer
+                    v-btn(outlined, color="error", @click="handlePlanApproval('FREE', 'APPROVAL_NO', '审批退回')") 需求退回
+                    v-btn(outlined, color="success", @click="handlePlanApproval('SUMMARY', 'APPROVAL_OK', '部门主管审批通过')") 需求通过
   material-plan(v-else, :see-id="see")
     v-btn(outlined, color="info", @click="handleBack") 返回
 </template>
@@ -104,16 +107,19 @@ import { requiredRules, unionRules, requiredMessageRules } from '_u/rule'
 import * as restAPI from '_api/rest'
 import * as materialPlanAPI from '_api/materialPlan'
 import MaterialPlan from '_c/material-plan'
+import SkeletonLoader from '_c/skeleton-loader'
 import { Role } from '_u/role'
 import { planStatus, approvalStatus, planTypes } from '_u/status'
 
 export default {
   name: 'MaterialPlanManagement',
   components: {
-    MaterialPlan
+    MaterialPlan,
+    SkeletonLoader
   },
   data: () => ({
     materialPlan: [],
+    skeletonLoader: true,
     revokeSnackbar: false,
     dayMenu: false,
     see: 0,
@@ -188,7 +194,10 @@ export default {
         .then(res => {
           _this.materialPlan = res.data.content.filter(d => !d.hasOwnProperty('relTargetType'))
         })
-        .finally(() => { this.loading = false })
+        .finally(() => {
+          this.loading = false
+          this.skeletonLoader = false
+        })
     },
     initApproval () {
       this.approval = {
