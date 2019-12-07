@@ -38,6 +38,7 @@
 <script>
 import { procurementOrderPlanStatus, approvalStatus } from '_u/status'
 import ApproveConfirm from '_c/approve-confirm'
+import * as procurementOrderAPI from '_api/procurementOrder'
 
 export default {
   name: 'ManagementTable',
@@ -76,11 +77,11 @@ export default {
     filterSearch (value, search, item) {
       const condition = search.split('&')
       return item.type.includes(condition[0]) &&
-        item.supplier.includes(condition[1]) &&
-        new Date(item.procurementDate).getTime() < new Date(condition[2]).getTime() &&
-        new Date(item.deliveryDate).getTime() < new Date(condition[3]).getTime() &&
-        item.planStatus.includes(condition[4]) &&
-        item.approvalStatus.includes(condition[5])
+          item.supplier.includes(condition[1]) &&
+          new Date(item.procurementDate).getTime() < new Date(condition[2]).getTime() &&
+          new Date(item.deliveryDate).getTime() < new Date(condition[3]).getTime() &&
+          item.planStatus.includes(condition[4]) &&
+          item.approvalStatus.includes(condition[5])
     },
     formatPlanStatus (type) {
       return this._.find(procurementOrderPlanStatus, { value: type }).name
@@ -100,7 +101,11 @@ export default {
     handleRevoke (item) {
       this.$confirm({ title: '您确认撤回吗？' },
         () => {
-          // TODO:撤回事件
+          procurementOrderAPI.withdrawApproval(item.id).then(res => {
+            this.$message('撤回成功', 'success')
+            item.approvalStatus = 0
+            item.planStatus = 0
+          })
         })
     },
     handleDelete (item) {
@@ -111,6 +116,10 @@ export default {
         })
     },
     handleApproval (flag) {
+      // let approval = {
+      //   description: this.approvalContent,
+      //   approvalType:2,
+      // }
       if (flag) {
         // TODO：审批通过, 处理完毕以后记得要使用 this.approvalContent = '' 清空
         console.log('OK:' + this.approvalContent)
