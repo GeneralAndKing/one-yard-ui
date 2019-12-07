@@ -1,6 +1,6 @@
 <template lang="pug">
   .management-table
-    approve-confirm(v-model="approvalContent", ref="approval", title="采购订单审批", @submit="handleApproval")
+    approve-confirm(v-model="approvalContent", ref="approval", title="采购订单审批", @submit="handleApproval", :auto="false")
     v-data-table(:headers="headers", :items="value", item-key="id", loading-text="正在加载数据", :loading="loading",
       no-data-text="暂无数据", no-results-text="没有匹配的数据", :search="search", :custom-filter="filterSearch")
       template(v-slot:item.planStatus="{ item }")
@@ -72,7 +72,7 @@ export default {
       { text: '审批状态', value: 'approvalStatus', align: 'start' },
       { text: '操作', value: 'action', sortable: false, width: '210px', align: 'center' }
     ],
-    approval: null
+    approvalItem: null
   }),
   methods: {
     filterSearch (value, search, item) {
@@ -102,7 +102,7 @@ export default {
     handleRevoke (item) {
       this.$confirm({ title: '您确认撤回吗？' },
         () => {
-          procurementOrderAPI.withdrawApproval(item.id).then(res => {
+          procurementOrderAPI.withdrawApproval(item.id).then(() => {
             this.$message('撤回成功', 'success')
             item.approvalStatus = 0
             item.planStatus = 0
@@ -117,22 +117,26 @@ export default {
         })
     },
     handleApproval (flag) {
-      // let approval = {
-      //   description: this.approvalContent,
-      //   approvalType:2,
-      // }
-      // 审批的元素是 this.approval
-      console.log(this.approval)
-      if (flag) {
-        // TODO：审批通过, 处理完毕以后记得要使用 this.approvalContent = '' 清空
-        console.log('OK:' + this.approvalContent)
-      } else {
-        // TODO：审批拒绝, 处理完毕以后记得要使用 this.approvalContent = '' 清空
-        console.log('FAIL:' + this.approvalContent)
+      let approval = {
+        description: this.approvalContent,
+        approvalType: 2,
+        planId: this.approvalItem.id
       }
+      if (flag) approval.result = '审批通过'
+      else approval.result = '审批退回'
+      this.$refs.approval.loading = true
+      procurementOrderAPI.approvalProcurementOrder(this.approvalItem, approval)
+        .then(() => {
+          this.$message('审批成功', 'success')
+          if (flag) this.approvalItem.approvalStatus = 3
+          else this.approvalItem.approvalStatus = 2
+          this.approvalContent = ''
+          this.$refs.approval.dialog = false
+        })
+        .finally(() => { this.$refs.approval.loading = false })
     },
     showApproval (item) {
-      this.approval = item
+      this.approvalItem = item
       this.$refs.approval.dialog = true
     }
   }

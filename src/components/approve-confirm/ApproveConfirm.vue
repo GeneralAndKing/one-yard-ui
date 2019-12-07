@@ -1,7 +1,7 @@
 <template lang="pug">
   .approve-confirm
     v-dialog(v-model="dialog", max-width="350px")
-      v-card
+      v-card(:loading="loading")
         v-card-title.headline
           span.title {{title}}
           v-spacer
@@ -27,20 +27,22 @@ export default {
     value: { type: String, default: '' },
     title: { type: String, default: '' },
     okText: { type: String, default: '需求通过' },
-    cancelText: { type: String, default: '需求退回' }
+    cancelText: { type: String, default: '需求退回' },
+    auto: { type: Boolean, default: true }
   },
   data: () => ({
     rules: {
       required: requiredRules,
       union: unionRules
     },
+    loading: false,
     dialog: false
   }),
   methods: {
     handleApproval (flag) {
       if (typeof (this.$refs.description) !== 'undefined' && !this.$refs.description.validate(true)) return
       this.$emit('submit', flag)
-      this.handleClose()
+      if (this.auto) this.handleClose()
     },
     handleClose () {
       this.dialog = false

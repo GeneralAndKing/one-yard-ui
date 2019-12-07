@@ -17,6 +17,7 @@ export const submit = (procurementOrder, procurementMaterials, orderTerms) => {
     data: { procurementOrder, procurementMaterials, orderTerms }
   })
 }
+
 /**
  * 撤回审批
  * @param procurementOrderId
@@ -32,6 +33,12 @@ export const withdrawApproval = (procurementOrderId) => {
   })
 }
 
+/**
+ * 审批订单
+ * @param procurementOrder
+ * @param approval
+ * @returns {*}
+ */
 export const approvalProcurementOrder = (procurementOrder, approval) => {
   return axios.request({
     url: `/${PLAN_MATERIAL}/approvalProcurementOrder`,
