@@ -60,7 +60,8 @@
           slot
           v-spacer
           v-btn(outlined, color="success", @click="handleSave") {{see?'编辑':'保存'}}
-    change-history(v-if="seeItem !== null", ref="history", :materials="materials")
+    change-history(v-if="seeItem !== null", :item="seeItem", ref="history",
+      :material="materials", :procurementMaterial="procurementMaterial")
 </template>
 
 <script>

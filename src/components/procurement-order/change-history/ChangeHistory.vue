@@ -15,10 +15,19 @@
 </template>
 
 <script>
+import * as restAPI from '_api/rest'
 export default {
   name: 'ChangeHistory',
   props: {
-    materials: {
+    item: {
+      type: Object,
+      required: true
+    },
+    material: {
+      type: Array,
+      required: true
+    },
+    procurementMaterial: {
       type: Array,
       required: true
     }
@@ -39,20 +48,16 @@ export default {
     history: []
   }),
   created () {
-    for (let i = 1; i < 5; i++) {
-      this.history.push({
-        // TODO:初始化信息，需要通过 materialId 查询到对应的 material
-        material: { name: `物料${i}` },
-        oldNumber: i,
-        newNumber: i,
-        oldPrice: 1,
-        newPrice: 1,
-        chargeUnit: '个',
-        oldChargeNumber: i,
-        newChargeNumber: i,
-        status: i % 2 === 1 ? '待审批' : '审批通过'
+    let _this = this
+    restAPI.getRestLink(`/changeHistory/search/byOrderId?orderId=${this.item.id}`)
+      .then(res => {
+        res.data.content.some(value => {
+          value.procurementMaterial = _this._.find(_this.procurementMaterial, { id: value.procurementMaterialId })
+          value.material = _this._.find(_this.material, { id: value.procurementMaterial.materialId })
+          console.log(value)
+          this.history.push(value)
+        })
       })
-    }
   },
   methods: {
     handleClose () {
