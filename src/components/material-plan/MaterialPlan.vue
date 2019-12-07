@@ -28,7 +28,7 @@
                     v-menu(ref="month", :close-on-content-click="false", :return-value.sync="date", transition="scale-transition",
                       v-model="menu", max-width="290px", min-width="290px",)
                       template(v-slot:activator="{ on }")
-                        v-text-field(v-model="materialPlan.month", label="需求月份", :disabled="see", v-on="on",
+                        v-text-field(v-model="materialPlan.month", label="需求月份", :disabled="see", v-on="on", readonly,
                           :rules="rules.union(rules.required('需求月份'))")
                       v-date-picker(v-model="date", type="month", no-title, scrollable, locale="zh-cn")
                         v-spacer
@@ -127,7 +127,7 @@
                                           v-text-field(v-model="editedItem.unit", label="计量单位", :rules="rules.union(rules.required('计量单位'))",
                                             readonly, hint="当前物料计量单位")
                                         v-flex(xs12, md6, md4)
-                                          v-text-field(v-model="editedItem.number", label="需求数量", type="number", :rules="rules.union(rules.requiredMessage('需求数量'),rules.maxLength(10))",
+                                          v-text-field(v-model="editedItem.number", label="需求数量", type="number", :rules="rules.union(rules.requiredMessage('需求数量'))",
                                             hint="当前物料所需数量")
                                         v-flex(xs12, md6, md4)
                                           v-menu(v-model="dayMenu", :close-on-content-click="false", transition="scale-transition",

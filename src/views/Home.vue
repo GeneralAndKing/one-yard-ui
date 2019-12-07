@@ -54,7 +54,7 @@
                   v-list-item-icon.ma-0.justify-end
                     v-btn(text, small, color="info", @click="handleInfo(message)") 详情
                     v-btn(text, small, :color="message.status === 'READ'? 'error' : 'success'", @click="handleChange(message)") {{message.status === 'READ' ? '标为未读' : '标为已读'}}
-                  span.overline.font-weight-thin.text-right {{message.createTime.replace('T', ' ')}}
+                  span.overline.font-weight-thin.text-right {{formatDate(message.createTime)}}
               v-list-item(v-if="item.items.length === 0")
                 v-list-item-subtitle.text-center.body-1.font-weight-light 暂无通知信息
     v-dialog(v-model="noticeDialog", max-width="350")
@@ -87,13 +87,10 @@ export default {
       noticeDialog: false,
       menus: genMenu(),
       notice: false,
-      messages: [{
-        type: '未读',
-        items: []
-      }, {
-        type: '已读',
-        items: []
-      }]
+      messages: [
+        { type: '未读', items: [] },
+        { type: '已读', items: [] }
+      ]
     }
   },
   computed: {
@@ -168,6 +165,12 @@ export default {
           this.messages[0].items.unshift(message)
         }
       })
+    },
+    formatDate (date) {
+      if (!date.hasOwnProperty('date')) return date.replace('T', ' ')
+      let d = date.date
+      let t = date.time
+      return `${d.year}-${d.month}-${d.day} ${t.hour}:${t.minute}:${t.second}`
     }
   }
 }

@@ -25,15 +25,15 @@
                       template(v-slot:activator="{ on }")
                         v-text-field(v-model="search.createTime", v-on="on", label="需求日期", readonly)
                       v-date-picker(v-model="search.createTime", no-title, @input="dayMenu = false", locale="zh-cn")
+                  v-flex.text-right(xs12, v-per="[Role.ROLE_PRODUCTION_SUPERVISOR,Role.ROLE_WORKSHOP_SUPERVISOR,Role.ROLE_WAREHOUSE_SUPERVISOR,Role.ROLE_FINANCE_SUPERVISOR]")
+                    v-btn.mr-4(outlined, color="light-blue",
+                      v-per="[Role.ROLE_PRODUCTION_PLANER,Role.ROLE_WORKSHOP_PLANER,Role.ROLE_WAREHOUSE_PLANER,Role.ROLE_FINANCE_PLANER]",
+                      @click="initData()" ) 加载自己创建的需求计划
+                    v-btn.mr-4(outlined, color="light-blue",
+                      @click="seeApprovalIng()" ) (部门主管)查看待审批的需求计划
+                    v-btn(outlined, color="light-blue",
+                      @click="seeApprovalEd()" ) (部门主管)查看审批通过的需求计划
                   v-flex.text-right(xs12)
-                    div(v-per="[Role.ROLE_PRODUCTION_SUPERVISOR,Role.ROLE_WORKSHOP_SUPERVISOR,Role.ROLE_WAREHOUSE_SUPERVISOR,Role.ROLE_FINANCE_SUPERVISOR]")
-                      v-btn.mr-4(outlined, color="light-blue",
-                        v-per="[Role.ROLE_PRODUCTION_PLANER,Role.ROLE_WORKSHOP_PLANER,Role.ROLE_WAREHOUSE_PLANER,Role.ROLE_FINANCE_PLANER]",
-                        @click="initData()" ) 加载自己创建的需求计划
-                      v-btn.mr-4(outlined, color="light-blue",
-                        @click="seeApprovalIng()" ) (部门主管)查看待审批的需求计划
-                      v-btn.mr-4(outlined, color="light-blue",
-                        @click="seeApprovalEd()" ) (部门主管)查看审批通过的需求计划
                     v-btn(outlined, color="warning", @click="seeReset") 重置条件
               v-data-table.mt-8(:headers="headers", :items="materialPlan", :loading="loading", loading-text="加载中......",
                 item-key="id", :mobile-breakpoint="900",  :custom-filter="filterSearch", :search="searchValue",
