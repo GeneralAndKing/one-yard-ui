@@ -107,7 +107,6 @@ export default {
   }),
   methods: {
     handlePlan () {
-      // TODO： 选单事件
       if (!(this.order.type)) {
         this.$message('未选择采购订单类型', 'error')
       } else {
@@ -116,15 +115,12 @@ export default {
     },
     handlePlanSelect (selectItems) {
       this.$emit('select', selectItems)
-      console.log(selectItems)
-      // TODO：收到选择的物料以后进行处理
     },
     handleAdd () {
       this.item = null
       this.$refs.add.handleShow()
     },
     handleDeleteSelect () {
-      // TODO： 删除所选事件
       let isPlan = false
       this.selected.forEach(item => {
         if (item.isSelect === undefined) {
@@ -139,7 +135,6 @@ export default {
       this.selected = []
     },
     handleDelete (item) {
-      // TODO: 删除事件
       this.value.splice(this._.indexOf(this.value, item), 1)
     },
     handleEdit (item) {

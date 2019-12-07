@@ -34,7 +34,7 @@ import ManagementTable from './ManagementTable'
 import DateMenu from '_c/date-menu'
 import ProcurementOrder from '_c/procurement-order'
 import { tomorrow } from '_u/util'
-import * as RestAPI from '_api/rest'
+import * as restAPI from '_api/rest'
 import SkeletonLoader from '_c/skeleton-loader'
 export default {
   name: 'Management',
@@ -48,14 +48,7 @@ export default {
     see: null,
     search: {},
     skeletonLoader: true,
-    // TODO:初始化供应商, 此处必须在数组头添加一个id为0,name为 '' 的元素
-    supplier: [
-      { id: 0, name: '' },
-      { id: 1, name: '供应商1' },
-      { id: 2, name: '供应商2' },
-      { id: 3, name: '供应商3' },
-      { id: 4, name: '供应商4' }
-    ],
+    supplier: [{ id: 0, name: '' }],
     orderType: orderType,
     planStatus: procurementOrderPlanStatus,
     approvalStatus: approvalStatus,
@@ -90,17 +83,16 @@ export default {
     handleSee (item) {
       // 点击查看的时候，跳转过去
       this.see = item
-      console.log(this.see)
     },
     initData () {
       this.orders.length = 0
       this.load.table = true
-      RestAPI.getAll('procurementOrder').then(res => {
-        this.orders.push(...res.data.content)
-      }).finally(() => {
-        this.load.table = false
-        this.skeletonLoader = false
-      })
+      restAPI.getAll('supplier').then(res => { this.supplier.push(...res.data.content) })
+      restAPI.getAll('procurementOrder').then(res => { this.orders.push(...res.data.content) })
+        .finally(() => {
+          this.load.table = false
+          this.skeletonLoader = false
+        })
     },
     handleBack () {
       this.see = null

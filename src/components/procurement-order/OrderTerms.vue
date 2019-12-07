@@ -74,12 +74,10 @@ export default {
       this.$refs.add.handleShow()
     },
     handleDeleteSelect () {
-      // TODO： 删除所选事件
       this.selected.forEach(item => this.value.splice(this._.indexOf(this.value, item), 1))
       this.selected = []
     },
     handleDelete (item) {
-      // TODO: 删除事件
       this.value.splice(this._.indexOf(this.value, item), 1)
     },
     handleEdit (item) {

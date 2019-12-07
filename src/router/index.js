@@ -8,7 +8,6 @@ const router = new VueRouter({
   routes: routes
 })
 router.beforeEach((to, from, next) => {
-  // TODO: 加载开始
   Vue.prototype.$loading.start()
   if (store.getters['auth/isAuth']) {
     if (to.meta === {} || to.meta.auth === undefined) {
@@ -44,7 +43,6 @@ router.afterEach(route => {
   setTimeout(() => {
     Vue.prototype.$loading.finish()
   }, 500)
-  // TODO: 加载完成
   window.document.title = route.meta.meta || '一码当先'
 })
 

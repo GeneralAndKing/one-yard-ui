@@ -20,7 +20,7 @@
           span 提交审批
         v-tooltip(top)
           template(v-slot:activator="{ on }")
-            v-btn.mr-1(outlined, rounded, x-small, fab, color="info", v-on="on", @click="$refs.approval.dialog = true")
+            v-btn.mr-1(outlined, rounded, x-small, fab, color="info", v-on="on", @click="showApproval(item)")
               v-icon mdi-book-open-variant
           span 审批
         v-tooltip(top)
@@ -71,7 +71,8 @@ export default {
       { text: '计划状态', value: 'planStatus', align: 'start' },
       { text: '审批状态', value: 'approvalStatus', align: 'start' },
       { text: '操作', value: 'action', sortable: false, width: '210px', align: 'center' }
-    ]
+    ],
+    approval: null
   }),
   methods: {
     filterSearch (value, search, item) {
@@ -120,6 +121,8 @@ export default {
       //   description: this.approvalContent,
       //   approvalType:2,
       // }
+      // 审批的元素是 this.approval
+      console.log(this.approval)
       if (flag) {
         // TODO：审批通过, 处理完毕以后记得要使用 this.approvalContent = '' 清空
         console.log('OK:' + this.approvalContent)
@@ -127,6 +130,10 @@ export default {
         // TODO：审批拒绝, 处理完毕以后记得要使用 this.approvalContent = '' 清空
         console.log('FAIL:' + this.approvalContent)
       }
+    },
+    showApproval (item) {
+      this.approval = item
+      this.$refs.approval.dialog = true
     }
   }
 }
