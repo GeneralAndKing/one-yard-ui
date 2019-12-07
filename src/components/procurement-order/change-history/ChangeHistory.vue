@@ -11,7 +11,9 @@
         v-card-text
           v-data-table(:headers="headers", :items="history")
             template(v-slot:item.materialName="{ item }")
-              span {{item.material.name}}
+              span {{item.procurementMaterial.material.name}}
+            template(v-slot:item.createTime="{ item }")
+              span {{item.createTime.replace("T", " ")}}
 </template>
 
 <script>
@@ -21,10 +23,6 @@ export default {
   props: {
     item: {
       type: Object,
-      required: true
-    },
-    material: {
-      type: Array,
       required: true
     },
     procurementMaterial: {
@@ -43,7 +41,8 @@ export default {
       { text: '计价单位', value: 'chargeUnit', align: 'start' },
       { text: '原计价数量', value: 'oldChargeNumber', align: 'start' },
       { text: '新计价数量', value: 'newChargeNumber', align: 'start' },
-      { text: '变更状态', value: 'status', align: 'start' }
+      { text: '变更状态', value: 'status', align: 'start' },
+      { text: '创建时间', value: 'createTime', align: 'start' }
     ],
     history: []
   }),
@@ -53,8 +52,6 @@ export default {
       .then(res => {
         res.data.content.some(value => {
           value.procurementMaterial = _this._.find(_this.procurementMaterial, { id: value.procurementMaterialId })
-          value.material = _this._.find(_this.material, { id: value.procurementMaterial.materialId })
-          console.log(value)
           this.history.push(value)
         })
       })

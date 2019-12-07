@@ -29,8 +29,8 @@
                 v-text-field(v-model="order.remark" ref="remark", label="备注", :disabled='see', clearable,
                   :rules="rules.unionRules(rules.maxLengthRules(250))")
               v-flex.text-right.mt-4(sm12, md6, lg4, v-if="seeItem !== null")
-                v-btn.mr-4(outlined, color="secondary", @click="$refs.history.show = true") 变更历史
-                v-btn(outlined, color="secondary") 库存查询
+                v-btn.mr-4(outlined, color="secondary", @click="$refs.history.show = true", v-if="change") 变更历史
+                v-btn(outlined, color="secondary", @click="$refs.materials.show = true") 库存查询
         v-toolbar(flat, color="secondary")
         v-tabs(v-model="tab", show-arrows)
           v-tab(v-for="item in tabs", :key="item.id")
@@ -60,8 +60,8 @@
           slot
           v-spacer
           v-btn(outlined, color="success", @click="handleSave") {{see?'编辑':'保存'}}
-    change-history(v-if="seeItem !== null", :item="seeItem", ref="history",
-      :material="materials", :procurementMaterial="procurementMaterial")
+    change-history(v-if="change", :item="seeItem", ref="history", :procurementMaterial="procurementMaterial")
+    check-inventory(v-if="seeItem !== null", :material="materials", ref="materials")
 </template>
 
 <script>
@@ -71,6 +71,7 @@ import ProcurementMaterial from './ProcurementMaterial'
 import OrderTerms from './OrderTerms'
 import ProcurementApprove from './ProcurementApprove'
 import ChangeHistory from '_c/procurement-order/change-history'
+import CheckInventory from '_c/procurement-order/check-inventory'
 import { orderTypeSelect, formatOrderTypeSelect } from '_u/status'
 import { getTime } from '_u/util'
 import * as RuleAPI from '_u/rule'
@@ -85,7 +86,8 @@ export default {
     ProcurementMaterial,
     OrderTerms,
     ProcurementApprove,
-    ChangeHistory
+    ChangeHistory,
+    CheckInventory
   },
   props: {
     // 如果是编辑，那么 seeItem 不为 null
@@ -105,6 +107,7 @@ export default {
     ],
     isSelect: false,
     see: false,
+    change: false,
     orderType: orderTypeSelect,
     // TODO:初始化供应商
     supplier: [],
@@ -158,9 +161,10 @@ export default {
       this.procurementApprove = res.data.content
       res = await RestAPI.getRestLink(`procurementMaterial/search/byOrderId?orderId=${this.seeItem.id}`)
       this.procurementMaterial = res.data.content
-      this.procurementMaterial.some(value => {
+      await this.procurementMaterial.some(value => {
         value.material = this._.find(this.materials, { id: value.materialId })
       })
+      this.change = true
     } finally {
       this.load.table = false
     }
