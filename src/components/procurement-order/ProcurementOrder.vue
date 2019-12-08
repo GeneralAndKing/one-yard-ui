@@ -115,7 +115,6 @@ export default {
     skeletonLoader: true,
     change: false,
     orderType: orderTypeSelect,
-    // TODO:初始化供应商
     supplier: [],
     materials: [],
     order: {
@@ -179,7 +178,16 @@ export default {
   },
   methods: {
     print () {
-      // TODO: 打印
+      this.order.procurementMaterial = this.procurementMaterial
+      this.order.orderTerms = this.orderTerms
+      this.$router.push({
+        name: 'print',
+        params: {
+          model: this.order,
+          flag: 'order',
+          direction: true
+        }
+      })
     },
     generateCode () {
       const type = formatOrderTypeSelect(this.order.type)
