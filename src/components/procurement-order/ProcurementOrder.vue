@@ -7,7 +7,7 @@
       v-slide-y-transition(mode="out-in")
         skeleton-loader(v-if="skeletonLoader")
         div(v-else)
-          v-card-title 采购订单{{see? '编辑' : '添加'}}
+          v-card-title 采购订单{{change?'变更':see? '编辑' : '添加'}}
           v-card-text
             v-container(grid-list-md)
               v-form(ref="base")
@@ -198,6 +198,13 @@ export default {
         this.see = false
         // TODO:编辑事件
       } else {
+        if (this.change) {
+          procurementOrderAPI.changeProcurementOrder(this.order.id, this.procurementMaterial).then(res => {
+            this.$message('变更成功', 'success')
+            this.$emit('back')
+          })
+          return
+        }
         if (!this.$refs.base.validate(true)) {
           this.$message('请填写完订单属性后再进行保存', 'error')
           return

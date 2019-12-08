@@ -35,9 +35,9 @@
                   v-text-field(v-model="editItem.taxRate" :ref="`${formRef}taxRate`", label="税率",
                     :rules="rules.unionRules(rules.requiredRules('税率'),rules.integerRules,rules.maxLengthRules(3))", suffix="%" counter="number")
                 v-flex(sm12, md6, lg4)
-                  v-text-field(v-model="editItem.procurementUnit" :ref="`${formRef}chargeUnit`", label="计价单位" disabled)
+                  v-text-field(v-model="editItem.chargeUnit" :ref="`${formRef}chargeUnit`", label="计价单位")
                 v-flex(sm12, md6, lg4)
-                  v-text-field(v-model="editItem.procurementNumber" :ref="`${formRef}chargeNumber`", label="计价数量", type="number" disabled)
+                  v-text-field(v-model="editItem.chargeNumber" :ref="`${formRef}chargeNumber`", label="计价数量", type="number")
                 v-flex(sm12, md6, lg4)
                   v-text-field(v-model="editItem.taxAmount" :ref="`${formRef}taxRate`", label="税额（总共交多少税）",
                     :rules="rules.unionRules(rules.requiredRules('税额'))", suffix="元" disabled)
