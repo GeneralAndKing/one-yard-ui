@@ -44,7 +44,7 @@
 import { procurementOrderPlanStatus, approvalStatus } from '_u/status'
 import ApproveConfirm from '_c/approve-confirm'
 import * as procurementOrderAPI from '_api/procurementOrder'
-
+import * as RestAPI from '_api/rest'
 export default {
   name: 'ManagementTable',
   components: {
@@ -104,7 +104,12 @@ export default {
     handleSubmit (item) {
       this.$confirm({ title: '您确认提交审批吗？' },
         () => {
-          // TODO:提交审批事件
+          RestAPI.patchOne(`procurementOrder`, item.id, { planStatus: 'APPROVAL',
+            approvalStatus: 'APPROVAL_ING' }).then(res => {
+            this.$message('提交审批成功', 'success')
+            item.planStatus = 'APPROVAL'
+            item.approvalStatus = 'APPROVAL_ING'
+          })
         })
     },
     handleRevoke (item) {
@@ -112,8 +117,8 @@ export default {
         () => {
           procurementOrderAPI.withdrawApproval(item.id).then(() => {
             this.$message('撤回成功', 'success')
-            item.approvalStatus = 0
-            item.planStatus = 0
+            item.planStatus = 'NO_SUBMIT'
+            item.approvalStatus = 'NO_SUBMIT'
           })
         })
     },
