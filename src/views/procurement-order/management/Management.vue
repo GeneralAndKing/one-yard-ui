@@ -24,7 +24,7 @@
                   v-flex.text-right(sm12)
                     v-btn(outlined, color="secondary", @click="handleReset") 重置条件
               management-table.mt-5(v-model="orders", :search="searchValue", :loading="load.table", @see="handleSee" @change="handleChange")
-      procurement-order(v-else, :seeItem="see")
+      procurement-order(v-else, :seeItem="see" @back="handleBack")
         v-btn(outlined, color="warning", @click="handleBack") 返回
 </template>
 

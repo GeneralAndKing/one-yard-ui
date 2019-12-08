@@ -46,3 +46,11 @@ export const approvalProcurementOrder = (procurementOrder, approval) => {
     data: { procurementOrder, approval }
   })
 }
+
+export const changeProcurementOrder = (id, procurementMaterials) => {
+  return axios.request({
+    url: `/${PLAN_MATERIAL}/change`,
+    method: 'post',
+    data: { id, procurementMaterials }
+  })
+}
