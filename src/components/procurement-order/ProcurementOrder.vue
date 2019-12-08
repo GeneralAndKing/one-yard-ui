@@ -159,8 +159,6 @@ export default {
       if (!this.seeItem) return
       this.load.table = true
       this.see = true
-      this.change = this._.get(this.seeItem, 'isChange', false)
-      if (this.change) this.see = false
       this.order = this.seeItem
       let res = await RestAPI.getRestLink(`orderTerms/search/byOrderId?orderId=${this.seeItem.id}`)
       this.orderTerms = res.data.content
@@ -168,6 +166,8 @@ export default {
       this.procurementApprove = res.data.content
       res = await RestAPI.getRestLink(`procurementMaterial/search/byOrderId?orderId=${this.seeItem.id}`)
       this.procurementMaterial = res.data.content
+      this.change = this._.get(this.seeItem, 'isChange', false)
+      if (this.change) this.see = false
       await this.procurementMaterial.some(value => {
         value.material = this._.find(this.materials, { id: value.materialId })
       })
@@ -199,7 +199,7 @@ export default {
         // TODO:编辑事件
       } else {
         if (this.change) {
-          procurementOrderAPI.changeProcurementOrder(this.order.id, this.procurementMaterial).then(res => {
+          procurementOrderAPI.changeProcurementOrder(this.order.id, this.procurementMaterial).then(() => {
             this.$message('变更成功', 'success')
             this.$emit('back')
           })
