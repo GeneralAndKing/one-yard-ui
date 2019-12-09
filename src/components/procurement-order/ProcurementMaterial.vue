@@ -51,7 +51,7 @@
           v-btn(outlined, color="error", @click="handleDeleteSelect", :disabled='see' v-if="!change") 删除所选
     procurement-material-edit(v-model="item", ref="add", :materials="materials", @submit="handleSubmit" :change="change")
     procurement-plan-select(ref="planSelect", :materials="materials", :order="order" @select="handlePlanSelect")
-    change-history(:item="order", :procurementMaterial="value", :id="id", ref="materials")
+    change-history(v-if="id > 0", :item="order", :procurementMaterial="value", :id="id", ref="materials")
 
 </template>
 
