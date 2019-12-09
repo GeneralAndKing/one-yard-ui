@@ -140,7 +140,7 @@ export default {
     handleCancel (item) {
       this.$confirm({ title: '取消请求将由主管进行审批许可，成功取消后可在"采购订单管理" -> 选择已取消筛选查看，您确认取消该订单吗？' },
         () => {
-          RestAPI.patchOne(`procurementOrder`, item.id, { planStatus: 'CANCEL',
+          RestAPI.patchOne(`procurementOrder`, item.id, { planStatus: 'APPROVAL_CANCEL',
             approvalStatus: 'APPROVAL_ING' }).then(res => {
             this.$message('发起取消请求成功！等待采购部门主管审批。', 'success')
             item.planStatus = 'APPROVAL_CANCEL'
