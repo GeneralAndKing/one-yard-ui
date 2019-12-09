@@ -38,7 +38,7 @@
             v-btn(outlined, rounded, x-small, fab, color="error", v-on="on", @click="handleCancel(item)")
               v-icon mdi-link-off
           span 取消订单
-        v-tooltip(top v-if="item.approvalStatus==='NO_SUBMIT' && item.planStatus==='NO_SUBMIT'")
+        v-tooltip(top v-if="(item.approvalStatus==='NO_SUBMIT' && item.approvalStatus==='APPROVAL_PASS') && item.planStatus==='NO_SUBMIT'")
           template(v-slot:activator="{ on }")
             v-btn(outlined, rounded, x-small, fab, color="error", v-on="on", @click="handleDelete(item)")
               v-icon mdi-delete
