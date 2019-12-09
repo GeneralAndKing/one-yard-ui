@@ -231,11 +231,11 @@ export default {
             return
           }
         }
-        procurementOrderAPI.submit(this.order, this.procurementMaterial, this.orderTerms).then(res => {
+        procurementOrderAPI.submit(this._.omit(this.order, ['id']), this.procurementMaterial, this.orderTerms).then(res => {
           this.$message(res.data, 'success')
           this.see = true
+          this.$router.push({ name: 'procurementOrderManagement' })
         })
-        // TODO：保存事件
       }
     },
     handleMaterialSelect (items) {

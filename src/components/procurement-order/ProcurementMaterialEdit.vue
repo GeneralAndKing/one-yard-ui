@@ -52,6 +52,8 @@
                     :rules="rules.unionRules(rules.requiredRules('含税总价'))", suffix="元" disabled)
                 v-flex(xs12, md6, md4)
                   v-switch(v-model="editItem.isComplimentary", :label="`是否是赠品:${editItem.isComplimentary ? '是': '否'}`")
+                v-flex(sm12)
+                  v-text-field(v-model="editItem.remark", label="备注")
         v-card-actions
           v-spacer
           v-btn(outlined, color="error", @click="handleReset") 重置
@@ -69,22 +71,10 @@ export default {
     DateMenu
   },
   props: {
-    value: {
-      type: Object,
-      default: () => null
-    },
-    change: {
-      type: Boolean,
-      required: true
-    },
-    materials: {
-      type: Array,
-      required: true
-    },
-    maxWidth: {
-      type: String,
-      default: '1200px'
-    }
+    value: { type: Object, default: () => null },
+    change: { type: Boolean, required: true },
+    materials: { type: Array, required: true },
+    maxWidth: { type: String, default: '1200px' }
   },
   data: () => ({
     show: false,
@@ -107,7 +97,8 @@ export default {
       demandDepartment: '',
       materialReceivingDepartment: '',
       status: '',
-      sort: 1
+      sort: 1,
+      remark: ''
     },
     editItem: {},
     edit: false,

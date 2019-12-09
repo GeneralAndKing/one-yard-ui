@@ -59,6 +59,7 @@
 import ProcurementMaterialEdit from './ProcurementMaterialEdit'
 import ProcurementPlanSelect from './ProcurementPlanSelect'
 import ChangeHistory from '_c/procurement-order/change-history'
+import { getTime } from '_u/util'
 
 export default {
   name: 'ProcurementMaterial',
@@ -139,7 +140,7 @@ export default {
     },
     handleCopy (item) {
       let newItem = this._.cloneDeep(item)
-      newItem.name = `${new Date().toISOString()}-${item.materialId}-${Math.ceil(Math.random() * 100)}`
+      newItem.name = `${getTime()}}-${item.materialId}-${Math.ceil(Math.random() * 100)}`
       newItem.planMaterialId = undefined
       newItem.isSelect = undefined
       this.value.unshift(newItem)
@@ -151,8 +152,9 @@ export default {
       if (this.item === null) {
         // 添加成功
         // 添加一个不重复的主键
-        item.name = `${new Date().toISOString()}-${item.materialId}-${Math.ceil(Math.random() * 100)}`
+        item.name = `${getTime()}-${item.materialId}-${Math.ceil(Math.random() * 100)}`
         this.value.unshift(item)
+        this.$refs.add.handleReset()
       } else {
         // 编辑成功
         this.value.splice(this._.indexOf(this.value, this.item), 1, item)
