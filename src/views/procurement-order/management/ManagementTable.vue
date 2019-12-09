@@ -136,9 +136,9 @@ export default {
         planId: this.approvalItem.id
       }
       if (flag) {
-        approval.result = '审批通过'
+        approval.result = '审核通过'
       } else {
-        approval.result = '审批退回'
+        approval.result = '审核不通过'
       }
       this.$refs.approval.loading = true
       procurementOrderAPI.approvalProcurementOrder(this.approvalItem, approval)
