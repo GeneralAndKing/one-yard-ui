@@ -23,6 +23,11 @@
             v-btn.mr-1(outlined, rounded, x-small, fab, color="info", @click="handleCopy(item)", v-on="on" :disabled="see" v-if="!change")
               v-icon file_copy
           span 复制
+        v-tooltip(top, v-if="item.status === 'CHANGED'")
+          template(v-slot:activator="{ on }")
+            v-btn.mr-1(outlined, rounded, x-small, fab, color="secondary", @click="handleHistory(item)", v-on="on" :disabled="see||item.isSelect!==undefined" v-if="!change")
+              v-icon mdi-attachment
+          span 变更历史
         v-tooltip(top)
           template(v-slot:activator="{ on }")
             v-btn(outlined, rounded, x-small, fab, color="error", @click="handleDelete(item)", v-on="on" :disabled="see||item.isSelect!==undefined" v-if="!change")
@@ -46,44 +51,29 @@
           v-btn(outlined, color="error", @click="handleDeleteSelect", :disabled='see' v-if="!change") 删除所选
     procurement-material-edit(v-model="item", ref="add", :materials="materials", @submit="handleSubmit" :change="change")
     procurement-plan-select(ref="planSelect", :materials="materials", :order="order" @select="handlePlanSelect")
+    change-history(:item="order", :procurementMaterial="value", :id="id", ref="materials")
 
 </template>
 
 <script>
 import ProcurementMaterialEdit from './ProcurementMaterialEdit'
 import ProcurementPlanSelect from './ProcurementPlanSelect'
+import ChangeHistory from '_c/procurement-order/change-history'
+
 export default {
   name: 'ProcurementMaterial',
   components: {
     ProcurementMaterialEdit,
-    ProcurementPlanSelect
+    ProcurementPlanSelect,
+    ChangeHistory
   },
   props: {
-    value: {
-      type: Array,
-      required: true
-    },
-    see: {
-      type: Boolean,
-      required: true
-    },
-    change: {
-      type: Boolean,
-      required: true
-    },
-    loading: {
-      type: Boolean,
-      default: false
-    },
-    order: {
-      type: Object,
-      required: true
-    },
-    materials: {
-      type: Array,
-      required: true
-    }
-
+    value: { type: Array, required: true },
+    see: { type: Boolean, required: true },
+    change: { type: Boolean, required: true },
+    loading: { type: Boolean, default: false },
+    order: { type: Object, required: true },
+    materials: { type: Array, required: true }
   },
   data: () => ({
     // 添加的时候为 null, 否则为要编辑的元素
@@ -106,8 +96,10 @@ export default {
       { text: '是否赠品', value: 'isComplimentary', align: 'start' },
       { text: '需求部门', value: 'demandDepartment', align: 'start' },
       { text: '收料部门', value: 'materialReceivingDepartment', align: 'start' },
-      { text: '操作', value: 'action', sortable: false, width: '150px', align: 'center' }
-    ]
+      { text: '操作', value: 'action', sortable: false, width: '180px', align: 'center' }
+    ],
+    history: [],
+    id: 0
   }),
   methods: {
     handlePlan () {
@@ -142,7 +134,6 @@ export default {
       this.value.splice(this._.indexOf(this.value, item), 1)
     },
     handleEdit (item) {
-      console.log(item)
       this.item = item
       this.$refs.add.handleShow()
     },
@@ -166,6 +157,10 @@ export default {
         // 编辑成功
         this.value.splice(this._.indexOf(this.value, this.item), 1, item)
       }
+    },
+    handleHistory (item) {
+      this.id = item.id
+      this.$refs.materials.show = true
     }
   }
 }
