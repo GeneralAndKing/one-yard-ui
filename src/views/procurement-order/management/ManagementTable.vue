@@ -18,11 +18,6 @@
             v-btn.mr-1(outlined, rounded, x-small, fab, color="#FFC400", v-on="on", @click="handleChange(item)")
               v-icon mdi-message-draw
           span 变更
-        v-tooltip(top v-if="item.approvalStatus==='APPROVAL_OK'&&item.planStatus==='EFFECTIVE'")
-          template(v-slot:activator="{ on }")
-            v-btn(outlined, rounded, x-small, fab, color="error", v-on="on", @click="handleCancel(item)")
-              v-icon mdi-delete
-          span 取消订单
         v-tooltip(top v-if="item.planStatus==='NO_SUBMIT'&&(item.approvalStatus==='NO_SUBMIT'||item.approvalStatus==='APPROVAL_NO')")
           template(v-slot:activator="{ on }")
             v-btn.mr-1(outlined, rounded, x-small, fab, color="teal darken-1", v-on="on", @click="handleSubmit(item)")
@@ -38,7 +33,12 @@
             v-btn.mr-1(outlined, rounded, x-small, fab, color="warning", v-on="on", @click="handleRevoke(item)")
               v-icon mdi-backup-restore
           span 撤回
-        v-tooltip(top v-if="item.approvalStatus!=='APPROVAL_ING'")
+        v-tooltip(top v-if="item.approvalStatus==='APPROVAL_OK'&&item.planStatus==='EFFECTIVE'")
+          template(v-slot:activator="{ on }")
+            v-btn(outlined, rounded, x-small, fab, color="error", v-on="on", @click="handleCancel(item)")
+              v-icon mdi-link-off
+          span 取消订单
+        v-tooltip(top v-if="item.approvalStatus==='NO_SUBMIT' && item.planStatus==='NO_SUBMIT'")
           template(v-slot:activator="{ on }")
             v-btn(outlined, rounded, x-small, fab, color="error", v-on="on", @click="handleDelete(item)")
               v-icon mdi-delete
