@@ -9,26 +9,25 @@
             v-btn(icon,  @click="handleClose", color="white")
               v-icon mdi-close
         v-card-text
-          v-data-table(:headers="headers", :items="history")
+          v-data-table(:headers="headers", :items="value")
             template(v-slot:item.materialName="{ item }")
-              span {{item.procurementMaterial.material.name}}
+              span(v-if="typeof item.procurementMaterial !== 'undefined'") {{item.procurementMaterial.material.name}}
             template(v-slot:item.createTime="{ item }")
-              span {{item.createTime.replace("T", " ")}}
+              span(v-if="typeof item.createTime !== 'undefined'") {{item.createTime.replace("T", " ")}}
+            template(v-slot:item.status="{ item }")
+              span {{formatApprovalStatus(item.status)}}
 </template>
 
 <script>
 import * as restAPI from '_api/rest'
+import { approvalStatusSelect } from '_u//status'
+
 export default {
   name: 'ChangeHistory',
   props: {
-    item: {
-      type: Object,
-      required: true
-    },
-    procurementMaterial: {
-      type: Array,
-      required: true
-    }
+    item: { type: Object, required: true },
+    procurementMaterial: { type: Array, required: true },
+    id: { type: Number, default: 0 }
   },
   data: () => ({
     show: false,
@@ -44,7 +43,8 @@ export default {
       { text: '变更状态', value: 'status', align: 'start' },
       { text: '创建时间', value: 'createTime', align: 'start' }
     ],
-    history: []
+    history: [],
+    value: []
   }),
   created () {
     let _this = this
@@ -53,10 +53,20 @@ export default {
         res.data.content.some(value => {
           value.procurementMaterial = _this._.find(_this.procurementMaterial, { id: value.procurementMaterialId })
           this.history.push(value)
+          this.value.push(value)
         })
       })
   },
+  watch: {
+    id (val) {
+      this.value = this._.filter(this.history, { procurementMaterialId: val })
+    }
+  },
   methods: {
+    formatApprovalStatus (status) {
+      if (!status) return
+      return this._.find(approvalStatusSelect, { value: status }).name
+    },
     handleClose () {
       this.show = false
     }
