@@ -10,7 +10,7 @@
         v-card-text
           v-autocomplete(v-model="select" ,label="物料名称", :items="material",
             autofocus, item-text="name", return-object)
-          p 库存数量：{{select.number}}
+          p(style="font-size:20px") 库存数量：{{select.number}}
         v-card-actions
           v-spacer
           v-btn(outlined, color="success", @click="show = false") 关闭

@@ -15,8 +15,8 @@
           span 查看
         v-tooltip(top v-if="item.approvalStatus==='APPROVAL_OK'")
           template(v-slot:activator="{ on }")
-            v-btn.mr-1(outlined, rounded, x-small, fab, color="success", v-on="on", @click="handleChange(item)")
-              v-icon remove_red_eye
+            v-btn.mr-1(outlined, rounded, x-small, fab, color="#FFC400", v-on="on", @click="handleChange(item)")
+              v-icon mdi-message-draw
           span 变更
         v-tooltip(top v-if="item.planStatus==='NO_SUBMIT'&&item.approvalStatus==='NO_SUBMIT'")
           template(v-slot:activator="{ on }")
