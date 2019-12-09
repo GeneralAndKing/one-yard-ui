@@ -23,7 +23,7 @@
             v-btn.mr-1(outlined, rounded, x-small, fab, color="teal darken-1", v-on="on", @click="handleSubmit(item)")
               v-icon mdi-format-wrap-inline
           span 提交审批
-        v-tooltip(top v-if="item.planStatus==='APPROVAL'&&item.approvalStatus==='APPROVAL_ING'")
+        v-tooltip(top v-if="item.approvalStatus==='APPROVAL_ING'")
           template(v-slot:activator="{ on }")
             v-btn.mr-1(outlined, rounded, x-small, fab, color="info", v-on="on", @click="showApproval(item)")
               v-icon mdi-book-open-variant
@@ -38,7 +38,7 @@
             v-btn(outlined, rounded, x-small, fab, color="error", v-on="on", @click="handleCancel(item)")
               v-icon mdi-link-off
           span 取消订单
-        v-tooltip(top v-if="item.approvalStatus==='NO_SUBMIT' && item.planStatus==='NO_SUBMIT'")
+        v-tooltip(top v-if="(item.approvalStatus==='NO_SUBMIT' ||item.approvalStatus==='APPROVAL_NO') && item.planStatus==='NO_SUBMIT'")
           template(v-slot:activator="{ on }")
             v-btn(outlined, rounded, x-small, fab, color="error", v-on="on", @click="handleDelete(item)")
               v-icon mdi-delete
