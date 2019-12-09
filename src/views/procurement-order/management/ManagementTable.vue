@@ -15,8 +15,8 @@
           span 查看
         v-tooltip(top v-if="item.approvalStatus==='APPROVAL_OK'")
           template(v-slot:activator="{ on }")
-            v-btn.mr-1(outlined, rounded, x-small, fab, color="success", v-on="on", @click="handleChange(item)")
-              v-icon remove_red_eye
+            v-btn.mr-1(outlined, rounded, x-small, fab, color="#FFC400", v-on="on", @click="handleChange(item)")
+              v-icon mdi-message-draw
           span 变更
         v-tooltip(top v-if="item.planStatus==='NO_SUBMIT'&&item.approvalStatus==='NO_SUBMIT'")
           template(v-slot:activator="{ on }")
@@ -136,9 +136,9 @@ export default {
         planId: this.approvalItem.id
       }
       if (flag) {
-        approval.result = '审批通过'
+        approval.result = '审核通过'
       } else {
-        approval.result = '审批退回'
+        approval.result = '审核不通过'
       }
       this.$refs.approval.loading = true
       procurementOrderAPI.approvalProcurementOrder(this.approvalItem, approval)
