@@ -74,11 +74,6 @@ export default {
   },
   created () {
     this.$vuetify.theme.dark = false
-    this.$message({ content: 'left1', timeout: 1000000, y: 'bottom' })
-    this.$message({ content: 'left2', timeout: 10000, y: 'bottom' })
-    // this.$message({ content: 'left2', timeout: 10000, x: 'left' })
-    // this.$message({ content: 'left2', timeout: 10000, x: 'left' })
-    // this.$message({ content: 'left2', timeout: 10000, x: 'left' })
   },
   methods: {
     handleAccount () {
