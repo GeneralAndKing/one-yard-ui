@@ -22,7 +22,11 @@
                   v-flex(sm12, md6, lg4)
                     date-menu(v-model="search.deliveryDate", label="交货日期", :init="tomorrow")
                   v-flex.text-right(sm12)
-                    v-btn(outlined, color="secondary", @click="handleReset") 重置条件
+                    span(v-per="[Role.ROLE_PROCUREMENT_SUPERVISOR]")
+                      v-btn.mr-4(outlined, color="secondary", @click="search.planStatus = 'APPROVAL_CANCEL'") (主管) 取消审批
+                      v-btn.mr-4(outlined, color="secondary", @click="search.planStatus = 'CHANGED'") (主管) 变跟审批
+                      v-btn.mr-4(outlined, color="secondary", @click="search.planStatus = 'APPROVAL'") (主管) 提交审批
+                    v-btn(outlined, color="warning", @click="handleReset") 重置条件
               management-table.mt-5(v-model="orders", :search="searchValue", :loading="load.table", @see="handleSee" @change="handleChange")
       procurement-order(v-else, :seeItem="see" @back="handleBack")
         v-btn(outlined, color="warning", @click="handleBack") 返回
@@ -36,6 +40,8 @@ import ProcurementOrder from '_c/procurement-order'
 import { tomorrow } from '_u/util'
 import * as restAPI from '_api/rest'
 import SkeletonLoader from '_c/skeleton-loader'
+import { Role } from '_u/role'
+
 export default {
   name: 'Management',
   components: {
@@ -63,6 +69,9 @@ export default {
       const search = this.search
       return `${search.type}&${search.supplier}&${search.procurementDate}` +
         `&${search.deliveryDate}&${search.planStatus}&${search.approvalStatus}`
+    },
+    Role () {
+      return Role
     }
   },
   created () {

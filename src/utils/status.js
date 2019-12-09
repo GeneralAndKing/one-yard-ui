@@ -110,10 +110,10 @@ export const procurementOrderPlanStatus = [
   { name: '', value: '' },
   { name: '待提交', value: 'NO_SUBMIT' },
   { name: '提交审批', value: 'APPROVAL' },
-  { name: '已关闭', value: 'CLOSE' },
+  { name: '取消审批', value: 'APPROVAL_CANCEL' },
   { name: '未完成', value: 'UNFINISHED' },
   { name: '已完成', value: 'FINISHED' },
-  { name: '已变更', value: 'CHANGED' },
+  { name: '变更审批中', value: 'CHANGED' },
   { name: '已生效', value: 'EFFECTIVE' },
   { name: '已作废', value: 'CANCEL' }
 ]
@@ -124,10 +124,10 @@ export const procurementOrderPlanStatus = [
 export const procurementOrderPlanStatusSelect = [
   { name: '待提交', value: 'NO_SUBMIT' },
   { name: '提交审批', value: 'APPROVAL' },
-  { name: '已关闭', value: 'CLOSE' },
+  { name: '取消审批', value: 'APPROVAL_CANCEL' },
   { name: '未完成', value: 'UNFINISHED' },
   { name: '已完成', value: 'FINISHED' },
-  { name: '已变更', value: 'CHANGED' },
+  { name: '变更审批中', value: 'CHANGED' },
   { name: '已生效', value: 'EFFECTIVE' },
   { name: '已作废', value: 'CANCEL' }
 ]
