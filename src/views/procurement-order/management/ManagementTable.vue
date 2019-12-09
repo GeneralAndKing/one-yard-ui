@@ -13,27 +13,27 @@
             v-btn.mr-1(outlined, rounded, x-small, fab, color="success", v-on="on", @click="handleSee(item)")
               v-icon remove_red_eye
           span 查看
-        v-tooltip(top)
+        v-tooltip(top v-if="item.approvalStatus==='APPROVAL_OK'")
           template(v-slot:activator="{ on }")
             v-btn.mr-1(outlined, rounded, x-small, fab, color="success", v-on="on", @click="handleChange(item)")
               v-icon remove_red_eye
           span 变更
-        v-tooltip(top)
+        v-tooltip(top v-if="item.planStatus==='NO_SUBMIT'&&item.approvalStatus==='NO_SUBMIT'")
           template(v-slot:activator="{ on }")
             v-btn.mr-1(outlined, rounded, x-small, fab, color="teal darken-1", v-on="on", @click="handleSubmit(item)")
               v-icon mdi-format-wrap-inline
           span 提交审批
-        v-tooltip(top)
+        v-tooltip(top v-if="item.planStatus==='APPROVAL'&&item.approvalStatus==='APPROVAL_ING'")
           template(v-slot:activator="{ on }")
             v-btn.mr-1(outlined, rounded, x-small, fab, color="info", v-on="on", @click="showApproval(item)")
               v-icon mdi-book-open-variant
           span 审批
-        v-tooltip(top)
+        v-tooltip(top v-if="item.planStatus==='APPROVAL'&&item.approvalStatus==='APPROVAL_ING'")
           template(v-slot:activator="{ on }")
             v-btn.mr-1(outlined, rounded, x-small, fab, color="warning", v-on="on", @click="handleRevoke(item)")
               v-icon mdi-backup-restore
           span 撤回
-        v-tooltip(top)
+        v-tooltip(top v-if="item.approvalStatus!=='APPROVAL_ING'")
           template(v-slot:activator="{ on }")
             v-btn(outlined, rounded, x-small, fab, color="error", v-on="on", @click="handleDelete(item)")
               v-icon mdi-delete
@@ -44,7 +44,7 @@
 import { procurementOrderPlanStatus, approvalStatus } from '_u/status'
 import ApproveConfirm from '_c/approve-confirm'
 import * as procurementOrderAPI from '_api/procurementOrder'
-
+import * as RestAPI from '_api/rest'
 export default {
   name: 'ManagementTable',
   components: {
@@ -104,7 +104,12 @@ export default {
     handleSubmit (item) {
       this.$confirm({ title: '您确认提交审批吗？' },
         () => {
-          // TODO:提交审批事件
+          RestAPI.patchOne(`procurementOrder`, item.id, { planStatus: 'APPROVAL',
+            approvalStatus: 'APPROVAL_ING' }).then(res => {
+            this.$message('提交审批成功', 'success')
+            item.planStatus = 'APPROVAL'
+            item.approvalStatus = 'APPROVAL_ING'
+          })
         })
     },
     handleRevoke (item) {
@@ -112,8 +117,8 @@ export default {
         () => {
           procurementOrderAPI.withdrawApproval(item.id).then(() => {
             this.$message('撤回成功', 'success')
-            item.approvalStatus = 0
-            item.planStatus = 0
+            item.planStatus = 'NO_SUBMIT'
+            item.approvalStatus = 'NO_SUBMIT'
           })
         })
     },
@@ -130,18 +135,23 @@ export default {
         approvalType: 2,
         planId: this.approvalItem.id
       }
-      if (flag) approval.result = '审批通过'
-      else approval.result = '审批退回'
+      if (flag) {
+        approval.result = '审批通过'
+      } else {
+        approval.result = '审批退回'
+      }
       this.$refs.approval.loading = true
       procurementOrderAPI.approvalProcurementOrder(this.approvalItem, approval)
         .then(() => {
           this.$message('审批成功', 'success')
-          if (flag) this.approvalItem.approvalStatus = 3
-          else this.approvalItem.approvalStatus = 2
+          this.approvalItem.approvalStatus = 'APPROVAL_NO'
+          this.approvalItem.approvalStatus = 'APPROVAL_OK'
+        })
+        .finally(() => {
+          this.$refs.approval.loading = false
           this.approvalContent = ''
           this.$refs.approval.dialog = false
         })
-        .finally(() => { this.$refs.approval.loading = false })
     },
     showApproval (item) {
       this.approvalItem = item
