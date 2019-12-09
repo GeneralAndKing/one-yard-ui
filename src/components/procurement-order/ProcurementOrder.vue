@@ -62,7 +62,7 @@
             v-card-actions
               slot
               v-spacer
-              v-btn(outlined, color="success", @click="handleSave") {{see?'编辑':'保存'}}
+              v-btn(outlined, color="success", @click="handleSave", v-if="edit") {{see?'编辑':'保存'}}
     change-history(v-if="change", :item="seeItem", ref="history", :procurementMaterial="procurementMaterial")
     check-inventory(v-if="seeItem !== null", :material="materials", ref="materials")
 </template>
@@ -126,8 +126,6 @@ export default {
       procurementDepartment: '',
       procurementDate: '',
       deliveryDate: '',
-      // TODO：订单初始化的时候需要指定以下两个状态
-      // 这两个类型已经写在了 util/status.js 里面了
       planStatus: 'NO_SUBMIT',
       approvalStatus: 'NO_SUBMIT',
       createTime: '',
@@ -147,6 +145,11 @@ export default {
   computed: {
     rules () {
       return RuleAPI
+    },
+    edit () {
+      const order = this.order
+      return (order.approvalStatus === 'NO_SUBMIT' && order.planStatus === 'NO_SUBMIT') ||
+        (order.approvalStatus === 'APPROVAL_OK' && order.planStatus === 'EFFECTIVE')
     }
   },
   async created () {

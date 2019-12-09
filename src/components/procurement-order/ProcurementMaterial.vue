@@ -25,7 +25,7 @@
           span 复制
         v-tooltip(top, v-if="item.status === 'CHANGED'")
           template(v-slot:activator="{ on }")
-            v-btn.mr-1(outlined, rounded, x-small, fab, color="secondary", @click="handleHistory(item)", v-on="on" :disabled="see||item.isSelect!==undefined" v-if="!change")
+            v-btn.mr-1(outlined, rounded, x-small, fab, color="secondary", @click="handleHistory(item)", v-on="on", v-if="!change")
               v-icon mdi-attachment
           span 变更历史
         v-tooltip(top)
