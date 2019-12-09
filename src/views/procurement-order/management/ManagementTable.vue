@@ -13,12 +13,17 @@
             v-btn.mr-1(outlined, rounded, x-small, fab, color="success", v-on="on", @click="handleSee(item)")
               v-icon remove_red_eye
           span 查看
-        v-tooltip(top v-if="item.approvalStatus==='APPROVAL_OK'")
+        v-tooltip(top v-if="item.approvalStatus==='APPROVAL_OK'&&item.planStatus==='EFFECTIVE'")
           template(v-slot:activator="{ on }")
             v-btn.mr-1(outlined, rounded, x-small, fab, color="#FFC400", v-on="on", @click="handleChange(item)")
               v-icon mdi-message-draw
           span 变更
-        v-tooltip(top v-if="item.planStatus==='NO_SUBMIT'&&item.approvalStatus==='NO_SUBMIT'")
+        v-tooltip(top v-if="item.approvalStatus==='APPROVAL_OK'&&item.planStatus==='EFFECTIVE'")
+          template(v-slot:activator="{ on }")
+            v-btn(outlined, rounded, x-small, fab, color="error", v-on="on", @click="handleCancel(item)")
+              v-icon mdi-delete
+          span 取消订单
+        v-tooltip(top v-if="item.planStatus==='NO_SUBMIT'&&(item.approvalStatus==='NO_SUBMIT'||item.approvalStatus==='APPROVAL_NO')")
           template(v-slot:activator="{ on }")
             v-btn.mr-1(outlined, rounded, x-small, fab, color="teal darken-1", v-on="on", @click="handleSubmit(item)")
               v-icon mdi-format-wrap-inline
@@ -66,6 +71,7 @@ export default {
   },
   data: () => ({
     approvalContent: '',
+    approvalType: '',
     headers: [
       { text: '订单类型', value: 'type', align: 'start' },
       { text: '单据编号', value: 'code', align: 'start' },
@@ -123,12 +129,27 @@ export default {
         })
     },
     handleDelete (item) {
-      this.$confirm({ title: '您确认删除吗？' },
+      this.$confirm({ title: '删除后其中需求物资将解除绑定同时订单不可查看，您确认删除改订单吗？' },
         () => {
-          // TODO:删除事件
-          this.value.splice(this._.indexOf(this.value, item), 1)
+          procurementOrderAPI.deleteProcurementOrder(item.id).then(res => {
+            this.$message('删除采购订单成功！', 'success')
+            this.value.splice(this._.indexOf(this.value, item), 1)
+          })
         })
     },
+    handleCancel (item) {
+      this.$confirm({ title: '取消请求将由主管进行审批许可，成功取消后可在"采购订单管理" -> 选择已取消筛选查看，您确认取消该订单吗？' },
+        () => {
+          RestAPI.patchOne(`procurementOrder`, item.id, { planStatus: 'CANCEL',
+            approvalStatus: 'APPROVAL_ING' }).then(res => {
+            this.$message('发起取消请求成功！等待采购部门主管审批。', 'success')
+            item.planStatus = 'APPROVAL_CANCEL'
+            item.approvalStatus = 'APPROVAL_ING'
+            this.value.splice(this._.indexOf(this.value, item), 1)
+          })
+        })
+    },
+    // 普通审批
     handleApproval (flag) {
       let approval = {
         description: this.approvalContent,
@@ -144,8 +165,27 @@ export default {
       procurementOrderAPI.approvalProcurementOrder(this.approvalItem, approval)
         .then(() => {
           this.$message('审批成功', 'success')
-          this.approvalItem.approvalStatus = 'APPROVAL_NO'
-          this.approvalItem.approvalStatus = 'APPROVAL_OK'
+          if (flag) {
+            if (this.approvalType === '普通审批') {
+              this.approvalItem.planStatus = 'EFFECTIVE'
+            } else if (this.approvalType === '变更审批') {
+              this.approvalItem.planStatus = 'EFFECTIVE'
+            } else if (this.approvalType === '取消审批') {
+              this.approvalItem.planStatus = 'CANCEL'
+            }
+            this.approvalItem.approvalStatus = 'APPROVAL_OK'
+          } else {
+            if (this.approvalType === '普通审批') {
+              this.approvalItem.approvalStatus = 'APPROVAL_NO'
+              this.approvalItem.planStatus = 'NO_SUBMIT'
+            } else if (this.approvalType === '变更审批') {
+              this.approvalItem.approvalStatus = 'EFFECTIVE'
+              this.approvalItem.planStatus = 'APPROVAL_OK'
+            } else if (this.approvalType === '取消审批') {
+              this.approvalItem.approvalStatus = 'EFFECTIVE'
+              this.approvalItem.planStatus = 'APPROVAL_OK'
+            }
+          }
         })
         .finally(() => {
           this.$refs.approval.loading = false
@@ -154,6 +194,16 @@ export default {
         })
     },
     showApproval (item) {
+      if (item.planStatus === 'APPROVAL' && item.approvalStatus === 'APPROVAL_ING') {
+        this.approvalType = '普通审批'
+      } else if (item.planStatus === 'APPROVAL_CANCEL' && item.approvalStatus === 'APPROVAL_ING') {
+        this.approvalType = '取消审批'
+      } else if (item.planStatus === 'CHANGED' && item.approvalStatus === 'APPROVAL_ING') {
+        this.approvalType = '变更审批'
+      } else {
+        this.message('订单状态错误，不可进行审批，刷新后再试！', 'error')
+        return
+      }
       this.approvalItem = item
       this.$refs.approval.dialog = true
     }

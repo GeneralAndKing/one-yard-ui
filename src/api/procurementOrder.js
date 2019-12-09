@@ -1,6 +1,6 @@
 import axios from './index'
 
-const PLAN_MATERIAL = 'procurementOrder'
+const PROCUREMENT_ORDER = 'procurementOrder'
 
 /**
  * 保存或修改订单
@@ -12,7 +12,7 @@ const PLAN_MATERIAL = 'procurementOrder'
  */
 export const submit = (procurementOrder, procurementMaterials, orderTerms) => {
   return axios.request({
-    url: `/${PLAN_MATERIAL}/procurementOrder`,
+    url: `/${PROCUREMENT_ORDER}/procurementOrder`,
     method: 'post',
     data: { procurementOrder, procurementMaterials, orderTerms }
   })
@@ -25,7 +25,7 @@ export const submit = (procurementOrder, procurementMaterials, orderTerms) => {
  */
 export const withdrawApproval = (procurementOrderId) => {
   return axios.request({
-    url: `/${PLAN_MATERIAL}/withdrawApproval`,
+    url: `/${PROCUREMENT_ORDER}/withdrawApproval`,
     method: 'post',
     data: {
       procurementOrderId: procurementOrderId
@@ -41,15 +41,25 @@ export const withdrawApproval = (procurementOrderId) => {
  */
 export const approvalProcurementOrder = (procurementOrder, approval) => {
   return axios.request({
-    url: `/${PLAN_MATERIAL}/approvalProcurementOrder`,
+    url: `/${PROCUREMENT_ORDER}/approvalProcurementOrder`,
     method: 'post',
     data: { procurementOrder, approval }
   })
 }
 
+// 删除订单
+export const deleteProcurementOrder = (id) => {
+  return axios.request({
+    url: `/${PROCUREMENT_ORDER}/delete`,
+    method: 'post',
+    data: { id }
+  })
+}
+
+// 更改订单
 export const changeProcurementOrder = (id, procurementMaterials) => {
   return axios.request({
-    url: `/${PLAN_MATERIAL}/change`,
+    url: `/${PROCUREMENT_ORDER}/change`,
     method: 'post',
     data: { id, procurementMaterials }
   })
