@@ -13,6 +13,9 @@
               v-form(ref="base")
                 v-layout(wrap, style="width:100%")
                   v-flex(sm12, md6, lg4)
+                    v-text-field(v-model="order.name" ref="name", label="订单名称", :disabled='see||change', clearable,
+                      :rules="rules.unionRules(rules.requiredRules('订单名称'))")
+                  v-flex(sm12, md6, lg4)
                     v-select(v-model="order.type", :items="orderType", ref="orderType", :disabled='see||isSelect||change', @change="generateCode",
                       label="单据类型", :rules="rules.unionRules(rules.requiredRules('单据类型'))")
                   v-flex(sm12, md6, lg4)
@@ -31,7 +34,7 @@
                   v-flex(sm12, md6, lg8)
                     v-text-field(v-model="order.remark" ref="remark", label="备注", :disabled='see||change', clearable,
                       :rules="rules.unionRules(rules.maxLengthRules(250))")
-                  v-flex.text-right.mt-4(sm12, md6, lg4, v-if="seeItem !== null")
+                  v-flex.text-right.mt-4(sm12, v-if="seeItem !== null")
                     v-btn.mr-4(outlined, color="secondary", @click="$refs.history.show = true", v-if="change") 变更历史
                     v-btn(outlined, color="secondary", @click="$refs.materials.show = true") 库存查询
             v-toolbar(flat, color="secondary")

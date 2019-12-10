@@ -9,6 +9,8 @@
             v-card-text
               v-container(grid-list-md)
                 v-layout(wrap, style="width:100%")
+                  v-flex(sm12, md12, lg4)
+                    v-text-field(v-model="search.name", label="订单名称")
                   v-flex(sm12, md6, lg4)
                     v-select(v-model="search.type", :items="orderType", label="单据类型")
                   v-flex(sm12, md6, lg4)
@@ -21,7 +23,7 @@
                     date-menu(v-model="search.procurementDate", label="采购日期", :init="tomorrow")
                   v-flex(sm12, md6, lg4)
                     date-menu(v-model="search.deliveryDate", label="交货日期", :init="tomorrow")
-                  v-flex.text-right(sm12)
+                  v-flex.text-right.mt-4(md12, lg8)
                     span(v-per="[Role.ROLE_PROCUREMENT_SUPERVISOR]")
                       v-btn.mr-4(outlined, color="secondary", @click="search.planStatus = 'APPROVAL_CANCEL'") (主管) 取消审批
                       v-btn.mr-4(outlined, color="secondary", @click="search.planStatus = 'CHANGED'") (主管) 变跟审批
@@ -67,7 +69,7 @@ export default {
   computed: {
     searchValue () {
       const search = this.search
-      return `${search.type}&${search.supplier}&${search.procurementDate}` +
+      return `${search.name}&${search.type}&${search.supplier}&${search.procurementDate}` +
         `&${search.deliveryDate}&${search.planStatus}&${search.approvalStatus}`
     },
     Role () {
@@ -81,6 +83,7 @@ export default {
   methods: {
     handleReset () {
       this.search = {
+        name: '',
         type: '',
         supplier: '',
         procurementDate: this.tomorrow.substring(0, 10),

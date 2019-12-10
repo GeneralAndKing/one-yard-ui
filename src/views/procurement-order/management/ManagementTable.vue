@@ -18,6 +18,11 @@
             v-btn.mr-1(outlined, rounded, x-small, fab, color="#FFC400", v-on="on", @click="handleChange(item)")
               v-icon mdi-message-draw
           span 变更
+        v-tooltip(top v-if="item.approvalStatus==='APPROVAL_OK'&&item.planStatus==='EFFECTIVE'")
+          template(v-slot:activator="{ on }")
+            v-btn.mr-1(outlined, rounded, x-small, fab, color="#6200ee", v-on="on", @click="handleFinished(item)")
+              v-icon mdi-check
+          span 订单完成
         v-tooltip(top v-if="item.planStatus==='NO_SUBMIT'&&(item.approvalStatus==='NO_SUBMIT'||item.approvalStatus==='APPROVAL_NO')")
           template(v-slot:activator="{ on }")
             v-btn.mr-1(outlined, rounded, x-small, fab, color="teal darken-1", v-on="on", @click="handleSubmit(item)")
@@ -73,6 +78,7 @@ export default {
     approvalContent: '',
     approvalType: '',
     headers: [
+      { text: '订单名称', value: 'name', align: 'start' },
       { text: '订单类型', value: 'type', align: 'start' },
       { text: '单据编号', value: 'code', align: 'start' },
       { text: '供应商', value: 'supplier', align: 'start' },
@@ -88,12 +94,13 @@ export default {
   methods: {
     filterSearch (value, search, item) {
       const condition = search.split('&')
-      return item.type.includes(condition[0]) &&
-          item.supplier.includes(condition[1]) &&
-          new Date(item.procurementDate).getTime() < new Date(condition[2]).getTime() &&
-          new Date(item.deliveryDate).getTime() < new Date(condition[3]).getTime() &&
-          item.planStatus.includes(condition[4]) &&
-          item.approvalStatus.includes(condition[5])
+      return item.name.includes(condition[0]) &&
+          item.type.includes(condition[1]) &&
+          item.supplier.includes(condition[2]) &&
+          new Date(item.procurementDate).getTime() < new Date(condition[3]).getTime() &&
+          new Date(item.deliveryDate).getTime() < new Date(condition[4]).getTime() &&
+          item.planStatus.includes(condition[5]) &&
+          item.approvalStatus.includes(condition[6])
     },
     formatPlanStatus (type) {
       return this._.find(procurementOrderPlanStatus, { value: type }).name
@@ -110,12 +117,23 @@ export default {
     handleSubmit (item) {
       this.$confirm({ title: '您确认提交审批吗？' },
         () => {
-          RestAPI.patchOne(`procurementOrder`, item.id, { planStatus: 'APPROVAL',
-            approvalStatus: 'APPROVAL_ING' }).then(res => {
-            this.$message('提交审批成功', 'success')
-            item.planStatus = 'APPROVAL'
-            item.approvalStatus = 'APPROVAL_ING'
-          })
+          RestAPI.patchOne(`procurementOrder`, item.id,
+            { planStatus: 'APPROVAL', approvalStatus: 'APPROVAL_ING' })
+            .then(() => {
+              this.$message('提交审批成功', 'success')
+              item.planStatus = 'APPROVAL'
+              item.approvalStatus = 'APPROVAL_ING'
+            })
+        })
+    },
+    handleFinished (item) {
+      this.$confirm({ title: '您确定标记此订单为完成状态吗？', content: '<b class="font-weight-bold red--text">注意：此操作不可逆</b>' },
+        () => {
+          RestAPI.patchOne(`procurementOrder`, item.id, { planStatus: 'APPROVAL_CANCEL' })
+            .then(() => {
+              item.planStatus = 'APPROVAL_CANCEL'
+              this.$message('操作成功', 'success')
+            })
         })
     },
     handleRevoke (item) {
