@@ -44,7 +44,8 @@ module.exports = {
             '/demand/system/ready'
           ]
         },
-        ['/demand/action/start', '整体流程'],
+        ['/demand/action/start', '第一阶段流程'],
+        ['/demand/action/next', '第二阶段流程'],
         ['/demand/action/adaptation', '移动端适配']
       ],
       '/architecture/': [

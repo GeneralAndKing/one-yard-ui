@@ -4,8 +4,8 @@ title: 后端
 
 ## 设计
 
-![GitHub](https://img.shields.io/github/license/GeneralAndKing/one-yard-ui)
-![Spring-boot](https://img.shields.io/badge/spring--boot-2.1.9-success)
+![GitHub](https://img.shields.io/github/license/GeneralAndKing/one-yard)
+![Spring-boot](https://img.shields.io/badge/spring--boot-2.2.2-success)
 ![gradle 5](https://img.shields.io/badge/gradle-5.6.2-blue)
 
 由于时间紧迫且功能较多，我们本着快速开发、多次迭代的原则，选择以 `JAVA` 语言为主，以 `JDK11` 为基础，使用 `spring-boot` 来完成此次后台的构建，同时放弃使用 `MAVEN` ，选择使用更加灵活且易用的 `GRADLE` 作为依赖管理与自动化构建工具。
@@ -19,6 +19,34 @@ title: 后端
 ![database](http://image.japoul.cn/docs/approval.png)
 
 表和字段均有详细注释，篇幅有限不再赘述，具体可以参见需求分析页。
+
+### TDD
+
+敏捷软件开发中，有一个非常重要的思想：测试驱动开发（Test-Driven Development）。我们团队在后端开发中使用这种思想来进行开发，并进行覆盖测试。我们后端开发逻辑思想如下
+
+![TDD](http://image.japoul.cn/docs/%E5%9B%BE%E7%89%871111.png)
+
+1. 思考
+2. 运行失败
+3. 写代码，运行成功
+4. 重构逻辑，保证测试通过
+
+由于时间紧迫，我们并不对整个应用进行测试，而是只对业务逻辑复杂的 `service` 进行测试驱动，测试结果如下：
+
+![TDD](http://image.japoul.cn/docs/1576034863180.jpeg)
+
+![TDD](http://image.japoul.cn/docs/1576034856773.jpeg)
+
+![TDD](http://image.japoul.cn/docs/1576034871781.jpeg)
+
+![TDD](http://image.japoul.cn/docs/1576034871781.jpeg)
+
+TDD 的思想能够保证我们代码的建硕性和项目的可读性，我们也在开发中体会到了莫大的好处：
+
+1. 代码 bug 减少
+2. 代码可读性增加
+3. 因为要覆盖所有代码分支，能够预测到自己没有考虑到的情况
+4. 协同工作中开发速度提高
 
 ### 应用分层
 
