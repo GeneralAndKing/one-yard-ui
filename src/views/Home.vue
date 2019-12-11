@@ -61,7 +61,8 @@
       v-card
         v-card-title.headline {{showMessage.name}}
         v-card-text
-          p(v-html="showMessage.message")
+          v-divider.mt-4
+          p.mt-4(v-html="showMessage.message")
         v-card-actions
           v-spacer
           v-btn(outlined, color="info", @click="handleRead") 已读

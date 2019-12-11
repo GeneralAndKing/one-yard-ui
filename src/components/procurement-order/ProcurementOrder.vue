@@ -24,6 +24,9 @@
                   v-flex(sm12, md6, lg4)
                     v-text-field(v-model="order.code" ref="code", label="单据编号", disabled, hint="此字段在选择单据类型后自动生成", persistent-hint,
                       :rules="rules.unionRules(rules.requiredRules('单据编号'))")
+                  v-flex(sm12, md6, lg4, v-if="order.type === '框架协议订单'")
+                    v-text-field(v-model="order.frameworkAgreementCode" ref="frameworkAgreementCode", label="框架协议编号",
+                      hint="此字段在选择单据类型为框架协议订单时才可填写", persistent-hint, :rules="rules.unionRules(rules.requiredRules('框架协议编号'))")
                   v-flex(sm12, md6, lg4)
                     date-menu(v-model="order.procurementDate", label="采购日期" :disabled="see ||change")
                   v-flex(sm12, md6, lg4)
@@ -31,7 +34,7 @@
                   v-flex(sm12, md6, lg4)
                     v-text-field(v-model="order.procurementDepartment" ref="procurementDepartment", label="采购部门", :disabled='see||change', clearable,
                       :rules="rules.unionRules(rules.requiredRules('采购部门'))")
-                  v-flex(sm12, md6, lg8)
+                  v-flex(sm12, md6, lg4)
                     v-text-field(v-model="order.remark" ref="remark", label="备注", :disabled='see||change', clearable,
                       :rules="rules.unionRules(rules.maxLengthRules(250))")
                   v-flex.text-right.mt-4(sm12, v-if="seeItem !== null")
@@ -153,6 +156,11 @@ export default {
       const order = this.order
       return (order.approvalStatus === 'NO_SUBMIT' && order.planStatus === 'NO_SUBMIT') ||
         (order.approvalStatus === 'APPROVAL_OK' && order.planStatus === 'EFFECTIVE')
+    }
+  },
+  watch: {
+    'order.type' (val) {
+      if (val !== '框架协议订单') this.order.frameworkAgreementCode = null
     }
   },
   async created () {

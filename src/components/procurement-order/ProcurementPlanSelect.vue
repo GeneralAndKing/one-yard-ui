@@ -85,6 +85,7 @@ export default {
         resourceLink = 'procurementPlan/search/byPlanType?planType=紧急采购计划'
       }
       restAPI.getRestLink(resourceLink).then(res => {
+        if (resourceLink.endsWith('APPROVAL_OK')) res.data.content = res.data.content.filter(v => v.planType !== '紧急采购计划')
         res.data.content.forEach(value => {
           this.plans.push(Object.assign({
             id: 0,

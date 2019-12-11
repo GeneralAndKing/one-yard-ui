@@ -3,7 +3,7 @@
     table(border="1", cellspacing="0")
       thead
         th(colspan="11")
-          h1.one-title 采 购 订 单
+          h1.one-title {{info.name}}({{info.type}})
       tbody
         tr
           td.one-title(colspan="6", rowspan="2") 订货单位（甲方）：G&K责任有限公司
@@ -62,6 +62,7 @@
         tr
           td.normal(colspan="12")
             div 订单条款：
+              span(v-if="info.type === '框架协议订单'") 本订单遵循相应的框架协议约束的法律效应。
             div(v-for="orderTerm in orderTerms")
               | {{orderTerm.code}}. {{orderTerm.name}}{{orderTerm.content}}{{orderTerm.description}}。条款类型{{orderTerm.type}}
         tr.word

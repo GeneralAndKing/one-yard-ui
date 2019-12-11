@@ -24,9 +24,9 @@
                         v-text-field(v-model="search.createTime", v-on="on", label="创建于（日期）之前", readonly)
                       v-date-picker(v-model="search.createTime", no-title, @input="dayMenu = false", locale="zh-cn")
                   v-flex.text-right(xs12)
-                    template(v-per="Role.ROLE_PROCUREMENT_PLANER")
+                    template(v-per="[Role.ROLE_PROCUREMENT_SUPERVISOR,Role.ROLE_FINANCE]")
                       v-btn.mr-4(outlined, color="light-blue",
-                        v-per="[Role.ROLE_PROCUREMENT_SUPERVISOR,Role.ROLE_FINANCE]",
+                        v-per="Role.ROLE_PROCUREMENT_PLANER",
                         @click="initTable()" ) 加载自己创建的采购计划
                     v-btn.mr-4(outlined, color="light-blue",
                       v-per="Role.ROLE_PROCUREMENT_SUPERVISOR",
@@ -188,6 +188,8 @@ export default {
       restAPI.getRestLink(resourcesLink)
         .then(res => {
           this.desserts = res.data.content.filter(d => !d.hasOwnProperty('relTargetType'))
+          this.search.approvalStatus = ''
+          this.search.planStatus = ''
         })
         .finally(() => {
           this.loading = false
