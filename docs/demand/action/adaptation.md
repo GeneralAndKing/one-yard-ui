@@ -8,48 +8,48 @@ title: 移动端适配
 
 欢迎页
 
-![index](http://q0zlaui5t.bkt.clouddn.com/docs/Screenshot_20191121_195918_mark.via.jpg)
+![index](http://image.japoul.cn/docs/Screenshot_20191121_195918_mark.via.jpg)
 
 仪表盘首页
 
-![首页](http://q0zlaui5t.bkt.clouddn.com/docs/Screenshot_20191121_200035_mark.via.jpg)
+![首页](http://image.japoul.cn/docs/Screenshot_20191121_200035_mark.via.jpg)
 
 表格页面，当列的数据过多的时候，手机端显示是极其不友好的，所以我们让他在手机端将表格转化为了每行数据。这样在移动端也有很好的体验。
 
-![表格](http://q0zlaui5t.bkt.clouddn.com/docs/Screenshot_20191121_015914_mark.via.jpg)
+![表格](http://image.japoul.cn/docs/Screenshot_20191121_015914_mark.via.jpg)
 
-![表格](http://q0zlaui5t.bkt.clouddn.com/docs/Screenshot_20191121_200327_mark.via.jpg)
+![表格](http://image.japoul.cn/docs/Screenshot_20191121_200327_mark.via.jpg)
 
 树型+卡片布局
 
-![树型](http://q0zlaui5t.bkt.clouddn.com/docs/Screenshot_20191121_200308_mark.via.jpg)
+![树型](http://image.japoul.cn/docs/Screenshot_20191121_200308_mark.via.jpg)
 
 表单
 
-![表单](http://q0zlaui5t.bkt.clouddn.com/docs/Screenshot_20191121_200342_mark.via.jpg)
+![表单](http://image.japoul.cn/docs/Screenshot_20191121_200342_mark.via.jpg)
 
 个人设置表单
 
-![个人设置表单](http://q0zlaui5t.bkt.clouddn.com/docs/Screenshot_20191121_200659_com.android.chrome.jpg)
+![个人设置表单](http://image.japoul.cn/docs/Screenshot_20191121_200659_com.android.chrome.jpg)
 
 ## 暗黑主题
 
 仪表盘首页
 
-![仪表盘](http://q0zlaui5t.bkt.clouddn.com/docs/Screenshot_20191121_200214_mark.via.jpg)
+![仪表盘](http://image.japoul.cn/docs/Screenshot_20191121_200214_mark.via.jpg)
 
 树型+卡片布局
 
-![树型+卡片布局](http://q0zlaui5t.bkt.clouddn.com/docs/Screenshot_20191121_200254_mark.via.jpg)
+![树型+卡片布局](http://image.japoul.cn/docs/Screenshot_20191121_200254_mark.via.jpg)
 
 表格布局
 
-![表格布局](http://q0zlaui5t.bkt.clouddn.com/docs/Screenshot_20191121_200357_mark.via.jpg)
+![表格布局](http://image.japoul.cn/docs/Screenshot_20191121_200357_mark.via.jpg)
 
 长表单
 
-![长表单](http://q0zlaui5t.bkt.clouddn.com/docs/Screenshot_20191121_200422_mark.via.jpg)
+![长表单](http://image.japoul.cn/docs/Screenshot_20191121_200422_mark.via.jpg)
 
 个人设置
 
-![个人设置](http://q0zlaui5t.bkt.clouddn.com/docs/Screenshot_20191121_200712_com.android.chrome.jpg)
+![个人设置](http://image.japoul.cn/docs/Screenshot_20191121_200712_com.android.chrome.jpg)

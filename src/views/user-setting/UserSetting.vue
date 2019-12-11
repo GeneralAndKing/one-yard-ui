@@ -32,7 +32,7 @@
         v-card.mt-5.mb-3
           .one-avatar.text-center
             v-avatar.mx-auto.elevation-18(height="130px", width="130px")
-              v-img.one-avatar-img(:src="me.icon", lazy-src="http://q0zlaui5t.bkt.clouddn.com/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195")
+              v-img.one-avatar-img(:src="me.icon", lazy-src="http://image.japoul.cn/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195")
           v-flex.text-center(xs12, sm12)
             v-btn(color="light-blue", dark, @click="handleUpload", :loading="loading.upload")
               v-icon mdi-cloud-upload

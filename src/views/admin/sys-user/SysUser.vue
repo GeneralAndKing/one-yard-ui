@@ -9,7 +9,7 @@
             template(v-slot:item.icon="{ item }")
               v-avatar(size="36px")
                 v-img.one-avatar-img(:src="item.icon", :alt="item.name",
-                  lazy-src="http://q0zlaui5t.bkt.clouddn.com/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195")
+                  lazy-src="http://image.japoul.cn/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195")
             template(v-slot:item.roles="{ item }")
               v-chip.mr-1(v-for="role in item.roles", :key="role.name") {{role.description}}
             template(v-slot:item.status="{ item }")
@@ -44,7 +44,7 @@
                                 template( v-slot:default="{ hover }")
                                   v-avatar(size="64px")
                                     v-img(:src="editedItem.icon", :width="64", :height="64",
-                                      lazy-src="http://q0zlaui5t.bkt.clouddn.com/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195")
+                                      lazy-src="http://image.japoul.cn/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195")
                                     v-fade-transition
                                       v-overlay(v-if="hover", absolute)
                                         v-btn(test, x-small, @click="handleUpload", :loading="load.upload") 上传头像
@@ -112,7 +112,7 @@ export default {
     },
     editedIndex: -1,
     editedItem: {
-      icon: 'http://q0zlaui5t.bkt.clouddn.com/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195',
+      icon: 'http://image.japoul.cn/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195',
       username: '',
       password: '',
       name: '',
@@ -130,7 +130,7 @@ export default {
     },
     roles: [],
     defaultItem: {
-      icon: 'http://q0zlaui5t.bkt.clouddn.com/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195',
+      icon: 'http://image.japoul.cn/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195',
       password: '',
       username: '',
       name: '',
@@ -251,7 +251,7 @@ export default {
           const data = this._.cloneDeep(this.editedItem)
           data.roles = []
           data.password = md5(Base64.encode(data.password))
-          data.icon = 'http://q0zlaui5t.bkt.clouddn.com/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195'
+          data.icon = 'http://image.japoul.cn/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195'
           this.editedItem.roles.forEach(role => data.roles.push(_this._.find(role.links, { rel: 'self' }).href))
           restAPI.addOne('sysUser', data).then((res) => {
             res.data.password = 'xxxxxxxxxxxxxxxxxx'

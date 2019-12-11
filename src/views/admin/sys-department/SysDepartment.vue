@@ -67,7 +67,7 @@
                     v-row.pt-6.mx-auto(v-else, :key="selected.id", flat, max-width="400")
                       v-col.mb-2.text-center(cols="4", lg="3", v-for="(user, i) in users", :key="i")
                         v-avatar(size="88", color="indigo")
-                          v-img(:src="user.icon", lazy-src="http://q0zlaui5t.bkt.clouddn.com/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195")
+                          v-img(:src="user.icon", lazy-src="http://image.japoul.cn/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195")
                         h3.headline.my-2  {{ user.name }}
 
 </template>

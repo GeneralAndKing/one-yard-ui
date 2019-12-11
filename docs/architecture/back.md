@@ -16,7 +16,7 @@ title: 后端
 
 数据库设计如下：
 
-![database](http://q0zlaui5t.bkt.clouddn.com/docs/approval.png)
+![database](http://image.japoul.cn/docs/approval.png)
 
 表和字段均有详细注释，篇幅有限不再赘述，具体可以参见需求分析页。
 
@@ -24,7 +24,7 @@ title: 后端
 
 如下图
 
-![应用分层](http://q0zlaui5t.bkt.clouddn.com/docs/%E6%B7%B1%E5%BA%A6%E6%88%AA%E5%9B%BE_%E9%80%89%E6%8B%A9%E5%8C%BA%E5%9F%9F_20191120200120.png)
+![应用分层](http://image.japoul.cn/docs/%E6%B7%B1%E5%BA%A6%E6%88%AA%E5%9B%BE_%E9%80%89%E6%8B%A9%E5%8C%BA%E5%9F%9F_20191120200120.png)
 
 1. 开放接口层：直接封装 repository 方法暴露 http 接口；进行网关安全控制、流量控制、访问控制等
 2. 第三方引用或新应用接入：接受新应用注册客户端接入已有授权认证系统，包括其它部门 http 开放接口，基础平台，其它公司的HTTP接口。
@@ -42,7 +42,7 @@ title: 后端
 
 我们最为注重的是后台安全，作为一个系统，安全无疑是首位。我们团队参照 [RBAC ](https://en.wikipedia.org/wiki/Role-based_access_control) 模型以及项目需求，设计了基于 **方法** 与 **路径** 权限控制，颗粒化的控制**每一个请求**，建立了一个完整的授权系统，我们设计的 RBAC 模型如下：
 
-![rbca](http://q0zlaui5t.bkt.clouddn.com/docs/sys_user_role.png)
+![rbca](http://image.japoul.cn/docs/sys_user_role.png)
 
 从上到下各表如下：
 
@@ -307,7 +307,7 @@ application:
 
 除了上面两个意外，我们直接引用了 [Alibaba Druid](https://github.com/alibaba/druid) 来作为我们的数据源，相应的，其数据监控功能完美呈现于我们的应用之中，可以实时的对数据库的操作和运行进行监控和管理，
 
-![Druid](http://q0zlaui5t.bkt.clouddn.com/docs/%E6%B7%B1%E5%BA%A6%E6%88%AA%E5%9B%BE_%E9%80%89%E6%8B%A9%E5%8C%BA%E5%9F%9F_20191120204731.png)
+![Druid](http://image.japoul.cn/docs/%E6%B7%B1%E5%BA%A6%E6%88%AA%E5%9B%BE_%E9%80%89%E6%8B%A9%E5%8C%BA%E5%9F%9F_20191120204731.png)
 
 - 管理员帐号： `admin`
 - 管理员密码： `gak.123456789`

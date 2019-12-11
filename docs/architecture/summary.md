@@ -22,7 +22,9 @@ title: 总结
 
 > Q: 为啥不直接用 `spring-boot` 最新版，而是用 `2.1.9`？
 
-最新版不一定是最好的，在使用的时候发现最新版的依赖管理中的 `Spring-security` 存在一些 bug，参见我队队员提的 [ISSUE](https://github.com/spring-projects/spring-security-oauth/issues/1798)。虽然在随后的时间里，`Spring-security`将这个 bug 回滚了，但是在 `spring-boot` 的依赖管理中依旧没有变。所以我们退而求次，选择小版本号较低的 `2.1.9`。
+~~最新版不一定是最好的，在使用的时候发现最新版的依赖管理中的 `Spring-security` 存在一些 bug，参见我队队员提的 [ISSUE](https://github.com/spring-projects/spring-security-oauth/issues/1798)。虽然在随后的时间里，`Spring-security`将这个 bug 回滚了，但是在 `spring-boot` 的依赖管理中依旧没有变。所以我们退而求次，选择小版本号较低的 `2.1.9`。~~
+ 
+ 第二次版本迭代已经使用 `2.2.2` 最新版本。
 
 > Q: 为啥不用安全性更高的非对称加密啊？
 

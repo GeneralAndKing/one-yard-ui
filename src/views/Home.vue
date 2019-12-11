@@ -20,7 +20,7 @@
           v-list-item(link)
             v-list-item-avatar
               v-img(:src="me.icon", alt="avatar",
-                lazy-src="http://q0zlaui5t.bkt.clouddn.com/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195")
+                lazy-src="http://image.japoul.cn/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195")
             v-list-item-content
               v-list-item-title {{me.name}}
               v-list-item-subtitle {{me.email}}

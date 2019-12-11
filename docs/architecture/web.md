@@ -16,7 +16,7 @@ title: 前端
 
 我们前端主要依赖如下：
 
-![dep](http://q0zlaui5t.bkt.clouddn.com/docs/%E6%B7%B1%E5%BA%A6%E6%88%AA%E5%9B%BE_%E9%80%89%E6%8B%A9%E5%8C%BA%E5%9F%9F_20191120214407.png)
+![dep](http://image.japoul.cn/docs/%E6%B7%B1%E5%BA%A6%E6%88%AA%E5%9B%BE_%E9%80%89%E6%8B%A9%E5%8C%BA%E5%9F%9F_20191120214407.png)
 
 
 
@@ -115,18 +115,18 @@ v-app#inspire
 
 我们为移动端做了很好的适配，例如登录页面：
 
-![login](http://q0zlaui5t.bkt.clouddn.com/docs/%E6%B7%B1%E5%BA%A6%E6%88%AA%E5%9B%BE_%E9%80%89%E6%8B%A9%E5%8C%BA%E5%9F%9F_20191121020223.png)
+![login](http://image.japoul.cn/docs/%E6%B7%B1%E5%BA%A6%E6%88%AA%E5%9B%BE_%E9%80%89%E6%8B%A9%E5%8C%BA%E5%9F%9F_20191121020223.png)
 
 在移动端：
 
-![login](http://q0zlaui5t.bkt.clouddn.com/docs/Screenshot_20191121_015608_mark.via.jpg)
+![login](http://image.japoul.cn/docs/Screenshot_20191121_015608_mark.via.jpg)
 
 对于表格，在电脑端：
 
-![table](http://q0zlaui5t.bkt.clouddn.com/docs/%E6%B7%B1%E5%BA%A6%E6%88%AA%E5%9B%BE_%E9%80%89%E6%8B%A9%E5%8C%BA%E5%9F%9F_20191121015534.png)
+![table](http://image.japoul.cn/docs/%E6%B7%B1%E5%BA%A6%E6%88%AA%E5%9B%BE_%E9%80%89%E6%8B%A9%E5%8C%BA%E5%9F%9F_20191121015534.png)
 
 而在手机端：
 
-![table](http://q0zlaui5t.bkt.clouddn.com/docs/Screenshot_20191121_015914_mark.via.jpg)
+![table](http://image.japoul.cn/docs/Screenshot_20191121_015914_mark.via.jpg)
 
 这样的布局很好的显示出表格的数据了
