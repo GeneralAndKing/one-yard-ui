@@ -509,6 +509,7 @@ export default {
     handleAdd () {
       this.initEditedItem()
       this.editedItem.supplyMode = '采购'
+      this.editedItem.remark = '采购部'
       this.dialog = true
     },
     handleEdit (item) {

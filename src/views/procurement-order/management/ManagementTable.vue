@@ -15,37 +15,51 @@
           span 查看
         v-tooltip(top v-if="item.approvalStatus==='APPROVAL_OK'&&item.planStatus==='EFFECTIVE'")
           template(v-slot:activator="{ on }")
-            v-btn.mr-1(outlined, rounded, x-small, fab, color="#FFC400", v-on="on", @click="handleChange(item)")
+            v-btn.mr-1(outlined, rounded, x-small, fab, color="#FFC400", v-on="on",
+              v-per="[Role.ROLE_PROCUREMENT_PLANER]",
+              @click="handleChange(item)")
               v-icon mdi-message-draw
           span 变更
         v-tooltip(top v-if="item.approvalStatus==='APPROVAL_OK'&&item.planStatus==='EFFECTIVE'")
           template(v-slot:activator="{ on }")
-            v-btn.mr-1(outlined, rounded, x-small, fab, color="#6200ee", v-on="on", @click="handleFinished(item)")
+            v-btn.mr-1(outlined, rounded, x-small, fab, color="#6200ee", v-on="on",
+              v-per="[Role.ROLE_PROCUREMENT_PLANER]",
+              @click="handleFinished(item)")
               v-icon mdi-check
           span 订单完成
         v-tooltip(top v-if="item.planStatus==='NO_SUBMIT'&&(item.approvalStatus==='NO_SUBMIT'||item.approvalStatus==='APPROVAL_NO')")
           template(v-slot:activator="{ on }")
-            v-btn.mr-1(outlined, rounded, x-small, fab, color="teal darken-1", v-on="on", @click="handleSubmit(item)")
+            v-btn.mr-1(outlined, rounded, x-small, fab, color="teal darken-1", v-on="on",
+              v-per="[Role.ROLE_PROCUREMENT_PLANER]",
+              @click="handleSubmit(item)")
               v-icon mdi-format-wrap-inline
           span 提交审批
         v-tooltip(top v-if="item.approvalStatus==='APPROVAL_ING'")
           template(v-slot:activator="{ on }")
-            v-btn.mr-1(outlined, rounded, x-small, fab, color="info", v-on="on", @click="showApproval(item)")
+            v-btn.mr-1(outlined, rounded, x-small, fab, color="info", v-on="on",
+              v-per="[Role.ROLE_PROCUREMENT_SUPERVISOR]",
+              @click="showApproval(item)")
               v-icon mdi-book-open-variant
           span 审批
         v-tooltip(top v-if="item.planStatus==='APPROVAL'&&item.approvalStatus==='APPROVAL_ING'")
           template(v-slot:activator="{ on }")
-            v-btn.mr-1(outlined, rounded, x-small, fab, color="warning", v-on="on", @click="handleRevoke(item)")
+            v-btn.mr-1(outlined, rounded, x-small, fab, color="warning", v-on="on",
+              v-per="[Role.ROLE_PROCUREMENT_PLANER]",
+              @click="handleRevoke(item)")
               v-icon mdi-backup-restore
           span 撤回
         v-tooltip(top v-if="item.approvalStatus==='APPROVAL_OK'&&item.planStatus==='EFFECTIVE'")
           template(v-slot:activator="{ on }")
-            v-btn(outlined, rounded, x-small, fab, color="error", v-on="on", @click="handleCancel(item)")
+            v-btn(outlined, rounded, x-small, fab, color="error", v-on="on",
+              v-per="[Role.ROLE_PROCUREMENT_PLANER]",
+              @click="handleCancel(item)")
               v-icon mdi-link-off
           span 取消订单
         v-tooltip(top v-if="(item.approvalStatus==='NO_SUBMIT' ||item.approvalStatus==='APPROVAL_NO') && item.planStatus==='NO_SUBMIT'")
           template(v-slot:activator="{ on }")
-            v-btn(outlined, rounded, x-small, fab, color="error", v-on="on", @click="handleDelete(item)")
+            v-btn(outlined, rounded, x-small, fab, color="error", v-on="on",
+              v-per="[Role.ROLE_PROCUREMENT_PLANER]",
+              @click="handleDelete(item)")
               v-icon mdi-delete
           span 删除
 </template>
@@ -55,6 +69,8 @@ import { procurementOrderPlanStatus, approvalStatus } from '_u/status'
 import ApproveConfirm from '_c/approve-confirm'
 import * as procurementOrderAPI from '_api/procurementOrder'
 import * as RestAPI from '_api/rest'
+import { Role } from '_u/role'
+
 export default {
   name: 'ManagementTable',
   components: {
@@ -72,6 +88,11 @@ export default {
     search: {
       type: String,
       default: ''
+    }
+  },
+  computed: {
+    Role () {
+      return Role
     }
   },
   data: () => ({
@@ -94,6 +115,8 @@ export default {
   methods: {
     filterSearch (value, search, item) {
       const condition = search.split('&')
+      if (condition[3] === '') condition[3] = new Date('2999-12-06 0:0:0')
+      if (condition[4] === '') condition[4] = new Date('2999-12-06 0:0:0')
       return item.name.includes(condition[0]) &&
           item.type.includes(condition[1]) &&
           item.supplier.includes(condition[2]) &&
@@ -123,6 +146,7 @@ export default {
               this.$message('提交审批成功', 'success')
               item.planStatus = 'APPROVAL'
               item.approvalStatus = 'APPROVAL_ING'
+              this.$emit('init')
             })
         })
     },
@@ -133,6 +157,7 @@ export default {
             .then(() => {
               item.planStatus = 'APPROVAL_CANCEL'
               this.$message('操作成功', 'success')
+              this.$emit('init')
             })
         })
     },
@@ -143,6 +168,7 @@ export default {
             this.$message('撤回成功', 'success')
             item.planStatus = 'NO_SUBMIT'
             item.approvalStatus = 'NO_SUBMIT'
+            this.$emit('init')
           })
         })
     },
@@ -152,6 +178,7 @@ export default {
           procurementOrderAPI.deleteProcurementOrder(item.id).then(res => {
             this.$message('删除采购订单成功！', 'success')
             this.value.splice(this._.indexOf(this.value, item), 1)
+            this.$emit('init')
           })
         })
     },
@@ -164,6 +191,7 @@ export default {
             item.planStatus = 'APPROVAL_CANCEL'
             item.approvalStatus = 'APPROVAL_ING'
             this.value.splice(this._.indexOf(this.value, item), 1)
+            this.$emit('init')
           })
         })
     },
@@ -209,6 +237,7 @@ export default {
           this.$refs.approval.loading = false
           this.approvalContent = ''
           this.$refs.approval.dialog = false
+          this.$emit('init')
         })
     },
     showApproval (item) {

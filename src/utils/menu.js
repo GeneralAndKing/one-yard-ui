@@ -135,7 +135,8 @@ export const MENUS = [
         to: { name: 'procurementOrderManagement' },
         icon: 'mdi-file-multiple',
         auth: [
-          Role.ROLE_PROCUREMENT_PLANER
+          Role.ROLE_PROCUREMENT_PLANER,
+          Role.ROLE_PROCUREMENT_SUPERVISOR
         ]
       }
     ]

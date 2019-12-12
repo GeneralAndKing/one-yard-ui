@@ -13,9 +13,9 @@
               v-layout(wrap, style="width:100%")
                 v-flex(sm12, md6, lg4)
                   v-select(v-model="editItem.materialId", :items="materials", :ref="`${formRef}Material`",
-                    label="物料", :rules="rules.unionRules(rules.requiredRules('物料'))", item-text="name", item-value="id" :disabled="editItem.planMaterialId!==undefined")
+                    label="物料", :rules="rules.unionRules(rules.requiredRules('物料'))", item-text="name", item-value="id" :disabled="editItem.planMaterialId!==undefined" @change="materialSelect")
                 v-flex(sm12, md6, lg4)
-                  v-text-field(v-model="editItem.procurementUnit" :ref="`${formRef}procurementUnit`", label="采购单位" :disabled="editItem.planMaterialId!==undefined &&!change"
+                  v-text-field(v-model="editItem.procurementUnit" :ref="`${formRef}procurementUnit`", label="采购单位", readonly,
                     :rules="rules.unionRules(rules.requiredRules('采购单位'))")
                 v-flex(sm12, md6, lg4)
                   v-text-field(v-model="editItem.procurementNumber" :ref="`${formRef}procurementNumber`", label="采购数量",
@@ -33,7 +33,7 @@
                     :rules="rules.unionRules(rules.requiredRules('单价'))", suffix="元")
                 v-flex(sm12, md6, lg4)
                   v-text-field(v-model="editItem.taxRate" :ref="`${formRef}taxRate`", label="税率",
-                    :rules="rules.unionRules(rules.requiredRules('税率'),rules.integerRules,rules.maxLengthRules(3))", suffix="%" counter="number")
+                    :rules="rules.unionRules(rules.requiredRules('税率'))", suffix="%" counter="number")
                 v-flex(sm12, md6, lg4)
                   v-text-field(v-model="editItem.chargeUnit" :ref="`${formRef}chargeUnit`", label="计价单位")
                 v-flex(sm12, md6, lg4)
@@ -160,6 +160,9 @@ export default {
       if (!this.$refs[this.formRef].validate(true)) return
       this.$emit('submit', this.editItem)
       this.handleClose()
+    },
+    materialSelect (item) {
+      this.editItem.procurementUnit = this._.find(this.materials, { id: item }).unit
     },
     handleShow () {
       this.show = true

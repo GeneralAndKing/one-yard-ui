@@ -25,11 +25,12 @@
                     date-menu(v-model="search.deliveryDate", label="交货日期", :init="tomorrow")
                   v-flex.text-right.mt-4(md12, lg8)
                     span(v-per="[Role.ROLE_PROCUREMENT_SUPERVISOR]")
-                      v-btn.mr-4(outlined, color="secondary", @click="search.planStatus = 'APPROVAL_CANCEL'") (主管) 取消审批
-                      v-btn.mr-4(outlined, color="secondary", @click="search.planStatus = 'CHANGED'") (主管) 变跟审批
                       v-btn.mr-4(outlined, color="secondary", @click="search.planStatus = 'APPROVAL'") (主管) 提交审批
+                      v-btn.mr-4(outlined, color="secondary", @click="search.planStatus = 'CHANGED'") (主管) 变更审批
+                      v-btn.mr-4(outlined, color="secondary", @click="search.planStatus = 'APPROVAL_CANCEL'") (主管) 取消审批
                     v-btn(outlined, color="warning", @click="handleReset") 重置条件
-              management-table.mt-5(v-model="orders", :search="searchValue", :loading="load.table", @see="handleSee" @change="handleChange")
+              management-table.mt-5(v-model="orders", :search="searchValue", :loading="load.table", @see="handleSee",
+                @change="handleChange", @init="initData")
       procurement-order(v-else, :seeItem="see" @back="handleBack")
         v-btn(outlined, color="warning", @click="handleBack") 返回
 </template>
@@ -39,7 +40,6 @@ import { orderType, procurementOrderPlanStatus, approvalStatus } from '_u/status
 import ManagementTable from './ManagementTable'
 import DateMenu from '_c/date-menu'
 import ProcurementOrder from '_c/procurement-order'
-import { tomorrow } from '_u/util'
 import * as restAPI from '_api/rest'
 import SkeletonLoader from '_c/skeleton-loader'
 import { Role } from '_u/role'
@@ -61,7 +61,7 @@ export default {
     planStatus: procurementOrderPlanStatus,
     approvalStatus: approvalStatus,
     orders: [],
-    tomorrow: tomorrow(),
+    tomorrow: '',
     load: {
       table: false
     }
@@ -105,11 +105,12 @@ export default {
       this.orders.length = 0
       this.load.table = true
       restAPI.getAll('supplier').then(res => { this.supplier.push(...res.data.content) })
-      restAPI.getAll('procurementOrder').then(res => { this.orders.push(...res.data.content) })
-        .finally(() => {
-          this.load.table = false
-          this.skeletonLoader = false
-        })
+      restAPI.getAll('procurementOrder').then(res => {
+        this.orders.push(...res.data.content)
+      }).finally(() => {
+        this.load.table = false
+        this.skeletonLoader = false
+      })
     },
     handleBack () {
       this.see = null

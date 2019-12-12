@@ -68,7 +68,7 @@
             v-card-actions
               slot
               v-spacer
-              v-btn(outlined, color="success", @click="handleSave", v-if="edit") {{see?'编辑':'保存'}}
+              v-btn(outlined, color="success", v-per="Role.ROLE_PROCUREMENT_PLANER", @click="handleSave", v-if="edit") {{see?'编辑':'保存'}}
     change-history(v-if="change", :item="seeItem", ref="history", :procurementMaterial="procurementMaterial")
     check-inventory(v-if="seeItem !== null", :material="materials", ref="materials")
 </template>
@@ -83,10 +83,11 @@ import ChangeHistory from '_c/procurement-order/change-history'
 import CheckInventory from '_c/procurement-order/check-inventory'
 import SkeletonLoader from '_c/skeleton-loader'
 import { orderTypeSelect, formatOrderTypeSelect } from '_u/status'
-import { getTime } from '_u/util'
+import { getTime, to } from '_u/util'
 import * as RuleAPI from '_u/rule'
 import * as RestAPI from '_api/rest'
 import * as procurementOrderAPI from '_api/procurementOrder'
+import { Role } from '_u/role'
 
 export default {
   name: 'ProcurementOrder',
@@ -124,7 +125,7 @@ export default {
     supplier: [],
     materials: [],
     order: {
-      id: 1,
+      id: null,
       name: '',
       code: '',
       type: '',
@@ -156,6 +157,9 @@ export default {
       const order = this.order
       return (order.approvalStatus === 'NO_SUBMIT' && order.planStatus === 'NO_SUBMIT') ||
         (order.approvalStatus === 'APPROVAL_OK' && order.planStatus === 'EFFECTIVE')
+    },
+    Role () {
+      return Role
     }
   },
   watch: {
@@ -210,7 +214,6 @@ export default {
     handleSave () {
       if (this.see) {
         this.see = false
-        // TODO:编辑事件
       } else {
         if (this.change) {
           procurementOrderAPI.changeProcurementOrder(this.order.id, this.procurementMaterial).then(() => {
@@ -242,14 +245,15 @@ export default {
             return
           }
         }
-        procurementOrderAPI.submit(this._.omit(this.order, ['id']), this.procurementMaterial, this.orderTerms).then(res => {
+        procurementOrderAPI.submit(this.order, this.procurementMaterial, this.orderTerms).then(res => {
           this.$message(res.data, 'success')
           this.see = true
           this.$router.push({ name: 'procurementOrderManagement' })
         })
       }
     },
-    handleMaterialSelect (items) {
+    async handleMaterialSelect (items) {
+      let res, err, departmentName
       this.procurementMaterial = this.procurementMaterial.filter(value => {
         if (value.planMaterialId === undefined) {
           return value
@@ -261,6 +265,15 @@ export default {
           if (this._.find(this.procurementMaterial, { id: item.id })) {
             continue
           }
+          departmentName = item.remark
+          if (item.planId !== null) {
+            [err, res] = await to(RestAPI.getRestLink(`sysDepartment/search/getDepartmentName?planId=${item.planId}`))
+            if (err === null) {
+              departmentName = res.data
+              console.log(res.data)
+            }
+          }
+
           this.procurementMaterial.push({
             planMaterialId: item.id,
             name: `${new Date().toISOString()}-${item.materialId}-${Math.ceil(Math.random() * 100)}`,
@@ -277,7 +290,7 @@ export default {
             totalPrice: '',
             taxTotalPrice: '',
             isComplimentary: false,
-            demandDepartment: '',
+            demandDepartment: departmentName,
             materialReceivingDepartment: '',
             status: '',
             sort: 1,
