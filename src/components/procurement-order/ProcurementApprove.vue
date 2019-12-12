@@ -9,10 +9,10 @@
           span {{a.createUser}}
         v-card.elevation-2
           v-card-title {{a.result}}
-          v-card-text {{a.description}}
+          v-card-text(style="font-size:19px") {{a.description}}
           v-card-actions
             v-spacer
-            span.grey--text.pa-3 审批用户:{{a.createUser}}
+            span.grey--text.pa-3 审批人:{{a.createUser}} 审批时间：{{a.createTime}}
 
 </template>
 

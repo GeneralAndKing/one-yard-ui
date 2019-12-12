@@ -158,6 +158,10 @@ export default {
     },
     handleSubmit () {
       if (!this.$refs[this.formRef].validate(true)) return
+      if (this.change) {
+        this.editItem.status = 'CHANGED'
+      }
+      console.log(this.editItem)
       this.$emit('submit', this.editItem)
       this.handleClose()
     },

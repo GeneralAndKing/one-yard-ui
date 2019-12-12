@@ -61,12 +61,12 @@ export default {
     selected: [],
     search: '',
     headers: [
-      { text: '排序', value: 'sort', align: 'start' },
       { text: '条款名称', value: 'name', align: 'start' },
       { text: '条款编号', value: 'code', align: 'start' },
       { text: '条款类型', value: 'type', align: 'start' },
       { text: '条款内容', value: 'content', align: 'start' },
       { text: '说明', value: 'description', align: 'start' },
+      { text: '排序', value: 'sort', align: 'start' },
       { text: '操作', value: 'action', sortable: false, width: '150px', align: 'center' }
     ]
   }),
@@ -76,6 +76,7 @@ export default {
     handleAdd () {
       this.item = null
       this.$refs.add.handleShow()
+      this.$refs.add.handleReset()
     },
     handleDeleteSelect () {
       this.selected.forEach(item => this.value.splice(this._.indexOf(this.value, item), 1))
@@ -87,6 +88,7 @@ export default {
     handleEdit (item) {
       this.item = item
       this.$refs.add.handleShow()
+      this.$refs.add.handleReset()
     },
     // 这个事件是添加或者编辑成功以后，添加到表格之中的事件
     // 参数是修改后的元素，原来的元素是 this.item

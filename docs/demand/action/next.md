@@ -44,17 +44,56 @@ title: 第二阶段流程
 
 ![](http://image.japoul.cn/2%7DVVBW47$K_AJZ%25LRRQ%7D312.png)
 
+2.4.添加/编辑订单条款，查看审批流程信息等：
+
+![](http://image.japoul.cn/X_WCK2ZQRL5R4W1V%7BR~1%5D%25C.png)
+
+![](http://image.japoul.cn/GF1V9LCEO%5BSL%60O29N_%5DLX3M.png)
+
 2.4.撤回审批请求
 
 ![](http://image.japoul.cn/%5BN_JN%25N7CW%28CEY%60CWZP@4GT.png)
 
-2.5.
+2.5.采购部门主管可以对三种类型的审批进行审批处理，可以通过按钮进行筛选：
 
 ![](http://image.japoul.cn/DXHSN64X%7DF8FP%7D6%251667$JQ.png)
 
+2.6.主管审批通过后订单状态变为已生效，此时采购计划员可以点击变更按钮对订单进行变更，开放待采购物料的需求数量的编辑权限：
 
-![]()
-![]()
-![]()
+![](http://image.japoul.cn/B%7DGW%293Q%282S%25%60%7D01F$I0JNHM.png)
+
+2.7.进入变更界面后点击物料后方的编辑按钮对物料的数量、单价等信息进行编辑：
+![](http://image.japoul.cn/OR%605_%60Q2BYA%25BG1@7%5B_%5BCMJ.png)
+
+2.8.若之前该订单有变更过，则可点击变更历史按钮查看。填写完成变更信息后点击保存后订单状态自动进入变更审批状态，等待采购主管审批完成：
+
+![](http://image.japoul.cn/LVC9TRF4W13C%29TSH45ZWEFO.png)
+
+2.9.采购部门主管在进行变更审批时，在订单管理界面点击查看按钮进入订单详情页后，可以在明细信息处查看变更的物料信息，若物料信息在本次审批中发生了变更，则数据后方会出现变更历史按钮，点击后可以查看改物料的变更历史，没有发生变更的数据没有该按钮：
+
+![](http://image.japoul.cn/AQ%5BH1A%7B%28WP%7DFH3K%7DACGGA@S.png)
+
+某条物料的变更历史详情页：
+![](http://image.japoul.cn/6DM5KS3SUKX~4%5DAZA8%60I$UG.png)
+
+2.10.主管审批通过后订单状态回归已生效，采购计划员可查看变更历史状态变为已通过，若不通过则物料数据会回退，变更历史状态变为审核不通过：
+
+![](http://image.japoul.cn/YD3QN1U1D~J%25%2566__XQWG$V.png)
+
+2.11.采购计划员还可对已生效的订单进行取消和已完成操作，取消操作需要通过采购主管的审批才会生效。采购计划员可对已生效的订单进行追踪，确定已完成后可以点击已完成按钮结束整个采购流程：
+
+![](http://image.japoul.cn/EVT%7DMI@%7D9P3TL162GRRO60X.png)
+
+![](http://image.japoul.cn/6P0I1W1V3V%5BX%60%7B5WN$P%5D@%60J.png)
+
+![](http://image.japoul.cn/8%60%7BL45HB1RPYE%25Y%281~NC~@V.png)
+
+3.打印采购订单：
+
+![](http://image.japoul.cn/~%5B%25NM%7B2~%5BKKXQIO1QN%60KTRH.png)
+
+![](http://image.japoul.cn/Z1$%290CY%7B@A1SWQ9%7D~MS~%601B.png)
+
+![](http://image.japoul.cn/SU5_6LRDF%600Y~W%2885WRBVW4.png)
 
 

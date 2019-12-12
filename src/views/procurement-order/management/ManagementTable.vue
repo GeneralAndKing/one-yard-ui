@@ -232,12 +232,12 @@ export default {
               this.approvalItem.planStatus = 'APPROVAL_OK'
             }
           }
+          this.$emit('init')
         })
         .finally(() => {
           this.$refs.approval.loading = false
           this.approvalContent = ''
           this.$refs.approval.dialog = false
-          this.$emit('init')
         })
     },
     showApproval (item) {
