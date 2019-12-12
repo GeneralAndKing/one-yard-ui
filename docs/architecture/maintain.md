@@ -59,7 +59,7 @@ services:
 
 锁定 `mysql` 版本为 `8`，锁定 `redis` 的版本为 `5`，自动化容器编排。
 
-## Nginx 取舍
+## Nginx 与 caddy 取舍
 
 项目初期打算，直接使用 `nginx` 来作为反向代理和应用服务器：
 
@@ -69,5 +69,59 @@ services:
 
 但是后来经过团队商议决定，杀鸡焉用牛刀。`Nginx` 存在配置复杂的，占用内存高的特点，且访问速度有时不尽人意，让人着实难受。
 
-**所以最终我们决定，在应用不大，并发不高的的情况下，选择更加方便快捷，小型简单的 Caddy 来作为前端应用的 `web` 服务器，后端应用自行处理跨域问题**。事实证明 caddy 带来的速度上提升是非常让人满意的！
+**所以最终我们决定，在应用不大，并发不高的的情况下，选择更加方便快捷，小型简单的 Caddy 来作为前端应用的 `web` 服务器，后端应用自行处理跨域问题**。事实证明 caddy 带来的速度上提升是非常让人满意的！并且，在以后有需要的时候，完全可以平滑过度到 `https` 与 `http2`。
 
+## 自动化构建与部署
+
+自动化构建与部署可以说是一个非常实用的功能了，这项功能很大程度上省去了我们运维的成本，对于前后端我们都有不同的自动化构建与部署策略。
+
+### 后端
+
+Gradle 非常强大，我们完全可以使用它的插件来完成我们自动化部署的流程，通过建立相应的 `task`，一步一步的让程序部署到服务器之上。
+
+```gradle
+ssh.settings {
+    // ssh 设置
+}
+
+remotes {
+    // 服务器配置
+}
+
+task copy(dependsOn: bootJar) {
+    // 打包上传
+}
+
+task restart(dependsOn: copy) {
+    // 服务重启
+}
+
+task showLog {
+    // 查看服务器日志
+}
+```
+
+### 前端
+
+node 配合 yarn 来完成我们自动化构建，通过打包以后连接上传，也让我们能够快速部署前端应用。
+
+```javascript
+conn
+  .on('ready', () => {
+    // 删除旧的构建
+    conn.exec(`rm -rf ${server.path}/*`, (error, stdout) => {
+      if (error) throw error
+      stdout
+        .on('close', () => {
+          scpClient.scp('./dist', server, error => {
+           // 上传
+          })
+          //...
+        })
+        .on('data', data => console.log('STDOUT: ' + data))
+        .stderr.on('data', data => console.log('STDERR: ' + data))
+    })
+  })
+  .connect(server)
+
+```
