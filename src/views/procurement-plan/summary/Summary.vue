@@ -676,6 +676,7 @@ export default {
             return
           } else if (this.selected[d].purchaseDate < key) {
             this.$message(`选中的第` + (parseInt(d) + 1) + `条数据采购日期早于了当前日期`, 'warning')
+            this.selected = []
             return
           }
         }

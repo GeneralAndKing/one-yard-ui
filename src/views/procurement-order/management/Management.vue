@@ -102,10 +102,17 @@ export default {
       this.see = item
     },
     initData () {
+      let role = this.$store.getters['auth/role']
+      let promise = null
       this.orders.length = 0
       this.load.table = true
       restAPI.getAll('supplier').then(res => { this.supplier.push(...res.data.content) })
-      restAPI.getAll('procurementOrder').then(res => {
+      if (Role.isSupervisor(role)) {
+        promise = restAPI.getAll('procurementOrder')
+      } else {
+        promise = restAPI.getRestLink(`procurementOrder/search/byCreateUser?createUser=${this.$store.getters['auth/username']}`)
+      }
+      promise.then(res => {
         this.orders.push(...res.data.content)
       }).finally(() => {
         this.load.table = false
