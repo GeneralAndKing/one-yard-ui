@@ -4,7 +4,7 @@
         v-container.fill-height
           v-layout(align-center, justify-center)
             v-flex.text-center
-              h1.display-1.blue--text {{text}} {{code}}
+              h1.display-1.blue--text {{code}} {{text}}
               p.mt-2 ~~~
               v-btn(outlined, color="info", @click="handleBack") 点击返回
 </template>

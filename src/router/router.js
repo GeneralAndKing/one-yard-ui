@@ -239,7 +239,8 @@ export const routes = [
         meta: {
           meta: '采购订单管理',
           auth: [
-            Role.ROLE_PROCUREMENT_PLANER
+            Role.ROLE_PROCUREMENT_PLANER,
+            Role.ROLE_PROCUREMENT_SUPERVISOR
           ]
         },
         component: () => import(/* webpackChunkName: "sys-department" */ '_v/procurement-order/management')
