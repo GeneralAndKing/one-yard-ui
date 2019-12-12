@@ -22,7 +22,7 @@
         v-btn(outlined, color="info", @click="handleAccount") {{accountText}}
         v-spacer
         v-btn(color="info", @click="next") {{nextBtnText}}
-      v-footer#form-footer.grey--text @ 2019 copy right by EchoCow Japoul BugRui
+      v-footer#form-footer.grey--text @ 2019 copy right by G&K
 </template>
 
 <script>
