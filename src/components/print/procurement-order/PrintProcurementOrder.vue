@@ -44,9 +44,9 @@
           td {{material.material.code}}
           td {{material.procurementUnit}}
           td {{material.procurementNumber}}
-          td {{material.supplier}}
           td {{material.chargeUnit}}
           td {{material.chargeNumber}}
+          td {{material.supplier}}
           td {{material.unitPrice}}
           td {{material.totalPrice}}
           td {{material.remark}}
@@ -63,8 +63,9 @@
           td.normal(colspan="12")
             div 订单条款：
               span(v-if="info.type === '框架协议订单'") 本订单遵循相应的框架协议约束的法律效应。
-            div(v-for="orderTerm in orderTerms")
-              | {{orderTerm.code}}. {{orderTerm.name}}{{orderTerm.content}}{{orderTerm.description}}。条款类型{{orderTerm.type}}
+            div(v-for="(orderTerm, index) in orderTerms")
+              | {{index + 1}}. {{orderTerm.name}}: {{orderTerm.detail}}
+              p(v-if="orderTerm.description !== null && orderTerm.description !== ''") 说明：{{orderTerm.description}}
         tr.word
           td(colspan="3") 采购工程师：
           td(colspan="3") 采购主管审核：

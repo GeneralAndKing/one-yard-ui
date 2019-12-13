@@ -24,7 +24,7 @@
                   v-text-field(v-model="editItem.sort" :ref="`${formRef}sort`", label="排序",
                     :rules="rules.unionRules(rules.requiredRules('排序'))", type="number")
                 v-flex(sm12)
-                  v-textarea(v-model="editItem.content", label="条款内容", rows="5", :ref='`${formRef}content`', auto-grow, counter,
+                  v-textarea(v-model="editItem.detail", label="条款内容", rows="5", :ref='`${formRef}detail`', auto-grow, counter,
                     :rules="rules.unionRules(rules.requiredRules('条款内容'))")
                 v-flex(sm12)
                   v-textarea(v-model="editItem.description", label="说明", rows="2", :ref='`${formRef}description`', auto-grow, counter)
@@ -55,7 +55,7 @@ export default {
       name: '',
       code: '',
       type: '',
-      content: '',
+      detail: '',
       description: '',
       sort: 1
     },
@@ -89,7 +89,7 @@ export default {
       this.$refs[this.formRef].resetValidation()
     },
     handleReset () {
-      this.initDate()
+      this.initData()
       this.$refs[this.formRef].resetValidation()
     },
     handleSubmit () {

@@ -64,7 +64,7 @@ export default {
       { text: '条款名称', value: 'name', align: 'start' },
       { text: '条款编号', value: 'code', align: 'start' },
       { text: '条款类型', value: 'type', align: 'start' },
-      { text: '条款内容', value: 'content', align: 'start' },
+      { text: '条款内容', value: 'detail', align: 'start' },
       { text: '说明', value: 'description', align: 'start' },
       { text: '排序', value: 'sort', align: 'start' },
       { text: '操作', value: 'action', sortable: false, width: '150px', align: 'center' }

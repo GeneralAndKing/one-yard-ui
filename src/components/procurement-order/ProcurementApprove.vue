@@ -4,7 +4,7 @@
       v-timeline-item(v-for="a in approve", :key="a.id", large, right)
         template(v-slot:icon)
           v-avatar
-            img(src="http://i.pravatar.cc/64")
+            img(src="http://image.japoul.cn/oneYard/avatar/d244472f-70b7-4a66-9a4e-de39cff10195")
         template(v-slot:opposite)
           span {{a.createUser}}
         v-card.elevation-2
