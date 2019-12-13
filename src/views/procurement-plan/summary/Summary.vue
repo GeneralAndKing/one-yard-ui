@@ -680,6 +680,8 @@ export default {
             return
           }
         }
+        if (this.selected[d].planSource === '' || this.selected[d].planSource === null ||
+          typeof (this.selected[d].planSource) === 'undefined') { this.selected[d].planSource = '自制计划' }
       }
       this.submitDialog = true
     },
