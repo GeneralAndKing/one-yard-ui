@@ -74,6 +74,7 @@
 <script>
 import { genMenu } from '_u/menu'
 import treeMenu from '_c/tree-menu'
+import { getTime } from '_u/util'
 import * as restAPI from '_api/rest'
 
 export default {
@@ -127,8 +128,8 @@ export default {
     initNotice () {
       this.socket = new WebSocket(`ws://127.0.0.1:8080/api/notify/${this.me.id}`)
       restAPI.getRestLink(`notification/search/byReceiverId?receiverId=${this.me.id}`).then((res) => {
-        this.messages[1].items = res.data.content.filter(n => n.status === 'READ')
-        this.messages[0].items = res.data.content.filter(n => n.status === 'UNREAD')
+        this.messages[1].items = res.data.content.filter(n => n.status && n.status === 'READ')
+        this.messages[0].items = res.data.content.filter(n => n.status && n.status === 'UNREAD')
       })
       this.socket.onerror = () => {
         console.error('建立链接失败')
@@ -138,6 +139,7 @@ export default {
       }
       this.socket.onmessage = mess => {
         this.messages[0].items.unshift(JSON.parse(mess.data))
+        this.$message('您有新的通知，请注意查看哦！', 'success')
       }
       this.socket.onclose = () => {
         console.log('连接关闭')
@@ -168,6 +170,7 @@ export default {
       })
     },
     formatDate (date) {
+      if (typeof (date) === 'undefined') return getTime()
       if (!date.hasOwnProperty('date')) return date.replace('T', ' ')
       let d = date.date
       let t = date.time

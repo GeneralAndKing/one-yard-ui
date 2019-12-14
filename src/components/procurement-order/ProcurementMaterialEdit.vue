@@ -161,7 +161,6 @@ export default {
       if (this.change) {
         this.editItem.status = 'CHANGED'
       }
-      console.log(this.editItem)
       this.$emit('submit', this.editItem)
       this.handleClose()
     },

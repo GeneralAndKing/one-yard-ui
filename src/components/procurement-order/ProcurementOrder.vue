@@ -271,7 +271,6 @@ export default {
             [err, res] = await to(RestAPI.getRestLink(`sysDepartment/search/getDepartmentName?planId=${item.planId}`))
             if (err === null) {
               departmentName = res.data
-              console.log(res.data)
             }
           }
 

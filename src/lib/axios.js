@@ -81,7 +81,11 @@ class HttpRequest {
     }, error => {
       this.destroy(url)
       let message = '未知错误'
-      if (error !== null && error.response !== null) {
+      if (typeof (error.response) === 'undefined') {
+        message = '未经授权:访问由于凭据无效被拒绝'
+        router.push({ name: 'login' })
+        this.queue = {}
+      } else {
         switch (error.response.status) {
           case 400:
             message = '请求错误:访问由于请求体无效被拒绝'
